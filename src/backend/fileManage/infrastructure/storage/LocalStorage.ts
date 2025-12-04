@@ -24,6 +24,10 @@ export class LocalStorage implements IStorage {
     return new Promise((resolve, reject) => {
       fs.unlink(fileName, (err) => {
         if (err) {
+          if (err.code === "ENOENT") {
+            // El archivo ya no existe → considérelo eliminado
+            return resolve(true);
+          }
           console.error(err);
           reject(err);
         }

@@ -1,12 +1,78 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const res = await fetch(new URL("/api/file", Astro.url));
+const files = await res.json();
+console.log(files);
 ---
 
 <Layout>
-    <h1>File Manage</h1>
+  <h1>File Manage</h1>
+  <form>
+    <input id="fileInput" class="bg-gray-500 p-2" type="file" multiple name="file" />
+    <button id="uploadButton" class="bg-gray-500 p-2" type="submit"
+      >Upload</button
+    >
+  </form>
+  <ul id="files">
+    {
+      files.map((file: any) => (
+        <li class="text-white flex gap-2">
+          <span class="p-2">{file.name}</span>
+          <button id={file.id} name="delete" class="bg-red-500 p-2">
+            BORRAR
+          </button>
+        </li>
+      ))
+    }
+  </ul>
 </Layout>
 
 <script>
-    const files = await fetch("/api/file").then((res) => res.json());
-    console.log(files);
+  const fileInput = document.getElementById(
+    "fileInput"
+  ) as HTMLInputElement | null;
+  const uploadButton = document.getElementById("uploadButton");
+  const uploadFile = async (e: Event) => {
+    e.preventDefault();
+    const formData = new FormData();
+    if (!fileInput || !fileInput.files) {
+      return;
+    }
+    Array.from(fileInput.files).forEach((file) => {
+      formData.append("file", file);
+    });
+    const res = await fetch(`/api/file`, {
+      method: "POST",
+      body: formData,
+    });
+    if (res.ok) {
+      window.location.reload();
+    }
+  };
+  if (fileInput && uploadButton) {
+    uploadButton.addEventListener("click", uploadFile);
+  }
+  const deleteFile = async (id: string) => {
+    const res = await fetch(`/api/file`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: id }),
+    });
+    if (res.ok) {
+      window.location.reload();
+    }
+  };
+
+  document.addEventListener("click", (e) => {
+    if ((e.target as HTMLButtonElement).name === "delete") {
+      deleteFile((e.target as HTMLButtonElement).id);
+    }
+  });
+  document.querySelectorAll("button[name='delete']").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      deleteFile((e.target as HTMLButtonElement).id);
+    });
+  });
 </script>
