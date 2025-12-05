@@ -1,5 +1,6 @@
 import type { APIContext } from "astro";
 import type { IFileManagerUseCases } from "../../@core-contracts/application/useCases";
+import type { fileUploadParams } from "../../@core-contracts/application/useCases";
 
 export class AstroRouter {
   private fileManagerUseCases: IFileManagerUseCases;
@@ -19,10 +20,18 @@ export class AstroRouter {
     if (!file) {
       return new Response("No file uploaded", { status: 400 });
     }
+    console.log({ file });
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileUrl = await this.fileManagerUseCases.uploadFile(
+    const fileParams: fileUploadParams = {
+      id: crypto.randomUUID(),
+      name: file.name,
       buffer,
-      file.name
+      type: file.type,
+      size: file.size,
+      lastModified: file.lastModified,
+    };
+    const fileUrl = await this.fileManagerUseCases.uploadFile(
+      fileParams
     );
     return new Response(fileUrl, { status: 200 });
   };

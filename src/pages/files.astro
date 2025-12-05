@@ -1,6 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import DashBoardLayout from "../layouts/DashboardLayout.astro";
+import TimeAgo from "javascript-time-ago";
+import es from "javascript-time-ago/locale/es";
+TimeAgo.addDefaultLocale(es);
+const timeAgo = new TimeAgo("es-ES");
 const res = await fetch(new URL("/api/file", Astro.url));
 const files = await res.json();
 console.log(files);
@@ -43,33 +47,50 @@ console.log(files);
     <div
       class="text-gray-200 p-6 bg-gray-800 border border-gray-700 rounded-lg"
     >
-      <div class="flex px-4 font-bold text-lg border-b border-gray-700 pb-4">
-        <span>Nombre</span>
-      </div>
-      <ul class="w-full flex flex-wrap" id="files">
+      <ul class="w-full flex flex-wrap table" id="files">
         {
-          files.map((file: any) => (
-            <li class="border-gray-700 border-b flex gap-2 w-full py-4 px-2 hover:bg-gray-700/50 transition-all">
-              <span class="p-2 w-full font-[500] overflow-hidden text-ellipsis">
-                {file.name}
+          [
+            <li class=" font-bold text-xl table-row ">
+              <span class="p-4 w-full font-[500] overflow-hidden text-ellipsis table-cell">
+                Nombre
               </span>
-              <span class="p-2">tamaño</span>
-              <div class="flex gap-2 text-lg">
-                <button
-                  class="h-fit rounded-lg bx bx-edit text-gray-500 p-2 hover:bg-gray-500/50 transition-all"
-                  name="edit"
-                  id={file.id}
-                  title="Editar Nombre"
-                />
-                <button
-                  id={file.id}
-                  name="delete"
-                  class="h-fit bx bx-trash text-red-500 p-2 rounded-lg hover:bg-red-500/50 transition-all"
-                  title="Eliminar"
-                />
-              </div>
-            </li>
-          ))
+              <span class="p-4 whitespace-nowrap table-cell">
+                Ultima modificacion
+              </span>
+              <span class="p-4 whitespace-nowrap table-cell">Tamaño</span>
+              <span class="p-4 whitespace-nowrap table-cell">Acciones</span>
+            </li>,
+            ...files.map((file: any) => (
+              <li class="hover:bg-gray-700/50 transition-all table-row border">
+                <span class="p-4 w-full font-[500] overflow-hidden text-ellipsis table-cell">
+                  {file.name}
+                </span>
+                <span class="p-4 whitespace-nowrap table-cell">
+                  {timeAgo.format(file.lastModified)}
+                </span>
+                <span class="p-4 whitespace-nowrap table-cell">
+                  {new Intl.NumberFormat("es-ES", {
+                    style: "unit",
+                    unit: "kilobyte",
+                  }).format(Math.round(file.size / 1024))}
+                </span>
+                <div class="flex gap-2 text-lg table-cell pt-4 pl-4">
+                  <button
+                    class="h-fit rounded-lg bx bx-edit text-gray-500 p-2 hover:bg-gray-500/50 transition-all"
+                    name="edit"
+                    id={file.id}
+                    title="Editar Nombre"
+                  />
+                  <button
+                    id={file.id}
+                    name="delete"
+                    class="h-fit bx bx-trash text-red-500 p-2 rounded-lg hover:bg-red-500/50 transition-all"
+                    title="Eliminar"
+                  />
+                </div>
+              </li>
+            )),
+          ]
         }
       </ul>
     </div>

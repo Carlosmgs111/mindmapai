@@ -1,12 +1,13 @@
 type File = {
-    id: string;
-    name: string;
-    path: string;
-}
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  lastModified: number;
+};
 export interface IRepository {
-    
-    saveFile(file: File): Promise<void>;
-    getPathById(id: string): Promise<string | undefined>;
-    getFiles(): Promise<File[]>;
-    deleteFile(id: string): Promise<boolean>;
+  saveFile(file: File): Promise<void>;
+  getFileById(id: string): Promise<File | undefined>;
+  getFiles(): Promise<File[]>;
+  deleteFile(id: string): Promise<boolean>;
 }

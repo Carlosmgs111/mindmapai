@@ -4,30 +4,32 @@ import fs from "fs";
 type File = {
   id: string;
   name: string;
-  path: string;
+  type: string;
+  size: number;
+  lastModified: number;
 };
 
 export class LocalCsvRepository implements IRepository {
+  private repositoryPath: string = "./database/";
   constructor() {
-    if (!fs.existsSync("./database/")) {
-      fs.mkdirSync("./database/");
+    if (!fs.existsSync(this.repositoryPath)) {
+      fs.mkdirSync(this.repositoryPath);
     }
   }
   saveFile = async (file: File) => {
-    const { size } = fs.statSync("./database/files.csv");
-    console.log({ size });
+    const { size } = fs.statSync(this.repositoryPath + "files.csv");
     fs.appendFileSync(
-      "./database/files.csv",
-      (!size ? "" : "\n") + file.id + "," + file.name + "," + file.path
+      this.repositoryPath + "files.csv",
+      (!size ? "" : "\n") + file.id + "," + file.name + "," + file.type + "," + file.size + "," + file.lastModified
     );
   };
-  getPathById = async (id: string): Promise<string | undefined> => {
+  getFileById = async (id: string): Promise<File | undefined> => {
     const files = await this.getFiles();
-    return files.find((file) => file.id === id)?.path;
+    return files.find((file) => file.id === id);
   };
   getFiles = async () => {
     return new Promise<File[]>((resolve, reject) => {
-      fs.readFile("./database/files.csv", "utf-8", (err, data) => {
+      fs.readFile(this.repositoryPath + "files.csv", "utf-8", (err, data) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -35,8 +37,8 @@ export class LocalCsvRepository implements IRepository {
         if(!data) resolve([])
         resolve(
           data.split("\n").map((file: string) => {
-            const [id, name, path] = file.split(",");
-            return { id, name, path };
+            const [id, name, type, size, lastModified] = file.split(",");
+            return { id, name, type, size: Number(size), lastModified: Number(lastModified) };
           })
         );
       });
@@ -50,7 +52,7 @@ export class LocalCsvRepository implements IRepository {
     const newFiles = files.filter((file) => file.id !== id);
     console.log({ newFiles });
     const fileToWrite = newFiles
-      .map((file, index) => (!index ? "" : "\n") + file.id + "," + file.name + "," + file.path)
+      .map((file, index) => (!index ? "" : "\n") + file.id + "," + file.name + "," + file.type + "," + file.size + "," + file.lastModified)
       .join("");
     return new Promise<boolean>((resolve, reject) => {
       fs.writeFile("./database/files.csv", fileToWrite, (err) => {

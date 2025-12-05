@@ -2,14 +2,15 @@ import type { IStorage } from "../../@core-contracts/domain/storage";
 import fs from "fs";
 
 export class LocalFsStorage implements IStorage {
+  private storagePath: string = "./uploads";
   constructor() {
-    if (!fs.existsSync("./uploads")) {
-      fs.mkdirSync("./uploads");
+    if (!fs.existsSync(this.storagePath)) {
+      fs.mkdirSync(this.storagePath);
     }
   }
 
-  async uploadFile(file: Buffer, fileName: string): Promise<string> {
-    const filePath = `./uploads/${fileName}`;
+  uploadFile = async (file: Buffer, fileName: string): Promise<string> => {
+    const filePath = `${this.storagePath}/${fileName}`;
     return new Promise((resolve, reject) => {
       fs.writeFile(filePath, file, (err) => {
         if (err) {
@@ -19,10 +20,11 @@ export class LocalFsStorage implements IStorage {
         resolve(filePath);
       });
     });
-  }
-  async deleteFile(fileName: string): Promise<boolean> {
+  };
+  loadFileBuffer = async () => {};
+  deleteFile = async (fileName: string): Promise<boolean> => {
     return new Promise((resolve, reject) => {
-      fs.unlink(fileName, (err) => {
+      fs.unlink(this.storagePath + "/" + fileName, (err) => {
         if (err) {
           if (err.code === "ENOENT") {
             // El archivo ya no existe → considérelo eliminado
@@ -34,5 +36,5 @@ export class LocalFsStorage implements IStorage {
         resolve(true);
       });
     });
-  }
+  };
 }
