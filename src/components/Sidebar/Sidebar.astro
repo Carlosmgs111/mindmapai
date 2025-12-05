@@ -5,6 +5,13 @@ const currentPath = Astro.url.pathname;
 
 const items = [
   {
+    href: "/editor",
+    label: "Editor",
+    classIcon: "bx bx-pencil-sparkles",
+    isActive: currentPath.includes("editor"),
+    title: "Editor de mindmap",
+  },
+  {
     href: "/documents",
     label: "Documentos",
     classIcon: "bx bx-file-detail",
