@@ -1,4 +1,5 @@
 ---
+import { sc } from "../utils/sc";
 const { uploadEndpoint } = Astro.props;
 ---
 
@@ -6,18 +7,21 @@ const { uploadEndpoint } = Astro.props;
   <input class="hidden" id="fileInput" type="file" name="file" accept=".pdf" />
   <label
     id="fileLabel"
-    class="w-full p-4 hover:bg-gray-700/50 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap"
+    class="w-full p-4 hover:bg-gray-700/50 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer"
     for="fileInput"
-    ><i class="bx bx-file-detail mr-2 align-middle text-xl"></i>Seleccionar
-    Archivo PDF</label
+    ><i class="bx bx-file-detail mr-2 align-middle text-xl"></i>Haz clic para
+    seleccionar archivo</label
   >
   <button
     data-endpoint={uploadEndpoint}
-    class="bg-gray-700 hover:bg-gray-700/80 p-4 rounded-lg whitespace-nowrap"
+    class={sc(
+      "bg-gray-700/50 hover:bg-gray-700 p-4 rounded-lg whitespace-nowrap",
+      !uploadEndpoint && "hidden"
+    )}
     id="uploadButton"
     type="submit"
     ><i class="bx bx-folder-up-arrow mr-2 align-middle text-xl"></i>Subir
-    Archivo</button
+    archivo</button
   >
 </form>
 
@@ -47,13 +51,10 @@ const { uploadEndpoint } = Astro.props;
     Array.from(fileInput.files).forEach((file) => {
       formData.append("file", file);
     });
-    const res = await fetch(
-      `${uploadEndpoint}/${crypto.randomUUID()}`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const res = await fetch(`${uploadEndpoint}/${crypto.randomUUID()}`, {
+      method: "POST",
+      body: formData,
+    });
     if (res.ok) {
       window.location.reload();
     }

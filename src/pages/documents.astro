@@ -1,9 +1,23 @@
 ---
+import { sc } from "../utils/sc";
 import Layout from "../layouts/Layout.astro";
 import DashBoardLayout from "../layouts/DashboardLayout.astro";
+const documents: any[] = [];
 ---
 
 <Layout title="Documentos | MindMapAI">
   <DashBoardLayout>
+    <ul>{documents.map((document) => <li>{document}</li>)}</ul>
+    <a
+      href="/generator"
+      class="block text-gray-200 font-semibold text-2xl px-4 w-full mt-6 text-center bg-gray-700/50 hover:bg-gray-700 p-4 rounded-lg border border-gray-600"
+      ><i class="bx bx-plus mr-2 align-middle text-xl"></i>Agregar MindMap</a
+    >
+    <span
+      class={sc(
+        "block text-gray-200 font-semibold text-2xl px-4 w-full mt-6 text-center",
+        documents.length > 0 && "hidden"
+      )}>Aun no tienes ningun MindMap.</span
+    >
   </DashBoardLayout>
 </Layout>

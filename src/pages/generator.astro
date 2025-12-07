@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DashBoardLayout from "../layouts/DashboardLayout.astro";
+import FileSelector from "../components/FileSelector.astro";
+import FlowStep from "../components/FlowStep.astro";
+
+const stylesOptions = [
+  {
+    value: "default",
+    label: "🪄Que la IA decida",
+  },
+  { value: "minimalista", label: "🍦 Minimalista" },
+  { value: "academico", label: "📚 Académico" },
+  { value: "ejecutivo", label: "💼 Ejecutivo" },
+  { value: "investigador", label: "🔬 Investigador" },
+];
+---
+
+<Layout title="Editor | MindMapAI">
+  <DashBoardLayout>
+    <div
+      class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-gray-200 w-3xl"
+    >
+      <div>
+        <span
+          class="block text-gray-200 mb-2 font-bold text-2xl px-4 pb-2 w-full"
+          >Generar nuevo MindMap</span
+        >
+        <span
+          class="block text-gray-200 mb-2 font-semibold text-sm px-4 pb-2 w-full border-b border-gray-700"
+          >Flujo para crear un nuevo MindMap</span
+        >
+        <div class="flex flex-col gap-4 border-l-4 border-gray-600 pl-5 mt-8">
+          <FlowStep title="📄 Selecciona un PDF">
+            <FileSelector />
+          </FlowStep>
+          <FlowStep
+            title="🤔 Elige el estilo de pensamiento"
+            help="El estilo de pensamiento cambiara la forma en que la IA crea el MindMap"
+          >
+            <form class="flex flex-wrap justify-center gap-2 p-2">
+              {
+                stylesOptions.map((style) => (
+                  <label class="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="style"
+                      value={style.value}
+                      class="hidden peer"
+                      checked={style.value === "default"}
+                    />
+                    <span class="block px-4 py-2 bg-gray-600/50 border border-transparent peer-checked:border-gray-700  hover:bg-gray-600 rounded-lg peer-checked:bg-gray-600">
+                      {style.label}
+                    </span>
+                  </label>
+                ))
+              }
+            </form>
+          </FlowStep>
+          <FlowStep>
+            <button
+              class="bg-gray-700/50 hover:bg-gray-700 p-4 rounded-lg whitespace-nowrap"
+            >
+              <i class="bx bx-sparkles-alt mr-2 align-middle text-xl"></i> Generar
+              MindMap
+            </button>
+          </FlowStep>
+        </div>
+      </div>
+    </div>
+  </DashBoardLayout>
+</Layout>
