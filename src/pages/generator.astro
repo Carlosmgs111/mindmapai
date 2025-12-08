@@ -59,6 +59,7 @@ const stylesOptions = [
           </FlowStep>
           <FlowStep>
             <button
+              id="generate"
               class="bg-gray-700/50 hover:bg-gray-700 p-4 rounded-lg whitespace-nowrap"
             >
               <i class="bx bx-sparkles-alt mr-2 align-middle text-xl"></i> Generar
@@ -70,3 +71,29 @@ const stylesOptions = [
     </div>
   </DashBoardLayout>
 </Layout>
+
+<script>
+  import { fileStore } from "../stores/files";
+  import type { IndexFile } from "../stores/files";
+
+  const generateBtn = document.getElementById("generate") as HTMLButtonElement;
+  const generateMindmap = async () => {
+    const formData = new FormData();
+    const fileIndex: IndexFile = fileStore.get();
+    const file = fileIndex.files[fileIndex.indexes[0]];
+    if (!file) {
+      window.alert("No se selecciono ningun archivo");
+      return;
+    }
+    formData.append("file", file);
+    const res = await fetch(`/api/mindmap/${fileIndex.indexes[0]}`, {
+      method: "POST",
+      body: formData,
+    });
+    console.log(res);
+    if (res.ok) {
+      window.location.reload();
+    }
+  };
+  generateBtn.addEventListener("click", generateMindmap);
+</script>

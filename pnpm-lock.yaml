@@ -23,6 +23,9 @@ dependencies:
   level:
     specifier: ^10.0.0
     version: 10.0.0
+  nanostores:
+    specifier: ^1.1.0
+    version: 1.1.0
   pdf-extraction:
     specifier: ^1.0.2
     version: 1.0.2
@@ -3695,6 +3698,11 @@ packages:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
+
+  /nanostores@1.1.0:
+    resolution: {integrity: sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==}
+    engines: {node: ^20.0.0 || >=22.0.0}
     dev: false
 
   /napi-macros@2.2.2:

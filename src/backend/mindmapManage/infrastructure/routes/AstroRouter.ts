@@ -1,11 +1,11 @@
-import { type IMindmapUseCases } from "../../@core-contracts/application/useCases";
+import { type MindmapUseCases } from "../../application/UseCases";
 import { type APIContext } from "astro";
-import { type fileUploadParams } from "../../../fileManage/@core-contracts/application/useCases";
+import { type FileUploadDTO } from "../../../fileManage/@core-contracts/dtos";
 
 export class AstroRouter {
-  constructor(private mindmapUseCases: any) {}
+  constructor(private mindmapUseCases: MindmapUseCases) {}
   getText = async ({ params }: APIContext) => {
-    const { fileId } = params;
+    const fileId = params.fileId as string;
     console.log({ fileId });
     const text = await this.mindmapUseCases.getText(fileId);
     return new Response(text?.content, { status: 200 });
@@ -20,7 +20,7 @@ export class AstroRouter {
     }
     console.log({ file });
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileParams: fileUploadParams = {
+    const fileParams: FileUploadDTO = {
       id: fileId,
       name: file.name,
       buffer,
@@ -32,10 +32,10 @@ export class AstroRouter {
       fileParams
     );
     console.log({ fileUrl });
-    return new Response(fileUrl, { status: 200 });
+    return new Response(fileUrl.text, { status: 200 });
   };
   generateNewMindmapFromStoredFile = async ({ params }: APIContext) => {
-    const { fileId } = params;
+    const fileId = params.fileId as string;
     console.log({ fileId });
     const text = await this.mindmapUseCases.generateNewMindmapFromStoredFile(
       fileId
