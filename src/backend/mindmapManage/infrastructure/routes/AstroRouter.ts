@@ -10,6 +10,19 @@ export class AstroRouter {
     const text = await this.mindmapUseCases.getText(fileId);
     return new Response(text?.content, { status: 200 });
   };
+  getAllTexts = async () => {
+    const texts = await this.mindmapUseCases.getAllTexts();
+    return new Response(JSON.stringify(texts), { status: 200 });
+  };
+  getAllIndexes = async () => {
+    const indexes = await this.mindmapUseCases.getAllIndexes();
+    return new Response(JSON.stringify(indexes), { status: 200 });
+  };
+  removeMindmap = async ({ params }: APIContext) => {
+    const fileId = params.fileId as string;
+    await this.mindmapUseCases.removeMindmap(fileId);
+    return new Response("OK", { status: 200 });
+  };
   uploadFileAndGenerateMindmap = async ({ request, params }: APIContext) => {
     const { fileId } = params;
     const formData = await request.formData();

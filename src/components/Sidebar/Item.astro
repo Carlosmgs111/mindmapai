@@ -6,10 +6,12 @@ const { isActive, href, label, classIcon, title } = Astro.props;
 <li
   class={sc(
     "bg-gray-700/40 rounded-lg hover:bg-gray-700/90",
-    "transition-all font-semibold text-md cursor-pointer",
+    "transition-all font-semibold cursor-pointer",
     isActive && "bg-gray-700/90"
   )}
   title={title}
 >
-  <a href={href} class="block px-4 py-2"><i class={sc("mr-4 align-middle", classIcon)}></i>{label}</a>
+  <a href={href} class="block px-4 py-2"
+    ><i class={sc("mr-4 align-middle", classIcon)}></i>{label}</a
+  >
 </li>

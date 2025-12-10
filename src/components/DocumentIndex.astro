@@ -1,0 +1,38 @@
+---
+const id = Astro.props.id;
+---
+
+<span class="p-4 w-full font-[500] overflow-hidden text-ellipsis table-cell"
+  >{id}</span
+>
+<div class="flex gap-1 p-4 justify-end">
+  <button
+    class={`p-2 rounded-lg bx bx-trash text-red-500 hover:bg-red-500/50 transition-all`}
+    id="delete-button"
+    data-id={id}
+    title="Eliminar"></button>
+</div>
+
+<script>
+  const deleteButton = document.querySelector(
+    "#delete-button"
+  ) as HTMLButtonElement;
+
+  const deleteDocument = async (e: Event) => {
+    e.preventDefault();
+    const result = window.confirm(
+      "Esta a punto de eliminar el archivo, esta seguro de continuar?"
+    );
+    if (!result) {
+      return;
+    }
+    const document = (e.target as HTMLButtonElement).dataset.id;
+    const res = await fetch(`/api/mindmap/${document}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      window.location.reload();
+    }
+  };
+  deleteButton.addEventListener("click", deleteDocument);
+</script>

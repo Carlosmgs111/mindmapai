@@ -1,9 +1,9 @@
 ---
 import { sc } from "../utils/sc";
-const { uploadEndpoint } = Astro.props;
+const { uploadEndpoint, id } = Astro.props;
 ---
 
-<form class="flex gap-2 items-center text-gray-200">
+<form id={id} class={sc("flex gap-2 items-center text-gray-200")}>
   <input class="hidden" id="fileInput" type="file" name="file" accept=".pdf" />
   <label
     id="fileLabel"
@@ -26,92 +26,92 @@ const { uploadEndpoint } = Astro.props;
 </form>
 
 <script>
-import { fileStore } from "../stores/files";
+  import { fileStore } from "../stores/files";
 
-document.addEventListener("astro:page-load", () => {
-  const fileStored = fileStore.get();
-  const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-  const uploadButton = document.getElementById("uploadButton");
-  const fileLabel = document.getElementById("fileLabel");
+  document.addEventListener("astro:page-load", () => {
+    const fileStored = fileStore.get();
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    const uploadButton = document.getElementById("uploadButton");
+    const fileLabel = document.getElementById("fileLabel");
 
-  const updateLabel = () => {
-    if (fileLabel && fileInput?.files && fileInput.files.length > 0) {
-      const fileNames = Array.from(fileInput.files)
-        .map((file: File) => file.name)
-        .join(", ");
-      fileLabel.innerHTML = `<i class="bx bx-file-detail mr-2 align-middle text-xl"></i>${fileNames}`;
-    }
-  };
+    const updateLabel = () => {
+      if (fileLabel && fileInput?.files && fileInput.files.length > 0) {
+        const fileNames = Array.from(fileInput.files)
+          .map((file: File) => file.name)
+          .join(", ");
+        fileLabel.innerHTML = `<i class="bx bx-file-detail mr-2 align-middle text-xl"></i>${fileNames}`;
+      }
+    };
 
-  // Restaurar archivo del estado
-  if (fileStored.indexes[0]) {
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(fileStored.files[fileStored.indexes[0]] as File);
-    fileInput.files = dataTransfer.files;
-    updateLabel(); // Actualizar el label después de restaurar
-  }
+    // Restaurar archivo del estado
+    if (fileStored.indexes[0]) {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(fileStored.files[fileStored.indexes[0]] as File);
+      fileInput.files = dataTransfer.files;
+      updateLabel(); // Actualizar el label después de restaurar
+    }
 
-  const uploadFile = async (e: Event) => {
-    e.preventDefault();
-    const formData = new FormData();
-    
-    if (!fileInput || !fileInput.files) {
-      return;
-    }
-    
-    if (fileInput.files.length === 0) {
-      window.alert("No se selecciono ningun archivo");
-      return;
-    }
-    
-    const target = e.currentTarget as HTMLButtonElement;
-    const uploadEndpoint = target.dataset.endpoint;
-    
-    if (!uploadEndpoint) {
-      window.alert("No se proporciono un endpoint");
-      return;
-    }
-    
-    Array.from(fileInput.files).forEach((file) => {
-      formData.append("file", file);
-    });
-    
-    const res = await fetch(`${uploadEndpoint}/${crypto.randomUUID()}`, {
-      method: "POST",
-      body: formData,
-    });
-    
-    if (res.ok) {
-      window.location.reload();
-    }
-  };
+    const uploadFile = async (e: Event) => {
+      e.preventDefault();
+      const formData = new FormData();
 
-  const handleFileChange = (e: Event) => {
-    e.preventDefault();
-    
-    if (fileLabel && fileInput?.files && fileInput.files.length > 0) {
-      const fileLabelContent = Array.from(fileInput.files).map(
-        (file: File) => {
-          const fileId = crypto.randomUUID();
-          const fileIndexes = [...fileStore.get().indexes, fileId];
-          const files = { ...fileStore.get().files, [fileId]: file };
-          fileStore.set({
-            indexes: fileIndexes,
-            files,
-          });
-          return file.name;
-        }
-      );
-      fileLabel.innerHTML = `<i class="bx bx-file-detail mr-2 align-middle text-xl"></i>${fileLabelContent.join(", ")}`;
-    }
-  };
+      if (!fileInput || !fileInput.files) {
+        return;
+      }
 
-  if (uploadButton) {
-    uploadButton.addEventListener("click", uploadFile);
-  }
-  
-  if (fileInput) {
-    fileInput.addEventListener("change", handleFileChange);
-  }
-});
+      if (fileInput.files.length === 0) {
+        window.alert("No se selecciono ningun archivo");
+        return;
+      }
+
+      const target = e.currentTarget as HTMLButtonElement;
+      const uploadEndpoint = target.dataset.endpoint;
+
+      if (!uploadEndpoint) {
+        window.alert("No se proporciono un endpoint");
+        return;
+      }
+
+      Array.from(fileInput.files).forEach((file) => {
+        formData.append("file", file);
+      });
+
+      const res = await fetch(`${uploadEndpoint}/${crypto.randomUUID()}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        window.location.reload();
+      }
+    };
+
+    const handleFileChange = (e: Event) => {
+      e.preventDefault();
+
+      if (fileLabel && fileInput?.files && fileInput.files.length > 0) {
+        const fileLabelContent = Array.from(fileInput.files).map(
+          (file: File) => {
+            const fileId = crypto.randomUUID();
+            const fileIndexes = [...fileStore.get().indexes, fileId];
+            const files = { ...fileStore.get().files, [fileId]: file };
+            fileStore.set({
+              indexes: fileIndexes,
+              files,
+            });
+            return file.name;
+          }
+        );
+        fileLabel.innerHTML = `<i class="bx bx-file-detail mr-2 align-middle text-xl"></i>${fileLabelContent.join(", ")}`;
+      }
+    };
+
+    if (uploadButton) {
+      uploadButton.addEventListener("click", uploadFile);
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener("change", handleFileChange);
+    }
+  });
 </script>

@@ -1,0 +1,122 @@
+---
+import { sc } from "../utils/sc";
+
+interface Props {
+  id: string;
+  label?: string;
+  name?: string;
+  disabled?: boolean;
+}
+
+const { id, label, name, disabled = false } = Astro.props;
+---
+
+<form class="flex items-center gap-3">
+  <button
+    type="button"
+    role="switch"
+    aria-checked="false"
+    data-switch-id={id}
+    disabled={disabled}
+    class="relative inline-flex h-4 w-8 items-center rounded-full bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    <span
+      class="inline-block h-2 w-2 transform rounded-full bg-white translate-x-1 transition-transform"
+    ></span>
+  </button>
+  <input
+    type="checkbox"
+    id={id}
+    name={name}
+    disabled={disabled}
+    class={sc("sr-only", !name && "hidden")}
+  />
+  <label
+    for={id}
+    class={sc(
+      "text-sm font-medium text-gray-200 cursor-pointer select-none",
+      !label && "hidden"
+    )}
+  >
+    {label}
+  </label>
+</form>
+
+<script>
+  import { selectionMode } from "../stores/selectionMode";
+
+  document.addEventListener("astro:page-load", () => {
+    const switches = document.querySelectorAll('[role="switch"]');
+
+    switches.forEach((switchButton) => {
+      if (!(switchButton instanceof HTMLButtonElement)) return;
+
+      // Función para actualizar el UI basado en el store
+      const updateUI = (isChecked: boolean) => {
+        switchButton.setAttribute("aria-checked", String(isChecked));
+        switchButton.setAttribute("data-checked", String(isChecked));
+
+        // Actualizar clases de fondo
+        if (isChecked) {
+          switchButton.classList.remove("bg-gray-300");
+          switchButton.classList.add("bg-gray-900");
+        } else {
+          switchButton.classList.remove("bg-gray-900");
+          switchButton.classList.add("bg-gray-300");
+        }
+
+        // Actualizar posición del círculo
+        const circle = switchButton.querySelector("span");
+        if (circle) {
+          if (isChecked) {
+            circle.classList.remove("translate-x-1");
+            circle.classList.add("translate-x-5");
+          } else {
+            circle.classList.remove("translate-x-5");
+            circle.classList.add("translate-x-1");
+          }
+        }
+
+        // Sincronizar con input hidden si existe
+        const switchId = switchButton.getAttribute("data-switch-id");
+        if (switchId) {
+          const hiddenInput = document.getElementById(
+            switchId
+          ) as HTMLInputElement;
+          if (hiddenInput) {
+            hiddenInput.checked = isChecked;
+          }
+        }
+      };
+
+      // Inicializar con el valor actual del store
+      updateUI(selectionMode.get());
+
+      // Suscribirse a cambios en el store
+      const unsubscribe = selectionMode.subscribe((value) => {
+        updateUI(value);
+      });
+
+      // Click handler: solo actualiza el store
+      switchButton.addEventListener("click", () => {
+        if (switchButton.disabled) return;
+
+        // Toggle el valor en el store
+        selectionMode.set(!selectionMode.get());
+
+        // Disparar evento personalizado (opcional)
+        switchButton.dispatchEvent(
+          new CustomEvent("switch-change", {
+            detail: { checked: selectionMode.get() },
+            bubbles: true,
+          })
+        );
+      });
+
+      // Cleanup cuando el componente se desmonta
+      document.addEventListener("astro:before-swap", () => {
+        unsubscribe();
+      });
+    });
+  });
+</script>

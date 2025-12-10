@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import DashBoardLayout from "../layouts/DashboardLayout.astro";
 import FileSelector from "../components/FileSelector.astro";
 import FlowStep from "../components/FlowStep.astro";
+import { sc } from "../utils/sc";
 
 const stylesOptions = [
   {
@@ -32,7 +33,46 @@ const stylesOptions = [
         >
         <div class="flex flex-col gap-4 border-l-4 border-gray-600 pl-5 mt-8">
           <FlowStep title="📄 Selecciona un PDF">
-            <FileSelector />
+            <div class="">
+              <form id="file-options" class="flex gap-2 mb-2 text-sm">
+                <label class="w-full">
+                  <input
+                    type="radio"
+                    name="file:options"
+                    value="upload"
+                    class="hidden peer"
+                    checked
+                  />
+                  <span
+                    class="block p-2 text-center border border-gray-700 peer-checked:border-gray-700/80 hover:bg-gray-700 rounded-lg peer-checked:bg-gray-600"
+                  >
+                   <i class="bx bx-arrow-from-bottom-stroke mr-2 my-auto align-middle" /> Cargar PDF
+                  </span>
+                </label>
+                <label class="w-full">
+                  <input
+                    type="radio"
+                    name="file:options"
+                    value="library"
+                    class="hidden peer"
+                  />
+                  <span
+                    class="block p-2 text-center border border-gray-700 peer-checked:border-gray-700/80 hover:bg-gray-700 rounded-lg peer-checked:bg-gray-600"
+                  >
+                    <i class="bx bx-arrow-from-top-stroke mr-2 my-auto align-middle" />Seleccionar PDF de
+                    la biblioteca
+                  </span>
+                </label>
+              </form>
+              <div>
+                <FileSelector id="option:upload" />
+                <span
+                  id="option:library"
+                  class="block w-full p-4 hover:bg-gray-700/50 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer"
+                  >Archivo seleccionado de la biblioteca</span
+                >
+              </div>
+            </div>
           </FlowStep>
           <FlowStep
             title="🤔 Elige el estilo de pensamiento"
@@ -76,24 +116,53 @@ const stylesOptions = [
   import { fileStore } from "../stores/files";
   import type { IndexFile } from "../stores/files";
 
-  const generateBtn = document.getElementById("generate") as HTMLButtonElement;
-  const generateMindmap = async () => {
-    const formData = new FormData();
-    const fileIndex: IndexFile = fileStore.get();
-    const file = fileIndex.files[fileIndex.indexes[0]];
-    if (!file) {
-      window.alert("No se selecciono ningun archivo");
-      return;
-    }
-    formData.append("file", file);
-    const res = await fetch(`/api/mindmap/${fileIndex.indexes[0]}`, {
-      method: "POST",
-      body: formData,
-    });
-    console.log(res);
-    if (res.ok) {
-      window.location.reload();
-    }
-  };
-  generateBtn.addEventListener("click", generateMindmap);
+  document.addEventListener("astro:page-load", () => {
+    const fileOptions = document.getElementById(
+      "file-options"
+    ) as HTMLFormElement;
+    const generateBtn = document.getElementById(
+      "generate"
+    ) as HTMLButtonElement;
+    const optionUpload = document.getElementById(
+      "option:upload"
+    ) as HTMLFormElement;
+    const optionLibrary = document.getElementById(
+      "option:library"
+    ) as HTMLFormElement;
+    optionLibrary.classList.add("hidden");
+    const onChange = (e: Event) => {
+      const target = e.currentTarget as HTMLFormElement;
+      const fileOption = target.querySelector(
+        'input[name="file:options"]:checked'
+      ) as HTMLInputElement;
+      console.log(fileOption.value);
+      if (fileOption.value === "library") {
+        optionUpload.classList.add("hidden");
+        optionLibrary.classList.remove("hidden");
+      } else {
+        optionUpload.classList.remove("hidden");
+        optionLibrary.classList.add("hidden");
+      }
+    };
+    const generateMindmap = async () => {
+      const formData = new FormData();
+      const fileIndex: IndexFile = fileStore.get();
+      const file = fileIndex.files[fileIndex.indexes[0]];
+      if (!file) {
+        window.alert("No se selecciono ningun archivo");
+        return;
+      }
+      formData.append("file", file);
+      const res = await fetch(`/api/mindmap/${fileIndex.indexes[0]}`, {
+        method: "POST",
+        body: formData,
+      });
+      console.log(res);
+      if (res.ok) {
+        window.location.reload();
+      }
+    };
+    generateBtn.addEventListener("click", generateMindmap);
+    fileOptions.addEventListener("change", onChange);
+  });
 </script>

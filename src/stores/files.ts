@@ -1,7 +1,7 @@
 import { atom } from "nanostores";
 
 export type IndexFile = {
-  indexes: number[];
+  indexes: string[];
   files: {
     [id: string]: File | null;
   };

@@ -23,19 +23,20 @@ export class MindmapUseCases {
     if (!text) {
       throw new Error("Text not extracted");
     }
-    await this.repository.saveText(fileParams.id, text.text);
+    await this.repository.saveTextById(fileParams.id, text.text);
     return text;
   };
   removeMindmap = async (id: string) => {
-    // await this.repository.removeText(id);
-    // await this.fileManagerUseCases.removeFile(id);
+    await this.repository.deleteTextById(id);
+    // await this.fileManagerUseCases.deleteFile(id);
+    return true;
   };
   generateNewMindmapFromStoredFile = async (fileId: string) => {
     const text = await this.extractText(fileId);
     if (!text) {
       throw new Error("Text not extracted");
     }
-    await this.repository.saveText(fileId, text.text);
+    await this.repository.saveTextById(fileId, text.text);
     return text;
   };
   extractText = async (fileId: string) => {
@@ -44,7 +45,15 @@ export class MindmapUseCases {
     return text;
   };
   getText = async (fileId: string) => {
-    const text = await this.repository.getText(fileId);
+    const text = await this.repository.getTextById(fileId);
     return text;
+  };
+  getAllTexts = async () => {
+    const texts = await this.repository.getAllTexts();
+    return texts;
+  };
+  getAllIndexes = async () => {
+    const indexes = await this.repository.getAllIndexes();
+    return indexes;
   };
 }
