@@ -26,7 +26,7 @@ const { uploadEndpoint, id  , class:className } = Astro.props;
 </form>
 
 <script>
-  import { fileStore } from "../stores/files";
+  import { fileStore, setStagedFiles, setFiles } from "../stores/files";
 
   document.addEventListener("astro:page-load", () => {
     const fileStored = fileStore.get();
@@ -98,13 +98,9 @@ const { uploadEndpoint, id  , class:className } = Astro.props;
         const fileLabelContent = Array.from(fileInput.files).map(
           (file: File) => {
             const fileId = crypto.randomUUID();
-            const fileIndexes = [...fileStore.get().indexes, fileId];
             const files = { ...fileStore.get().files, [fileId]: file };
-            fileStore.set({
-              indexes: fileIndexes,
-              stagedIndexes: [...fileStore.get().stagedIndexes, fileId],
-              files,
-            });
+            setFiles(files);
+            setStagedFiles([fileId]);
             return file.name;
           }
         );
