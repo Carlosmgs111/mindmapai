@@ -1,5 +1,5 @@
 export interface AICompletionDTO {
-    systemPrompt: string;
+    systemPrompt?: string;
     userPrompt: string;
 }
 

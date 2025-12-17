@@ -10,8 +10,8 @@ export class AIUsesCases {
   // private promptBuilder: PromptBuilder
   {}
 
-  async *streamCompletion(dto: AICompletionDTO) {
-    const { systemPrompt, userPrompt } = dto;
+  async *streamCompletion(command: AICompletionDTO) {
+    const { systemPrompt, userPrompt } = command;
     // const chunks = await this.textChunker.chunkText(userPrompt);
     // const prompt = await this.promptBuilder.buildPrompt(chunks);
     for await (const chunk of this.aiProvider.streamCompletion(userPrompt)) {

@@ -42,4 +42,39 @@ export class AstroRouter {
     );
     return new Response(file, { status: 200 });
   };
+
+  async generateMindmapFromFileStream({ request, params }: APIContext) {
+    const { id } = params;
+    const contentType = request.headers.get("content-type");
+    if (contentType?.includes("multipart/form-data")) {
+      return new Response("Not implemented", { status: 501 });
+    }
+    const mindmapUseCases = this.mindmapUseCases;
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          const encoder = new TextEncoder();
+          for await (const chunk of mindmapUseCases.selectFileAndGenerateMindmapStream(
+            id as string,
+            (await request.json()).fileId as string
+          )) {
+            controller.enqueue(encoder.encode(chunk));
+          }
+          controller.close();
+        } catch (error) {
+          console.log(error);
+          controller.error(error);
+        }
+      },
+    });
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Cache-Control",
+      },
+    });
+  }
 }
