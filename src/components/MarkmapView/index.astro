@@ -1,0 +1,142 @@
+---
+interface Props {
+  className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div
+  class={`markmap-container relative w-full h-full bg-gray-800 rounded-lg overflow-hidden ${className}`}
+>
+  <svg data-type="markmap" class="markmap-svg w-full h-full"></svg>
+  
+  <div
+    class="absolute bottom-4 right-4 flex flex-col gap-2 bg-gray-700 rounded-lg shadow-lg p-2 z-10 text-xl"
+  >
+    <button
+      class="zoom-in px-3 py-2 hover:bg-gray-600 rounded transition-colors bx bx-search-plus aspect-square"
+      title="Zoom In"
+    ></button>
+    <button
+      class="zoom-out px-3 py-2 hover:bg-gray-600 rounded transition-colors bx bx-search-minus aspect-square"
+      title="Zoom Out"
+    ></button>
+    <button
+      class="fit-view px-3 py-2 hover:bg-gray-600 rounded transition-colors bx bx-fullscreen aspect-square"
+      title="Fit to View"
+    ></button>
+    <button
+      class="reset-view px-3 py-2 hover:bg-gray-600 rounded transition-colors bx bx-repeat-alt-2 aspect-square"
+      title="Reset View"
+    ></button>
+  </div>
+
+  <!-- Mensaje cuando no hay contenido -->
+  <div
+    class="empty-state absolute inset-0 flex items-center justify-center pointer-events-none opacity-100 transition-opacity"
+  >
+    <div class="text-center text-gray-400">
+     <i class="bx bx-search-big text-6xl"></i>
+      <p class="text-lg font-medium">No hay contenido para visualizar</p>
+      <p class="text-sm mt-2">Edita el markdown para generar tu mindmap</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { MarkMapViewer } from "./lib/MarkmapViewer";
+
+  let viewerInstances: MarkMapViewer[] = [];
+
+  document.addEventListener("astro:page-load", () => {
+    const containers = document.querySelectorAll(".markmap-container");
+    containers.forEach((container) => {
+      const viewer = new MarkMapViewer(container as HTMLElement);
+      viewerInstances.push(viewer);
+    });
+  });
+
+  document.addEventListener("astro:before-swap", () => {
+    viewerInstances.forEach((viewer) => {
+      viewer.destroy();
+    });
+    viewerInstances = [];
+  });
+</script>
+
+<style>
+  .markmap-container {
+    min-height: 400px;
+  }
+
+  .markmap-svg {
+    cursor: grab;
+  }
+
+  .markmap-svg:active {
+    cursor: grabbing;
+  }
+  .markmap-svg {
+    shape-rendering: geometricPrecision;
+  }
+  :global(.markmap) {
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 14px;
+  }
+  :global(.markmap-node) {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  :global(.markmap-node:hover) {
+    opacity: 0.85;
+  }
+
+  :global(.markmap-node > circle) {
+    fill: currentColor;
+    /* stroke: #fff; */
+    stroke-width: 2;
+  }
+  :global(.markmap-node > g) {
+    pointer-events: none;
+  }
+  :global(.markmap-node-text) {
+    fill: #1c5fbd;
+    font-weight: 500;
+  }
+  :global(.markmap-foreign) {
+    color: #efefef;
+  }
+  :global(.markmap-link) {
+    stroke-width: 1.5px;
+    /* fill: none; */
+    /* opacity: 0.6; */
+  }
+  :global(.markmap) {
+    --stroke-width: 0.25rem;
+  }
+  :global(.markmap path) {
+    stroke-width: var(--stroke-width);
+  }
+
+  :global(.markmap line) {
+    stroke-width: var(--stroke-width);
+  }
+
+  :global(.markmap circle) {
+    stroke-width: var(--stroke-width);
+  }
+
+  :global(.markmap a) {
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  :global(.markmap a:hover) {
+    color: #2fdfd6;
+  }
+</style>

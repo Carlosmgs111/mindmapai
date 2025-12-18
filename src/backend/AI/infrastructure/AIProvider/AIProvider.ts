@@ -22,7 +22,6 @@ export class AISDKProvider implements AIProvider {
       for await (const chunk of fullStream as any) {
         if (chunk.type === "text-delta") {
           // response += chunk.text;
-          con
           yield chunk.text;
         }
       }

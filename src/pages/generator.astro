@@ -206,8 +206,33 @@ const stylesOptions = [
         window.location.reload();
       }
     };
-    
-    generateBtn.addEventListener("click", generateMindmap);
+
+    const generateMindmapStream = async () => {
+      const fileIndex: IndexFile = fileStore.get();
+      let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
+      let headers: any = { "Content-Type": "application/json" };
+      const response = await fetch(`/api/mindmaps/stream/${crypto.randomUUID()}`, {
+        method: "POST",
+        headers,
+        body,
+      });
+      if (!response.body) {
+        return;
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      if (response.ok) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const data = decoder.decode(value, { stream: true });
+          // console.log(JSON.parse(data));
+          console.log(data);
+        }
+      }
+    };
+
+    generateBtn.addEventListener("click", generateMindmapStream);
     fileOptions.addEventListener("change", onChange);
   });
 </script>

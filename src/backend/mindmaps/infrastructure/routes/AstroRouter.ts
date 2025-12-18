@@ -43,7 +43,7 @@ export class AstroRouter {
     return new Response(file, { status: 200 });
   };
 
-  async generateMindmapFromFileStream({ request, params }: APIContext) {
+  generateMindmapFromFileStream = async ({ request, params }: APIContext) => {
     const { id } = params;
     const contentType = request.headers.get("content-type");
     if (contentType?.includes("multipart/form-data")) {
