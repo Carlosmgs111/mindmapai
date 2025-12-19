@@ -136,20 +136,20 @@ import { currentMindmap } from "@/features/mindmap-editor/stores/currentMindmap"
 ## ✅ Checklist de Migración
 
 ### Fase 1: Preparación
-- [ ] Crear estructura de directorios `features/` y `shared/`
-- [ ] Configurar path aliases en `tsconfig.json`
+- ✅ Crear estructura de directorios `features/` y `shared/`
+- ✅ Configurar path aliases en `tsconfig.json`
 - [ ] Documentar la nueva estructura al equipo
 
 ### Fase 2: Migrar Shared
-- [ ] Mover utilidades a `shared/utils/`
-  - [ ] `sc.ts`
-  - [ ] `shuffleArray.ts`
+- ✅ Mover utilidades a `shared/utils/`
+  - ✅ `sc.ts`
+  - ✅ `shuffleArray.ts`
 - [ ] Mover componentes UI a `shared/components/ui/`
-  - [ ] `Switch.astro`
+  - ✅ `Switch.astro`
   - [ ] `Button.astro` (si existe)
-- [ ] Mover componentes de layout a `shared/components/layout/`
-  - [ ] `Sidebar.astro`
-  - [ ] `SidebarItem.astro`
+- ✅ Mover componentes de layout a `shared/components/layout/`
+  - ✅ `Sidebar.astro`
+  - ✅ `SidebarItem.astro`
 
 ### Fase 3: Migrar Features
 - [ ] **Feature: Mindmap Editor**

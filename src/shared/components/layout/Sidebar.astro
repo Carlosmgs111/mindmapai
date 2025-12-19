@@ -1,0 +1,50 @@
+---
+import Item from "./Item.astro";
+import { sc } from "../../utils/sc";
+
+const currentPath = Astro.url.pathname;
+
+const items = [
+  {
+    href: "/dashboard/generator",
+    label: "Generador",
+    classIcon: "bx bx-pencil-sparkles",
+    isActive: currentPath.includes("generator"),
+    title: "Generador de mindmap",
+  },
+  {
+    href: "/dashboard/mindmaps",
+    label: "Mindmaps",
+    classIcon: "bx bx-intellect",
+    isActive: currentPath.includes("mindmaps"),
+    title: "Gestion de mindmaps",
+  },
+  {
+    href: "/dashboard/files",
+    label: "Archivos",
+    classIcon: "bx bx-archive",
+    isActive: currentPath.includes("files"),
+    title: "Gestion de archivos",
+  },
+];
+---
+
+<div
+  class={sc(
+    "h-screen flex flex-col gap-6 bg-slate-800/70 p-4 text-gray-200",
+    "border-r border-gray-700 sticky top-0"
+  )}
+>
+  <div class="flex items-center text-lg font-bold my-4">
+    <a class="text-center" href="/">
+      <i class="bx bx-brain mr-4 p-3 bg-slate-700/80 rounded-lg"></i>
+      MindMap AI
+    </a>
+  </div>
+  
+  <nav>
+    <ul class={sc("flex flex-col gap-2")}>
+      {items.map((item) => <Item {...item} />)}
+    </ul>
+  </nav>
+</div>
