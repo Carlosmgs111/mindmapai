@@ -22,7 +22,7 @@ const stylesOptions = [
 <Layout title="Generador | MindMapAI">
   <DashBoardLayout>
     <div
-      class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-gray-200"
+      class="bg-slate-800 p-10 rounded-3xl border border-slate-700 text-gray-200"
     >
       <div>
         <span
@@ -33,7 +33,7 @@ const stylesOptions = [
           class="block text-gray-200 mb-2 font-semibold text-sm px-4 pb-2 w-full border-b border-gray-700"
           >Flujo para crear un nuevo MindMap</span
         >
-        <div class="flex flex-col gap-4 border-l-4 border-gray-600 pl-5 mt-8">
+        <div class="flex flex-col gap-4 border-l-4 border-cyan-600 pl-5 mt-8">
           <FlowStep title="📄 Selecciona un PDF">
             <div class="">
               <form
@@ -237,6 +237,6 @@ const stylesOptions = [
     };
 
     // generateBtn.addEventListener("click", generateMindmapStream);
-    fileOptions.addEventListener("change", onChange);
+    fileOptions && fileOptions.addEventListener("change", onChange);
   });
 </script>

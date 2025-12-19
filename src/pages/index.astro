@@ -51,28 +51,6 @@ const useCases = [
     class="min-h-screen bg-slate-950 text-slate-100 font-['Roboto'] overflow-x-hidden"
   >
     <!-- Animated Background Grid -->
-    <div class="fixed inset-0 pointer-events-none opacity-20">
-      <div
-        class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.1)_1px,transparent_1px)] bg-[length:32px_32px]"
-      >
-      </div>
-    </div>
-
-    <!-- Floating Orbs -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden">
-      <div
-        class="orb-1 absolute top-20 left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
-      >
-      </div>
-      <div
-        class="orb-2 absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"
-      >
-      </div>
-      <div
-        class="orb-3 absolute top-1/2 left-1/2 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"
-      >
-      </div>
-    </div>
 
     <div class="relative z-10">
       <!-- Header -->
@@ -80,7 +58,7 @@ const useCases = [
         <nav class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div
-              class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center"
+              class="w-10 h-10 bg-gradient-to-br from-blue-500 to-gray-400 rounded-lg flex items-center justify-center"
             >
               <svg
                 class="w-6 h-6 text-slate-950"
@@ -96,7 +74,7 @@ const useCases = [
               </svg>
             </div>
             <span
-              class="text-2xl font-bold font-['Roboto'] bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
+              class="text-2xl font-bold font-['Roboto'] bg-gradient-to-r from-blue-400 to-gray-300 bg-clip-text text-transparent"
             >
               MindForge
             </span>
@@ -126,7 +104,7 @@ const useCases = [
           class="text-7xl md:text-8xl font-['Roboto'] font-black mb-6 leading-tight slide-up"
         >
           <span
-            class="block bg-gradient-to-r from-slate-100 via-blue-100 to-cyan-200 bg-clip-text text-transparent"
+            class="block bg-gradient-to-r from-slate-100 via-blue-100 to-gray-200 bg-clip-text text-transparent"
           >
             Transforma
           </span>
@@ -134,7 +112,7 @@ const useCases = [
             documentos en
           </span>
           <span
-            class="block bg-gradient-to-r from-blue-400 via-cyan-400 to-violet-400 bg-clip-text text-transparent mt-2"
+            class="block bg-gradient-to-r from-blue-400 via-gray-400 to-violet-400 bg-clip-text text-transparent mt-2"
           >
             Mindmaps
           </span>
@@ -145,7 +123,7 @@ const useCases = [
         >
           Sube cualquier documento y obtén un mapa mental estructurado en
           segundos.
-          <span class="text-cyan-400 font-medium"
+          <span class="text-gray-400 font-medium"
             >Arquitectura nano-precisa</span
           > para visualización instantánea.
         </p>
@@ -154,7 +132,7 @@ const useCases = [
           class="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in-delayed-2"
         >
           <button
-            class="cta-primary group px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-semibold text-lg transition-all flex items-center gap-3"
+            class="cta-primary group px-8 py-4 bg-gradient-to-r from-blue-500 to-gray-500 rounded-xl font-semibold text-lg transition-all flex items-center gap-3"
             data-action="try-now"
           >
             Probar Ahora
@@ -210,7 +188,7 @@ const useCases = [
             </div>
           </div>
           <div class="text-center border-x border-slate-800">
-            <div class="text-4xl font-bold font-['Roboto'] text-cyan-400 mb-2">
+            <div class="text-4xl font-bold font-['Roboto'] text-gray-400 mb-2">
               10+
             </div>
             <div class="text-sm text-slate-500 uppercase tracking-wider">
@@ -336,8 +314,8 @@ const useCases = [
                     <div class="h-2 bg-blue-500/50 rounded w-32"></div>
                   </div>
                   <div class="flex items-center gap-2 ml-4">
-                    <span class="text-cyan-400">##</span>
-                    <div class="h-2 bg-cyan-500/50 rounded w-40"></div>
+                    <span class="text-gray-400">##</span>
+                    <div class="h-2 bg-gray-500/50 rounded w-40"></div>
                   </div>
                   <div class="flex items-center gap-2 ml-8">
                     <span class="text-violet-400">-</span>
@@ -348,8 +326,8 @@ const useCases = [
                     <div class="h-2 bg-violet-500/50 rounded w-32"></div>
                   </div>
                   <div class="flex items-center gap-2 ml-4">
-                    <span class="text-cyan-400">##</span>
-                    <div class="h-2 bg-cyan-500/50 rounded w-36"></div>
+                    <span class="text-gray-400">##</span>
+                    <div class="h-2 bg-gray-500/50 rounded w-36"></div>
                   </div>
                   <div class="flex items-center gap-2 ml-8">
                     <span class="text-violet-400">-</span>
@@ -376,7 +354,7 @@ const useCases = [
         <div class="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {
             useCases.map((useCase) => (
-              <div class="use-case-card group p-6 bg-slate-900/30 backdrop-blur-sm border border-slate-800 hover:border-cyan-500/50 rounded-xl transition-all">
+              <div class="use-case-card group p-6 bg-slate-900/30 backdrop-blur-sm border border-slate-800 hover:border-gray-500/50 rounded-xl transition-all">
                 <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">
                   {useCase.emoji}
                 </div>
@@ -393,7 +371,7 @@ const useCases = [
       <!-- CTA Section -->
       <section class="container mx-auto px-6 py-24">
         <div
-          class="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-cyan-600 rounded-3xl p-12 text-center relative overflow-hidden"
+          class="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-gray-600 rounded-3xl p-12 text-center relative overflow-hidden"
         >
           <div
             class="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:24px_24px]"
@@ -437,7 +415,7 @@ const useCases = [
         >
           <div class="flex items-center gap-3">
             <div
-              class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center"
+              class="w-8 h-8 bg-gradient-to-br from-blue-500 to-gray-400 rounded-lg flex items-center justify-center"
             >
               <svg
                 class="w-5 h-5 text-slate-950"
@@ -453,7 +431,7 @@ const useCases = [
               </svg>
             </div>
             <span
-              class="font-['Roboto'] font-bold text-xl bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
+              class="font-['Roboto'] font-bold text-xl bg-gradient-to-r from-blue-400 to-gray-300 bg-clip-text text-transparent"
             >
               MindForge
             </span>

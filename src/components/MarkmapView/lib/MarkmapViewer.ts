@@ -25,7 +25,6 @@ export class MarkMapViewer {
 
   private init() {
     this.unsubscribe = currentMindmap.subscribe((markdown: string | null) => {
-      console.log(markdown);
       if (markdown && markdown.toString().trim()) {
         this.render(markdown);
       } else {
@@ -111,7 +110,7 @@ export class MarkMapViewer {
           scriptEl.src = script.url;
           scriptEl.onload = resolve;
           scriptEl.onerror = reject;
-          // document.head.appendChild(scriptEl);
+          document.head.appendChild(scriptEl);
         });
       }
     }
