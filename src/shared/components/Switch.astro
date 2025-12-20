@@ -43,7 +43,9 @@ const { id, label, name, disabled = false } = Astro.props;
 </form>
 
 <script>
-  import { selectionMode } from "../stores/selectionMode";
+
+  // TODO This component should receive state intead import
+  import { selectionMode } from "@/features/file-management/stores/selectionMode";
 
   document.addEventListener("astro:page-load", () => {
     const switches = document.querySelectorAll('[role="switch"]');

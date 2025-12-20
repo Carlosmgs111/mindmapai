@@ -152,26 +152,26 @@ import { currentMindmap } from "@/features/mindmap-editor/stores/currentMindmap"
   - ✅ `SidebarItem.astro`
 
 ### Fase 3: Migrar Features
-- [ ] **Feature: Mindmap Editor**
-  - [ ] Crear `features/mindmap-editor/stores/currentMindmap.ts`
-  - [ ] Crear `features/mindmap-editor/types/mindmap.types.ts`
-  - [ ] Mover `components/MarkmapView/` a `features/mindmap-editor/components/`
-  - [ ] Mover `components/MindmapTextEditor/` a `features/mindmap-editor/components/`
-  - [ ] Mover `lib/MarkmapViewer.ts` a `features/mindmap-editor/lib/`
+- ✅ **Feature: Mindmap Editor**
+  - ✅ Crear `features/mindmap-editor/stores/currentMindmap.ts`
+  - ✅ Crear `features/mindmap-editor/types/mindmap.types.ts`
+  - ✅ Mover `components/MarkmapView/` a `features/mindmap-editor/components/`
+  - ✅ Mover `components/MindmapTextEditor/` a `features/mindmap-editor/components/`
+  - ✅ Mover `lib/MarkmapViewer.ts` a `features/mindmap-editor/lib/`
   
-- [ ] **Feature: File Management**
-  - [ ] Crear `features/file-management/stores/files.ts`
-  - [ ] Crear `features/file-management/stores/selectionMode.ts`
-  - [ ] Crear `features/file-management/types/file.types.ts`
-  - [ ] Mover `components/LoadedFileSelector.astro`
-  - [ ] Mover `components/LibraryFileSelector.astro`
+- ✅ **Feature: File Management**
+  - ✅ Crear `features/file-management/stores/files.ts`
+  - ✅ Crear `features/file-management/stores/selectionMode.ts`
+  - ✅ Crear `features/file-management/types/file.types.ts`
+  - ✅ Mover `components/LoadedFileSelector.astro`
+  - ✅ Mover `components/LibraryFileSelector.astro`
   
-- [ ] **Feature: Mindmap Generator**
-  - [ ] Mover `components/FlowStep.astro`
-  - [ ] Crear stores si es necesario
+- ✅ **Feature: Mindmap Generator**
+  - ✅ Mover `components/FlowStep.astro`
+  - ✅ Crear stores si es necesario
 
 ### Fase 4: Actualizar Importaciones
-- [ ] Actualizar imports en `pages/`
+- ✅ Actualizar imports en `pages/`
 - [ ] Actualizar imports en `layouts/`
 - [ ] Actualizar imports dentro de features
 - [ ] Verificar que no hay imports circulares

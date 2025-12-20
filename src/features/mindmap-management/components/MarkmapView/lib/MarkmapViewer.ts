@@ -2,7 +2,7 @@ import "markmap-toolbar/dist/style.css";
 import { currentMindmap } from "../../../stores/currentMindmap";
 import { Transformer } from "markmap-lib";
 import { Markmap, loadCSS, loadJS, deriveOptions } from "markmap-view";
-import { shuffleArray } from "../../../utils/shuffleArray";
+import { shuffleArray } from "@/shared/utils/shuffleArray";
 import colors from "./colors.neon.v1.json";
 
 export class MarkMapViewer {

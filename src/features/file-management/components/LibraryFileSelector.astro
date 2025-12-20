@@ -1,6 +1,6 @@
 ---
-import Switch from "./Switch.astro";
-import { sc } from "../utils/sc";
+import Switch from "@/shared/components/Switch.astro";
+import { sc } from "@/shared/utils/sc";
 const mode = Astro.url.searchParams.get("mode");
 ---
 
@@ -32,7 +32,7 @@ const mode = Astro.url.searchParams.get("mode");
 <script>
   import { selectionMode } from "../stores/selectionMode";
   import { fileStore, setStagedFiles } from "../stores/files";
-  import { navigate } from "astro/virtual-modules/transitions-router.js";
+  import { navigate } from "astro:transitions/client";
 
   const updateSelectButtonState = (
     button: HTMLButtonElement,
@@ -137,6 +137,7 @@ const mode = Astro.url.searchParams.get("mode");
     });
 
     const selectButtonHandler = () => {
+      console.log("click", fileStore.get());
       const fileId = fileStore.get().stagedIndexes[0];
       console.log({ fileId }, fileStore.get());
       if (!fileId) return;

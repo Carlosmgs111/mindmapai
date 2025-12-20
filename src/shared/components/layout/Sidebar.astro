@@ -1,6 +1,6 @@
 ---
-import Item from "./Item.astro";
-import { sc } from "../../utils/sc";
+import SidebarItem from "./SidebarItem.astro";
+import { sc } from "@/shared/utils/sc";
 
 const currentPath = Astro.url.pathname;
 
@@ -44,7 +44,7 @@ const items = [
   
   <nav>
     <ul class={sc("flex flex-col gap-2")}>
-      {items.map((item) => <Item {...item} />)}
+      {items.map((item) => <SidebarItem {...item} />)}
     </ul>
   </nav>
 </div>
