@@ -1,0 +1,28 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import type { Message } from "@/shared/stores/chat";
+import ChatComponent from "@/features/chat/components/Chat/Chat.astro";
+
+interface Props {
+  initialMessages?: Message[];
+  placeholder?: string;
+  maxHeight?: string;
+}
+
+const { initialMessages = [], placeholder = "Escribe un mensaje..." } =
+  Astro.props;
+---
+
+<Layout>
+  <DashboardLayout contentClass="py-8">
+    <div class="h-[calc(100vh-64px)] pb-8">
+      <ChatComponent
+        initialMessages={initialMessages}
+        placeholder={placeholder}
+      />
+    </div>
+  </DashboardLayout>
+</Layout>
+
+<script></script>

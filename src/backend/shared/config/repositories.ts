@@ -1,10 +1,19 @@
 import { Level } from "level";
 
-let db: Level;
+let textsDB: Level;
 
-export function getDB() {
-  if (!db) {
-    db = new Level("./database/level/texts", { valueEncoding: "json" });
+export function getTextsDB() {
+  if (!textsDB) {
+    textsDB = new Level("./database/level/texts", { valueEncoding: "json" });
   }
-  return db;
+  return textsDB;
+}
+
+let promptsDB: Level;
+
+export function getPromptsDB() {
+  if (!promptsDB) {
+    promptsDB = new Level("./database/level/prompts", { valueEncoding: "json" });
+  }
+  return promptsDB;
 }

@@ -27,3 +27,5 @@ uploads
 database
 .vercel
 test-*
+.claude
+docs

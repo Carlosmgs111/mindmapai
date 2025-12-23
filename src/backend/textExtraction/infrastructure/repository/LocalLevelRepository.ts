@@ -1,13 +1,13 @@
 import type { Repository } from "../../@core-contracts/repository";
 import type { TextDTO } from "../../@core-contracts/dtos";
-import { getDB } from "../../../shared/config/repositories";
+import { getTextsDB } from "../../../shared/config/repositories";
 import { Level } from "level";
 
 export class LocalLevelRepository implements Repository {
   private db: Level;
   constructor() {
     console.log("LocalLevelRepository constructor");
-    this.db = getDB();
+    this.db = getTextsDB();
   }
   saveTextById = async (index: string, text: TextDTO) => {
     try {
