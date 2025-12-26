@@ -14,7 +14,7 @@ import { AstroRouter } from "./infrastructure/routes/AstroRouter";
 const vectorStore = new LevelVectorStore({
   dbPath: "./db",
   dimensions: 1024,
-  similarityThreshold: 0.5,
+  similarityThreshold: 0.7,
 });
 
 const embeddingProvider = new AIEmbeddingProvider();

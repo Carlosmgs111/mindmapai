@@ -18,6 +18,7 @@ export interface VectorDBConfig {
   dimensions: number;
   similarityThreshold?: number;
 }
+
 export interface VectorRepository {
   initialize(): Promise<void>;
   addDocument(document: Omit<VectorDocument, "timestamp">): Promise<void>;

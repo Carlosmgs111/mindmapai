@@ -1,3 +1,7 @@
+/*
+ ? This was generated with Claude
+ */
+
 import type { VectorRepository } from "../../@core-contracts/vectorRepository";
 import { getEmbeddingsDB } from "../../../shared/config/repositories";
 
@@ -95,6 +99,7 @@ export class LevelVectorStore implements VectorRepository {
         queryEmbedding,
         document.embedding
       );
+      console.log({ similarity });
       if (similarity >= this.similarityThreshold) {
         results.push({ document, similarity });
       }

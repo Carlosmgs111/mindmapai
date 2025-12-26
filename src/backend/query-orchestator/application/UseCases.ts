@@ -9,9 +9,11 @@ export class UseCases {
     const similarQuery = (
       await this.embeddingAPI.search(command.userPrompt)
     ).map((query) => query.document.content);
-    const context = `Response a lasiguiente consulta: ${
-      command.userPrompt
-    }\n basado en el siguiente contexto: ${similarQuery.join("\n")}`;
+    console.log({ similarQuery });
+    const context = `
+    # Response a la siguiente consulta: ${command.userPrompt}
+    ${similarQuery.length > 0 ? `\nContexto: ${similarQuery.join("\n")}` : ""}
+    `;
     for await (const chunk of this.aiApi.streamCompletion("", {
       ...command,
       userPrompt: context,
