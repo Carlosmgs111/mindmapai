@@ -4,7 +4,7 @@ import { sc } from "@/shared/utils/sc";
 
 const currentPath = Astro.url.pathname;
 
-const items = [
+const mainItems = [
   {
     href: "/dashboard/generator",
     label: "Generador",
@@ -34,6 +34,14 @@ const items = [
     title: "Chat",
   },
 ];
+
+const microServicesItems: any[] = [{
+  href: "/services/chunking",
+  label: "Chunking",
+  classIcon: "bx bx-table-rows-split",
+  isActive: currentPath.includes("chunking"),
+  title: "Gestion de servicios",
+}]
 ---
 
 <div
@@ -51,7 +59,11 @@ const items = [
   
   <nav>
     <ul class={sc("flex flex-col gap-2")}>
-      {items.map((item) => <SidebarItem {...item} />)}
+      {mainItems.map((item) => <SidebarItem {...item} />)}
+      <li class="flex items-center gap-2 text-gray-400 border-b border-gray-700 py-2 uppercase px-4 font-semibold">
+        <i class="bx bx-layers"></i>Services
+      </li>
+      {microServicesItems.map((item:any) => <SidebarItem {...item} />)}
     </ul>
   </nav>
 </div>

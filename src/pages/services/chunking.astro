@@ -1,0 +1,449 @@
+---
+// ? This was generated using Claude
+import Layout from "@/layouts/Layout.astro";
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+---
+
+<Layout>
+  <DashboardLayout>
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <header class="mb-8">
+        <h1 class="text-4xl font-bold text-cyan-400 mb-2">Document Chunking</h1>
+        <p class="text-slate-400">
+          Divide tu documento en fragmentos procesables
+        </p>
+      </header>
+
+      <!-- Main Content -->
+      <div class="">
+        <!-- Input Section -->
+        <div class="space-y-6 w-full">
+          <!-- Textarea -->
+          <div
+            class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6"
+          >
+            <label
+              for="documentInput"
+              class="block text-sm font-medium text-cyan-400 mb-2"
+            >
+              Documento a trocear
+            </label>
+            <textarea
+              id="documentInput"
+              rows="12"
+              class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none font-mono text-sm"
+              placeholder="Pega aquí tu documento..."></textarea>
+          </div>
+
+          <!-- Configuration Form -->
+          <form
+            id="chunkingForm"
+            class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6 space-y-4"
+          >
+            <h2 class="text-xl font-semibold text-cyan-400 mb-4">
+              Configuración
+            </h2>
+
+            <!-- Strategy -->
+            <div>
+              <label
+                for="strategy"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Estrategia
+              </label>
+              <select
+                id="strategy"
+                name="strategy"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="fixed">Fixed</option>
+                <option value="sentence">Sentence</option>
+                <option value="paragraph" selected>Paragraph</option>
+                <option value="semantic">Semantic</option>
+                <option value="recursive">Recursive</option>
+              </select>
+            </div>
+
+            <!-- Chunk Size -->
+            <div>
+              <label
+                for="chunkSize"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Chunk Size
+              </label>
+              <input
+                type="number"
+                id="chunkSize"
+                name="chunkSize"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder="Ej: 1000"
+              />
+            </div>
+
+            <!-- Chunk Overlap -->
+            <div>
+              <label
+                for="chunkOverlap"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Chunk Overlap
+              </label>
+              <input
+                type="number"
+                id="chunkOverlap"
+                name="chunkOverlap"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder="Ej: 200"
+              />
+            </div>
+
+            <!-- Separators -->
+            <div>
+              <label
+                for="separators"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Separadores (separados por coma)
+              </label>
+              <input
+                type="text"
+                id="separators"
+                name="separators"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder='Ej: "\n\n", "\n", " "'
+              />
+            </div>
+
+            <!-- Min Chunk Size -->
+            <div>
+              <label
+                for="minChunkSize"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Min Chunk Size
+              </label>
+              <input
+                type="number"
+                id="minChunkSize"
+                name="minChunkSize"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder="Ej: 100"
+              />
+            </div>
+
+            <!-- Max Chunk Size -->
+            <div>
+              <label
+                for="maxChunkSize"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Max Chunk Size
+              </label>
+              <input
+                type="number"
+                id="maxChunkSize"
+                name="maxChunkSize"
+                class="w-full bg-slate-900/50 border border-slate-600 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder="Ej: 2000"
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              id="submitButton"
+            >
+              Trocear
+            </button>
+          </form>
+          <div class="space-y-6">
+            <!-- Result Display -->
+            <div
+              class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6"
+            >
+              <h2 class="text-xl font-semibold text-cyan-400 mb-4">
+                Resultado
+              </h2>
+
+              <!-- Loading State -->
+              <div id="loadingState" class="hidden text-center py-8">
+                <div
+                  class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"
+                >
+                </div>
+                <p class="text-slate-400 mt-3">Procesando documento...</p>
+              </div>
+
+              <!-- Error State -->
+              <div
+                id="errorState"
+                class="hidden bg-red-900/20 border border-red-700 rounded-md p-4"
+              >
+                <p class="text-red-400 text-sm" id="errorMessage"></p>
+              </div>
+
+              <!-- Result -->
+              <div id="resultContainer" class="hidden">
+                <div
+                  class="bg-slate-900/50 border border-slate-600 rounded-md p-4 overflow-auto max-h-[600px]"
+                >
+                  <pre
+                    id="resultJson"
+                    class="text-slate-200 text-xs font-mono whitespace-pre-wrap">
+                  </pre>
+                </div>
+
+                <!-- Metadata Summary -->
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                  <div
+                    class="bg-slate-900/30 border border-slate-700 rounded-md p-3"
+                  >
+                    <p class="text-xs text-slate-500 mb-1">Chunks generados</p>
+                    <p
+                      class="text-2xl font-bold text-cyan-400"
+                      id="chunksCount"
+                    >
+                      0
+                    </p>
+                  </div>
+                  <div
+                    class="bg-slate-900/30 border border-slate-700 rounded-md p-3"
+                  >
+                    <p class="text-xs text-slate-500 mb-1">Tiempo de proceso</p>
+                    <p
+                      class="text-2xl font-bold text-cyan-400"
+                      id="processingTime"
+                    >
+                      0ms
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div id="emptyState" class="text-center py-12 text-slate-500">
+                <svg
+                  class="mx-auto h-12 w-12 text-slate-600 mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                <p>Los resultados aparecerán aquí</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+      </div>
+    </div>
+  </DashboardLayout>
+</Layout>
+
+<script>
+  interface ChunkingConfig {
+    strategy:
+      | "fixed"
+      | "sentence"
+      | "paragraph"
+      | "semantic"
+      | "recursive"
+      | "";
+    chunkSize?: number;
+    chunkOverlap?: number;
+    separators?: string[];
+    minChunkSize?: number;
+    maxChunkSize?: number;
+  }
+
+  interface ChunkingResponse {
+    documentId: string;
+    chunks: Array<{
+      id: string;
+      content: string;
+      metadata?: Record<string, unknown>;
+    }>;
+    metadata: {
+      originalLength: number;
+      chunksCount: number;
+      strategy: string;
+      processingTime: number;
+    };
+  }
+
+  const form = document.getElementById("chunkingForm") as HTMLFormElement;
+  const documentInput = document.getElementById(
+    "documentInput"
+  ) as HTMLTextAreaElement;
+  const submitButton = document.getElementById(
+    "submitButton"
+  ) as HTMLButtonElement;
+
+  const loadingState = document.getElementById(
+    "loadingState"
+  ) as HTMLDivElement;
+  const errorState = document.getElementById("errorState") as HTMLDivElement;
+  const emptyState = document.getElementById("emptyState") as HTMLDivElement;
+  const resultContainer = document.getElementById(
+    "resultContainer"
+  ) as HTMLDivElement;
+
+  const resultJson = document.getElementById("resultJson") as HTMLPreElement;
+  const chunksCount = document.getElementById(
+    "chunksCount"
+  ) as HTMLParagraphElement;
+  const processingTime = document.getElementById(
+    "processingTime"
+  ) as HTMLParagraphElement;
+  const errorMessage = document.getElementById(
+    "errorMessage"
+  ) as HTMLParagraphElement;
+
+  function showLoading() {
+    emptyState.classList.add("hidden");
+    errorState.classList.add("hidden");
+    resultContainer.classList.add("hidden");
+    loadingState.classList.remove("hidden");
+    submitButton.disabled = true;
+  }
+
+  function showError(message: string) {
+    loadingState.classList.add("hidden");
+    errorMessage.textContent = message;
+    errorState.classList.remove("hidden");
+    submitButton.disabled = false;
+  }
+
+  function syntaxHighlight(json: string): string {
+    json = json
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    return json.replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      (match) => {
+        let cls = "text-amber-400"; // number
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = "text-cyan-400"; // key
+          } else {
+            cls = "text-green-400"; // string
+          }
+        } else if (/true|false/.test(match)) {
+          cls = "text-purple-400"; // boolean
+        } else if (/null/.test(match)) {
+          cls = "text-red-400"; // null
+        }
+        return `<span class="${cls}">${match}</span>`;
+      }
+    );
+  }
+
+  function showResult(data: ChunkingResponse) {
+    loadingState.classList.add("hidden");
+    errorState.classList.add("hidden");
+    emptyState.classList.add("hidden");
+
+    const jsonString = JSON.stringify(data, null, 2);
+    resultJson.innerHTML = syntaxHighlight(jsonString);
+    chunksCount.textContent = data.metadata.chunksCount.toString();
+    processingTime.textContent = `${data.metadata.processingTime}ms`;
+
+    resultContainer.classList.remove("hidden");
+    submitButton.disabled = false;
+  }
+
+  function getFormData(): ChunkingConfig {
+    const formData = new FormData(form);
+
+    const config: ChunkingConfig = {
+      strategy: (formData.get("strategy") as ChunkingConfig["strategy"]) || "",
+    };
+
+    const chunkSize = formData.get("chunkSize") as string;
+    if (chunkSize) config.chunkSize = parseInt(chunkSize, 10);
+
+    const chunkOverlap = formData.get("chunkOverlap") as string;
+    if (chunkOverlap) config.chunkOverlap = parseInt(chunkOverlap, 10);
+
+    const separatorsInput = formData.get("separators") as string;
+    if (separatorsInput) {
+      config.separators = separatorsInput
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+    }
+
+    const minChunkSize = formData.get("minChunkSize") as string;
+    if (minChunkSize) config.minChunkSize = parseInt(minChunkSize, 10);
+
+    const maxChunkSize = formData.get("maxChunkSize") as string;
+    if (maxChunkSize) config.maxChunkSize = parseInt(maxChunkSize, 10);
+
+    return config;
+  }
+
+  async function handleSubmit(e: Event) {
+    e.preventDefault();
+
+    const documentText = documentInput.value.trim();
+
+    if (!documentText) {
+      showError("Por favor ingresa un documento para trocear");
+      return;
+    }
+
+    const config = getFormData();
+
+    if (!config.strategy) {
+      showError("Por favor selecciona una estrategia");
+      return;
+    }
+
+    showLoading();
+
+    try {
+      const response = await fetch("http://localhost:4322/api/chunking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: documentText,
+          config,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `Error ${response.status}: ${response.statusText}`
+        );
+      }
+
+      const data: ChunkingResponse = await response.json();
+      showResult(data);
+    } catch (error) {
+      showError(
+        error instanceof Error
+          ? error.message
+          : "Error al procesar el documento"
+      );
+    }
+  }
+
+  form.addEventListener("submit", handleSubmit);
+</script>
