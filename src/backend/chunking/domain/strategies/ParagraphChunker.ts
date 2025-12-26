@@ -1,7 +1,7 @@
 // src/lib/chunking/ParagraphChunker.ts
 
 import { BaseChunker } from './BaseChunker';
-import type { Chunk, ChunkMetadata } from '../../../@core-contracts/chunking';
+import type { Chunk, ChunkMetadata } from '../../@core-contracts/chunking';
 
 export class ParagraphChunker extends BaseChunker {
   private maxChunkSize: number;
@@ -45,12 +45,12 @@ export class ParagraphChunker extends BaseChunker {
         }
 
         // Dividir párrafo largo por oraciones
-        const sentenceChunker = new (await import('./SentenceChunker')).SentenceChunker(
-          this.maxChunkSize
-        );
+        const { SentenceChunker } = await import('./SentenceChunker');
+        const sentenceChunker = new SentenceChunker(this.maxChunkSize);
         const subChunks = await sentenceChunker.chunk(paragraph, metadata);
 
-        subChunks.forEach(async subChunk => {
+        // FIX: Usar for...of en lugar de forEach para manejar async correctamente
+        for (const subChunk of subChunks) {
           chunks.push(
             await this.createChunk(
               subChunk.content,
@@ -66,7 +66,7 @@ export class ParagraphChunker extends BaseChunker {
           );
           startPos += subChunk.content.length;
           chunkIndex++;
-        });
+        }
 
         continue;
       }

@@ -1,7 +1,7 @@
 // src/lib/chunking/SentenceChunker.ts
 
 import { BaseChunker } from './BaseChunker';
-import type { Chunk, ChunkMetadata } from '../../../@core-contracts/chunking';
+import type { Chunk, ChunkMetadata } from '../../@core-contracts/chunking';
 
 export class SentenceChunker extends BaseChunker {
   private maxChunkSize: number;

@@ -1,6 +1,6 @@
 // src/lib/chunking/BaseChunker.ts
 
-import type { Chunk, ChunkMetadata } from "../../../@core-contracts/chunking";
+import type { Chunk, ChunkMetadata } from "../../@core-contracts/chunking";
 
 export abstract class BaseChunker {
   protected generateChunkId(source: string, index: number): string {

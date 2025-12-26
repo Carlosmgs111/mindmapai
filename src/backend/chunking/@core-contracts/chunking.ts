@@ -1,5 +1,3 @@
-// src/lib/chunking/types.ts
-
 export interface ChunkMetadata {
   source: string;
   chunkIndex: number;
@@ -17,7 +15,7 @@ export interface Chunk {
 }
 
 export interface ChunkingStrategy {
-  chunk(text: string, metadata?: Partial<ChunkMetadata>): Chunk[];
+  chunk(text: string, metadata?: Partial<ChunkMetadata>): Chunk[] | Promise<Chunk[]>;
 }
 
 export interface ChunkingConfig {
@@ -27,4 +25,8 @@ export interface ChunkingConfig {
   separators?: string[];
   minChunkSize?: number;
   maxChunkSize?: number;
+}
+
+export interface ChunkerFactory {
+  create(config: ChunkingConfig): ChunkingStrategy;
 }

@@ -1,16 +1,16 @@
 // src/lib/chunking/SemanticChunker.ts
 
 import { BaseChunker } from './BaseChunker';
-import type { Chunk, ChunkMetadata } from '../../../@core-contracts/chunking';
-import type { EmbeddingProvider } from '../../../@core-contracts/providers';
+import type { Chunk, ChunkMetadata } from '../../@core-contracts/chunking';
+import type { EmbeddingAPI } from '@/modules/embeddings/@core-contracts/api';
 
 export class SemanticChunker extends BaseChunker {
-  private embeddingProvider: EmbeddingProvider;
+  private embeddingProvider: EmbeddingAPI;
   private maxChunkSize: number;
   private similarityThreshold: number;
 
   constructor(
-    embeddingProvider: EmbeddingProvider,
+    embeddingProvider: EmbeddingAPI,
     maxChunkSize: number = 1000,
     similarityThreshold: number = 0.7
   ) {
@@ -28,13 +28,13 @@ export class SemanticChunker extends BaseChunker {
 
     // Generar embeddings para cada oración
     const embeddings = await Promise.all(
-      sentences.map(s => this.embeddingProvider.generateEmbedding(s))
+      sentences.map(s => this.embeddingProvider.generateEmbeddings([s]))
     );
 
     // Calcular similitudes entre oraciones consecutivas
     const similarities: number[] = [];
     for (let i = 0; i < embeddings.length - 1; i++) {
-      const similarity = this.cosineSimilarity(embeddings[i], embeddings[i + 1]);
+      const similarity = this.cosineSimilarity(embeddings[i][0], embeddings[i + 1][0]);
       similarities.push(similarity);
     }
 
