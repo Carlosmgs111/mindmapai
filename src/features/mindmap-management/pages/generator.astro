@@ -99,7 +99,10 @@ const stylesOptions = [
             title="🤔 Elige el estilo de pensamiento"
             help="El estilo de pensamiento cambiara la forma en que la IA crea el MindMap"
           >
-            <form class="flex flex-wrap justify-center gap-2 p-2">
+            <form
+              id="style-options"
+              class="flex flex-wrap justify-center gap-2 p-2"
+            >
               {
                 stylesOptions.map((style) => (
                   <label class="cursor-pointer">
@@ -118,6 +121,16 @@ const stylesOptions = [
               }
             </form>
           </FlowStep>
+          <FlowStep
+            title="💬 Introduce una consulta"
+            help="Esto ayudara a la IA a entender el contexto del MindMap"
+          >
+            <input
+              id="query"
+              class="w-full p-2 border border-gray-500 rounded-lg outline-none focus:outline-none focus:border-gray-600"
+              type="text"
+            />
+          </FlowStep>
           <FlowStep>
             <a
               id="generate"
@@ -135,7 +148,12 @@ const stylesOptions = [
 </Layout>
 
 <script>
-  import { fileStore, setFiles, setStagedFiles } from "@/features/file-management/stores/files";
+  import {
+    fileStore,
+    setFiles,
+    setStagedFiles,
+  } from "@/features/file-management/stores/files";
+  import { queryStore } from "@/features/mindmap-management/stores/query";
   import type { IndexFile } from "@/features/file-management/stores/files";
   const params = new URLSearchParams(window.location.search);
   const fileId = params.get("fileId");
@@ -150,93 +168,126 @@ const stylesOptions = [
     });
     setStagedFiles([fileId]);
   }
+  const fileOptions = document.getElementById(
+    "file-options"
+  ) as HTMLFormElement;
+  const generateBtn = document.getElementById("generate") as HTMLButtonElement;
+  const optionUpload = document.getElementById(
+    "option:upload"
+  ) as HTMLFormElement;
+  const optionLibrary = document.getElementById(
+    "option:library"
+  ) as HTMLFormElement;
+  const styleOptions = document.getElementById(
+    "style-options"
+  ) as HTMLFormElement;
+  const query = document.getElementById("query") as HTMLInputElement;
+
+  const onChangeFileOptions = (e: Event) => {
+    // TODO:  The right file index must be selected between upload and library
+    const target = e.currentTarget as HTMLFormElement;
+    console.log(target);
+    const fileOption = target.querySelector(
+      'input[name="file:options"]:checked'
+    ) as HTMLInputElement;
+    console.log(fileOption.value);
+    if (fileOption.value === "library") {
+      optionUpload.classList.add("hidden");
+      optionLibrary.classList.remove("hidden");
+    } else {
+      optionUpload.classList.remove("hidden");
+      optionLibrary.classList.add("hidden");
+    }
+  };
+  const onChangeStyleOptions = (e: Event) => {
+    const target = e.currentTarget as HTMLFormElement;
+    const styleOption = target.querySelector(
+      'input[name="style"]:checked'
+    ) as HTMLInputElement;
+    queryStore.set({
+      query: queryStore.get().query,
+      style: styleOption.value,
+    });
+  };
+  const onChangeQuery = (e: Event) => {
+    const target = e.currentTarget as HTMLInputElement;
+    queryStore.set({
+      query: target.value,
+      style: queryStore.get().style,
+    });
+  };
 
   document.addEventListener("astro:page-load", () => {
-    const fileOptions = document.getElementById(
-      "file-options"
-    ) as HTMLFormElement;
-    const generateBtn = document.getElementById(
-      "generate"
-    ) as HTMLButtonElement;
-    const optionUpload = document.getElementById(
-      "option:upload"
-    ) as HTMLFormElement;
-    const optionLibrary = document.getElementById(
-      "option:library"
-    ) as HTMLFormElement;
+    queryStore.subscribe((value) => {
+      console.log(value);
+    });
+    // const generateMindmap = async () => {
+    //   const formData = new FormData();
+    //   const fileIndex: IndexFile = fileStore.get();
+    //   console.log(fileIndex);
+    //   let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
+    //   let headers: any = { "Content-Type": "application/json" };
+    //   const file = fileIndex.files[fileIndex.stagedIndexes[0]];
+    //   if (!file) {
+    //     window.alert("No se selecciono ningun archivo");
+    //     return;
+    //   }
+    //   if (file instanceof File) {
+    //     formData.append("file", file);
+    //     formData.append("id", fileIndex.stagedIndexes[0]);
+    //     body = formData;
+    //     headers = {};
+    //   }
+    //   const res = await fetch(`/api/mindmaps/${crypto.randomUUID()}`, {
+    //     method: "POST",
+    //     body,
+    //     headers,
+    //   });
+    //   console.log(res);
+    //   if (res.ok) {
+    //     window.location.reload();
+    //   }
+    // };
 
-    const onChange = (e: Event) => {
-      // TODO:  The right file index must be selected between upload and library
-      const target = e.currentTarget as HTMLFormElement;
-      const fileOption = target.querySelector(
-        'input[name="file:options"]:checked'
-      ) as HTMLInputElement;
-      console.log(fileOption.value);
-      if (fileOption.value === "library") {
-        optionUpload.classList.add("hidden");
-        optionLibrary.classList.remove("hidden");
-      } else {
-        optionUpload.classList.remove("hidden");
-        optionLibrary.classList.add("hidden");
-      }
-    };
-    const generateMindmap = async () => {
-      const formData = new FormData();
-      const fileIndex: IndexFile = fileStore.get();
-      console.log(fileIndex);
-      let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
-      let headers: any = { "Content-Type": "application/json" };
-      const file = fileIndex.files[fileIndex.stagedIndexes[0]];
-      if (!file) {
-        window.alert("No se selecciono ningun archivo");
-        return;
-      }
-      if (file instanceof File) {
-        formData.append("file", file);
-        formData.append("id", fileIndex.stagedIndexes[0]);
-        body = formData;
-        headers = {};
-      }
-      const res = await fetch(`/api/mindmaps/${crypto.randomUUID()}`, {
-        method: "POST",
-        body,
-        headers,
-      });
-      console.log(res);
-      if (res.ok) {
-        window.location.reload();
-      }
-    };
-
-    const generateMindmapStream = async () => {
-      const fileIndex: IndexFile = fileStore.get();
-      let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
-      let headers: any = { "Content-Type": "application/json" };
-      const response = await fetch(
-        `/api/mindmaps/stream/${crypto.randomUUID()}`,
-        {
-          method: "POST",
-          headers,
-          body,
-        }
-      );
-      if (!response.body) {
-        return;
-      }
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      if (response.ok) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const data = decoder.decode(value, { stream: true });
-          // console.log(JSON.parse(data));
-          console.log(data);
-        }
-      }
-    };
+    // const generateMindmapStream = async () => {
+    //   const fileIndex: IndexFile = fileStore.get();
+    //   let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
+    //   let headers: any = { "Content-Type": "application/json" };
+    //   const response = await fetch(
+    //     `/api/mindmaps/stream/${crypto.randomUUID()}`,
+    //     {
+    //       method: "POST",
+    //       headers,
+    //       body,
+    //     }
+    //   );
+    //   if (!response.body) {
+    //     return;
+    //   }
+    //   const reader = response.body.getReader();
+    //   const decoder = new TextDecoder();
+    //   if (response.ok) {
+    //     while (true) {
+    //       const { done, value } = await reader.read();
+    //       if (done) break;
+    //       const data = decoder.decode(value, { stream: true });
+    //       // console.log(JSON.parse(data));
+    //       console.log(data);
+    //     }
+    //   }
+    // };
 
     // generateBtn.addEventListener("click", generateMindmapStream);
-    fileOptions && fileOptions.addEventListener("change", onChange);
+    fileOptions && fileOptions.addEventListener("change", onChangeFileOptions);
+    styleOptions &&
+      styleOptions.addEventListener("change", onChangeStyleOptions);
+    query && query.addEventListener("change", onChangeQuery);
+  });
+  document.addEventListener("astro:page-unload", () => {
+    fileOptions &&
+      fileOptions.removeEventListener("change", onChangeFileOptions);
+    styleOptions &&
+      styleOptions.removeEventListener("change", onChangeStyleOptions);
+    query && query.removeEventListener("change", onChangeQuery);
   });
 </script>

@@ -11,13 +11,11 @@ import MarkmapView from "../components/MarkmapView/index.astro";
     >
       <a
         href="/dashboard/mindmaps"
-        class="block text-gray-200 font-semibold text-sm px-2 w-full  text-center bg-gray-700/50 hover:bg-gray-700 p-2 rounded-lg border border-gray-600"
+        class="block text-gray-200 font-semibold text-sm px-2 w-full text-center bg-gray-700/50 hover:bg-gray-700 p-2 rounded-lg border border-gray-600"
         ><i class="bx bx-reply mr-2 align-middle"></i>Regresar</a
       >
     </div>
-    <div
-      class="flex-1 h-full border border-gray-700 rounded-lg text-gray-200"
-    >
+    <div class="flex-1 h-full border border-gray-700 rounded-lg text-gray-200">
       <MindmapTextEditor />
     </div>
     <div class="flex-1 h-full border border-gray-700 rounded-lg text-gray-200">
@@ -29,16 +27,33 @@ import MarkmapView from "../components/MarkmapView/index.astro";
 <script>
   import { appendToCurrentMindmap } from "../stores/currentMindmap";
   import { fileStore } from "@/features/file-management/stores/files";
-  import type { IndexFile } from "@/features/file-management/stores/files";
+  import { queryStore } from "../stores/query";
+  import type {
+    IndexFile,
+    FileLoaded,
+  } from "@/features/file-management/stores/files";
 
   document.addEventListener("astro:page-load", () => {
     const params = new URLSearchParams(window.location.search);
     const startStream = params.get("start-stream");
-    console.log({ startStream });
     const generateMindmapStream = async () => {
       const fileIndex: IndexFile = fileStore.get();
-      let body: any = JSON.stringify({ fileId: fileIndex.stagedIndexes[0] });
+      let body: any = JSON.stringify({
+        fileId: fileIndex.stagedIndexes[0],
+        query: queryStore.get().query,
+        style: queryStore.get().style,
+      });
       let headers: any = { "Content-Type": "application/json" };
+      if (fileIndex.files[fileIndex.stagedIndexes[0]] instanceof File) {
+        const formData = new FormData();
+        const file = fileIndex.files[fileIndex.stagedIndexes[0]] as File;
+        formData.append("file", file);
+        formData.append("id", fileIndex.stagedIndexes[0]);
+        formData.append("query", queryStore.get().query);
+        formData.append("style", queryStore.get().style);
+        body = formData;
+        headers = {};
+      }
       const response = await fetch(
         `/api/mindmaps/stream/${crypto.randomUUID()}`,
         {
@@ -53,7 +68,7 @@ import MarkmapView from "../components/MarkmapView/index.astro";
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       if (response.ok) {
-        for(let run = true; run; ) {
+        for (let run = true; run; ) {
           const { done, value } = await reader.read();
           run = !done;
           const data = decoder.decode(value, { stream: true });

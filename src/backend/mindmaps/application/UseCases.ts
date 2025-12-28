@@ -107,6 +107,13 @@ export class UseCases {
       yield chunk;
     }
   }
+  async *uploadFileAndGenerateMindmapStream(
+    id: string,
+    file: GenerateMindmapParams){
+    
+      
+
+  }
   generateMindmapFromText = async (id: string, text: string) => {
     if (!text) {
       throw new Error("Text not found");

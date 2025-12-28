@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 
-type FileLoaded = {
+export type FileLoaded = {
   id: string;
   name: string;
 };
