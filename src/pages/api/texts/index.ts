@@ -1,3 +1,3 @@
-import { textsRouter } from "../../../backend/textExtraction";
+import { textsRouter } from "../../../backend/text-extraction";
 
 export const GET = textsRouter.getIndexes;

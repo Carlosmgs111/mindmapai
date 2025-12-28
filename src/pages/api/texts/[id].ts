@@ -1,4 +1,4 @@
-import { textsRouter } from "../../../backend/textExtraction";
+import { textsRouter } from "../../../backend/text-extraction";
 
 // export const GET = textsRouter.getText;
 // export const POST = textsRouter.generateMindmapFromFile;

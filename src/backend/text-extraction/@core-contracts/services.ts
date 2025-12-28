@@ -5,3 +5,7 @@ export interface TextExtractor {
     fileBuffer: Buffer
   ): Promise<TextExtractDTO | null>;
 }
+
+export interface TextCleaner {
+    cleanText(textExtract: TextExtractDTO): Promise<TextExtractDTO>;
+}

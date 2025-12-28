@@ -1,6 +1,6 @@
 import { filesApi } from "../files";
-import { textExtractorApi } from "../textExtraction";
-import { aiApi } from "../AI";
+import { textExtractorApi } from "../text-extraction";
+import { aiApi } from "../agents";
 
 import { AstroRouter } from "./infrastructure/routes/AstroRouter";
 import { UseCases } from "./application/UseCases";

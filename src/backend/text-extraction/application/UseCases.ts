@@ -2,14 +2,12 @@ import type { TextExtractor } from "../@core-contracts/services";
 import type { Repository } from "../@core-contracts/repository";
 import type { TextExtractParams } from "../@core-contracts/dtos";
 import { Text } from "../Domain/Text";
+import { TextCleanerService } from "./TextCleanerService";
 
 export class UseCases {
   private textExtractor: TextExtractor;
   private textRepository: Repository;
-  constructor(
-    textExtractor: TextExtractor,
-    textRepository: Repository
-  ) {
+  constructor(textExtractor: TextExtractor, textRepository: Repository) {
     this.textExtractor = textExtractor;
     this.textRepository = textRepository;
   }
@@ -23,12 +21,10 @@ export class UseCases {
     if (!extractedText) {
       throw new Error("Text not extracted");
     }
-    const text = new Text(
-      id,
-      source.id,
-      extractedText.text,
-      extractedText.metadata
-    );
+    console.log({ extractedText });
+    const cleanedText = TextCleanerService.cleanAll(extractedText.text);
+    console.log({ cleanedText });
+    const text = new Text(id, source.id, cleanedText, extractedText.metadata);
     await this.textRepository.saveTextById(id, text.toDTO());
     return text;
   };

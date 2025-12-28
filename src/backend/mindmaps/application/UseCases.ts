@@ -1,6 +1,6 @@
 import type { FilesApi } from "../../files/@core-contracts/filesApi";
-import type { TextExtractorApi } from "../../textExtraction/@core-contracts/textExtractorApi";
-import type { AIApi } from "../../Agent/@core-contracts/aiApi";
+import type { TextExtractorApi } from "../../text-extraction/@core-contracts/textExtractorApi";
+import type { AIApi } from "../../agents/@core-contracts/aiApi";
 import type { GenerateMindmapParams } from "../@core-contracts/dtos";
 
 const markmapExample = `
@@ -100,7 +100,7 @@ export class UseCases {
     ${text.text}
     </data>
     `;
-    for await (const chunk of this.aiApi.streamCompletion({
+    for await (const chunk of this.aiApi.streamCompletion("", {
       systemPrompt,
       userPrompt,
     })) {

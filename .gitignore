@@ -25,6 +25,7 @@ pnpm-debug.log*
 .vscode/
 uploads
 database
+db
 .vercel
 test-*
 .claude
