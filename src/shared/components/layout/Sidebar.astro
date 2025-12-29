@@ -13,6 +13,13 @@ const mainItems = [
     title: "Generador de mindmap",
   },
   {
+    href: "/services/knowledge-management",
+    label: "Gestion de conocimiento",
+    classIcon: "bx bx-brain",
+    isActive: currentPath.includes("knowledge-management"),
+    title: "Gestion de conocimiento",
+  },
+  {
     href: "/dashboard/mindmaps",
     label: "Mindmaps",
     classIcon: "bx bx-intellect",
@@ -35,13 +42,15 @@ const mainItems = [
   },
 ];
 
-const microServicesItems: any[] = [{
-  href: "/services/chunking",
-  label: "Chunking",
-  classIcon: "bx bx-table-rows-split",
-  isActive: currentPath.includes("chunking"),
-  title: "Gestion de servicios",
-}]
+const microServicesItems: any[] = [
+  {
+    href: "/services/chunking",
+    label: "Chunking",
+    classIcon: "bx bx-table-rows-split",
+    isActive: currentPath.includes("chunking"),
+    title: "Gestion de servicios",
+  },
+];
 ---
 
 <div
@@ -56,14 +65,16 @@ const microServicesItems: any[] = [{
       MindMap AI
     </a>
   </div>
-  
+
   <nav>
     <ul class={sc("flex flex-col gap-2")}>
       {mainItems.map((item) => <SidebarItem {...item} />)}
-      <li class="flex items-center gap-2 text-gray-400 border-b border-gray-700 py-2 uppercase px-4 font-semibold">
+      <li
+        class="flex items-center gap-2 text-gray-400 border-b border-gray-700 py-2 uppercase px-4 font-semibold"
+      >
         <i class="bx bx-layers"></i>Services
       </li>
-      {microServicesItems.map((item:any) => <SidebarItem {...item} />)}
+      {microServicesItems.map((item: any) => <SidebarItem {...item} />)}
     </ul>
   </nav>
 </div>
