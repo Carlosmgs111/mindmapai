@@ -1,7 +1,9 @@
-
-
-
-export type ChunkingStrategyType = "fixed" | "sentence" | "paragraph" | "semantic" | "recursive";
+export type ChunkingStrategyType =
+  | "fixed"
+  | "sentence"
+  | "paragraph"
+  | "semantic"
+  | "recursive";
 
 export interface ChunkMetadata {
   sourceId: string;

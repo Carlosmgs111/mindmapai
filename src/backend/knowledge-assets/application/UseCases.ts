@@ -6,6 +6,9 @@ import type { EmbeddingAPI } from "@/modules/embeddings/@core-contracts/api";
 import type { FileUploadDTO } from "@/modules/files/@core-contracts/dtos";
 import type { KnowledgeAssetsRepository } from "../@core-contracts/repositories";
 import type { KnowledgeAssetDTO } from "../@core-contracts/dtos";
+import type { FlowState } from "../@core-contracts/api";
+import type { Chunk } from "@/backend/chunking/@core-contracts/entities";
+import type { VectorDocument } from "@/backend/embeddings/@core-contracts/entities";
 
 export class UseCases {
   constructor(
@@ -27,27 +30,86 @@ export class UseCases {
     const sourceFile = source as FileUploadDTO;
 
     try {
-      const file = await this.filesApi.uploadFile(sourceFile);
+      const { status, message } = await this.filesApi.uploadFile(sourceFile);
+      console.log(status, message);
+      if (status === "error") {
+        throw new Error(message);
+      }
 
       const text = await this.textExtractorApi.extractTextFromPDF({
         id: sourceFile.id,
         source: sourceFile,
       });
-      const chunks = await this.chunkingApi.chunkOne(text.text, {
+      if (text.status === "error") {
+        throw new Error(text.message);
+      }
+      const chunks = await this.chunkingApi.chunkOne(text.text as string, {
         strategy: chunkingStrategy,
       });
-      const chunksContent = chunks.chunks.map((chunk) => chunk.content);
+      const chunkBatch = chunks.chunks as Chunk[];
+      const chunksContent = chunkBatch?.map((chunk) => chunk.content);
       const embeddings = await this.embeddingApi.generateEmbeddings(
         chunksContent
       );
+      const embeddingsDocuments = embeddings.documents as VectorDocument[];
       const knowledgeAsset: KnowledgeAssetDTO = {
         id: crypto.randomUUID(),
         sourceId: sourceFile.id,
-        cleanedTextId: text.id,
-        chunksIds: chunks.chunks.map((chunk) => chunk.id),
-        embeddingsIds: embeddings.map((embedding) => embedding.id),
+        cleanedTextId: text.id as string,
+        chunksIds: chunkBatch?.map((chunk) => chunk.id),
+        embeddingsIds: embeddingsDocuments.map((embedding) => embedding.id),
       };
       // await this.knowledgeAssetsRepository.saveKnowledgeAsset(knowledgeAsset);
+      return knowledgeAsset;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async *generateNewKnowledgeStreamingState(
+    command: GenerateNewKnowledgeDTO
+  ): AsyncGenerator<KnowledgeAssetDTO | FlowState> {
+    const { source, chunkingStrategy, embeddingStrategy } = command;
+    const sourceFile = source as FileUploadDTO;
+
+    try {
+      const { status, message } = await this.filesApi.uploadFile(sourceFile);
+      console.log(status, message);
+      if (status === "success") {
+        yield { status: "success", step: "fileUpload", message };
+      }
+
+      const text = await this.textExtractorApi.extractTextFromPDF({
+        id: sourceFile.id,
+        source: sourceFile,
+      });
+      if (text.status === "success") {
+        yield { status: "success", step: "textExtraction", message: text.message };
+      }
+      const chunks = await this.chunkingApi.chunkOne(text.text as string, {
+        strategy: chunkingStrategy,
+      });
+      if(chunks.status === "success") {
+        yield { status: "success", step: "chunking", message: chunks.message };
+      }
+      const chunkBatch = chunks.chunks as Chunk[];
+      const chunksContent = chunkBatch.map((chunk) => chunk.content);
+      const embeddings = await this.embeddingApi.generateEmbeddings(
+        chunksContent
+      );
+      if(embeddings.status === "success") {
+        yield { status: "success", step: "embedding", message: embeddings.message };
+      }
+      const embeddingsDocuments = embeddings.documents as VectorDocument[];
+      const knowledgeAsset: KnowledgeAssetDTO = {
+        id: crypto.randomUUID(),
+        sourceId: sourceFile.id,
+        cleanedTextId: text.id as string,
+        chunksIds: chunkBatch.map((chunk) => chunk.id),
+        embeddingsIds: embeddingsDocuments.map((embedding) => embedding.id),
+      };
+      // await this.knowledgeAssetsRepository.saveKnowledgeAsset(knowledgeAsset);
+      yield { status: "success", step: "knowledgeAsset", message: "Knowledge asset generated successfully" };
       return knowledgeAsset;
     } catch (error) {
       throw error;

@@ -1,4 +1,4 @@
-import type { ChunkMetadata, Chunk, ChunkingStrategyType } from "./entities";
+import type { ChunkMetadata, Chunk, ChunkingStrategyType, ChunkBatch } from "./entities";
 
 export interface ChunkingStrategy {
   chunk(
@@ -14,4 +14,9 @@ export interface ChunkingConfig {
   separators?: string[];
   minChunkSize?: number;
   maxChunkSize?: number;
+}
+
+export interface ChunkingResultDTO extends Partial<ChunkBatch> {
+    status: "success" | "error";
+    message?: string;
 }

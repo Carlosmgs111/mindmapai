@@ -1,7 +1,8 @@
 import type { Storage } from "../@core-contracts/storage";
 import type { Repository } from "../@core-contracts/repositories";
 import type { FileUploadDTO } from "../@core-contracts/dtos";
-import type { FileDTO } from "../@core-contracts/dtos";
+import type { File } from "../@core-contracts/entities";
+import type { FileUploadResultDTO } from "../@core-contracts/dtos";
 
 export class FilesUseCases {
   storage: Storage;
@@ -11,7 +12,7 @@ export class FilesUseCases {
     this.repository = repository;
   }
 
-  getFileById = async (id: string): Promise<FileDTO & { buffer: Buffer }> => {
+  getFileById = async (id: string): Promise<File & { buffer: Buffer }> => {
     const file = await this.repository.getFileById(id);
     const fileBuffer = await this.getFileBuffer(id);
     if (!file) {
@@ -20,25 +21,26 @@ export class FilesUseCases {
     return { ...file, buffer: fileBuffer };
   };
 
-  getFiles = async (): Promise<FileDTO[]> => {
+  getFiles = async (): Promise<File[]> => {
     const files = await this.repository.getFiles();
     return files;
   };
 
-  uploadFile = async (file: FileUploadDTO): Promise<FileDTO> => {
+  uploadFile = async (file: FileUploadDTO): Promise<FileUploadResultDTO> => {
     const fileUrl = await this.storage.uploadFile(file.buffer, file.name);
     if (!fileUrl) {
-      throw new Error("File not uploaded");
+      return { status: "error", message: "File not uploaded" };
     }
-    const fileEntity: FileDTO = {
+    const fileEntity: File = {
       id: file.id,
       name: file.name,
       type: file.type,
       size: file.size,
       lastModified: file.lastModified,
+      url: fileUrl,
     };
     await this.repository.saveFile(fileEntity);
-    return fileEntity;
+    return { ...fileEntity, status: "success" };
   };
 
   deleteFile = async (fileId: string) => {

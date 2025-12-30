@@ -31,7 +31,7 @@ let knowledgeAssetsDB: Level;
 
 export function getKnowledgeAssetsDB() {
   if (!knowledgeAssetsDB) {
-    knowledgeAssetsDB = new Level("./database/level/knowledgeAssets", { valueEncoding: "json" });
+    knowledgeAssetsDB = new Level("./database/level/knowledge-assets", { valueEncoding: "json" });
   }
   return knowledgeAssetsDB;
 }

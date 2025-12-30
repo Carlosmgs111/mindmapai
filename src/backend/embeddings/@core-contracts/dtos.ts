@@ -10,3 +10,9 @@ export interface VectorDBConfig {
   dimensions: number;
   similarityThreshold?: number;
 }
+
+export interface EmbeddingResultDTO {
+  documents?: VectorDocument[];
+  status: "success" | "error";
+  message?: string;
+}

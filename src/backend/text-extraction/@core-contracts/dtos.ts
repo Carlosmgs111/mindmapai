@@ -1,4 +1,4 @@
-import type { Source } from "./entities";
+import type { Source, Text } from "./entities";
 
 export interface SourceDTO extends Source {
   buffer: Buffer;
@@ -20,4 +20,9 @@ export interface TextExtractDTO {
 
 export interface TextExtractorParams {
   source: SourceDTO;
+}
+
+export interface TextExtractionResultDTO extends Partial<Text> {
+  status: "success" | "error";
+  message?: string;
 }
