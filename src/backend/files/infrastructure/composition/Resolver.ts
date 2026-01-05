@@ -23,6 +23,10 @@ export class FilesInfrastructureResolver {
         const { BrowserStorage } = await import("../storage/BrowserStorage");
         return new BrowserStorage();
       }
+      case "browser-mock": {
+        const { BrowserMockStorage } = await import("../storage/BrowserMockStorage");
+        return new BrowserMockStorage();
+      }
       default:
         throw new Error(`Unsupported storage: ${type}`);
     }

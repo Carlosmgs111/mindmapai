@@ -29,7 +29,7 @@ export default function FileList({ execEnv }: FileListProps) {
           // Importación dinámica del filesApiFactory con configuración browser
           const { filesApiFactory } = await import("@/modules/files/index");
           const api = await filesApiFactory({
-            storage: "browser",
+            storage: "browser-mock",
             repository: "browser",
           });
           setFilesApi(api);
@@ -73,7 +73,8 @@ export default function FileList({ execEnv }: FileListProps) {
   const handleDelete = async (id: string) => {
     if (execEnv === "browser" && filesApi) {
       // Usar la API del browser
-      await filesApi.deleteFile(id);
+      const res = await filesApi.deleteFile(id);
+      console.log({ res });
       setFilesState((prev) => prev.filter((f) => f.id !== id));
     } else {
       // Usar la API del servidor

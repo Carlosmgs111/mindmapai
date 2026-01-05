@@ -39,6 +39,7 @@ export class BrowserStorage implements Storage {
   }
 
   async deleteFile(fileUrl: string): Promise<boolean> {
+    console.log("Deleting file:", this.directoryHandle);
     if (!this.directoryHandle) {
       return false;
     }

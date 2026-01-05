@@ -39,6 +39,7 @@ export default function FileUploader({ execEnv, onUploadComplete }: FileUploader
             size: file.size,
             lastModified: file.lastModified,
             buffer: Buffer.from(buffer),
+            url: "",
           });
         } else {
           // API ya cargada
@@ -50,6 +51,7 @@ export default function FileUploader({ execEnv, onUploadComplete }: FileUploader
             size: file.size,
             lastModified: file.lastModified,
             buffer: Buffer.from(buffer),
+            url: "",
           });
         }
       } else {

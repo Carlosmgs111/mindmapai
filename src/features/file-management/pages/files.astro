@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
-import LoadedFileSelector from "../components/LoadedFileSelector.astro";
+import LoadedFileSelector from "../components/LoadedFileSelector";
 import FileList from "../components/FileList";
 
 const execEnv = import.meta.env.EXEC_ENV || "server";
@@ -18,7 +18,7 @@ console.log("EXEC_ENV:", execEnv);
         class="block text-gray-200 mb-2 font-semibold text-sm px-4 pb-2 w-full border-b border-gray-700"
         >Agrega un nuevo archivo PDF a la biblioteca</span
       >
-      <LoadedFileSelector uploadEndpoint={"/api/file"} />
+      <LoadedFileSelector client:load uploadEndpoint={"/api/file"} />
     </div>
 
     <!-- Componente React con LibraryFileSelector integrado y carga dinámica de API -->

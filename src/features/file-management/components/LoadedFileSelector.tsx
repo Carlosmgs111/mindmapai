@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { fileStore, setStagedFiles, setFiles } from "../stores/files";
 import { sc } from "@/shared/utils/sc";
+import { filesApiFactory } from "@/backend/files";
+
+const filesApi = await filesApiFactory({
+  storage: "browser-mock",
+  repository: "browser",
+});
 
 interface LoadedFileSelectorProps {
   uploadEndpoint?: string;
@@ -8,8 +14,14 @@ interface LoadedFileSelectorProps {
   className?: string;
 }
 
-export default function LoadedFileSelector({ uploadEndpoint, id, className="" }: LoadedFileSelectorProps) {
-  const [fileName, setFileName] = useState<string>("Haz clic para seleccionar archivo");
+export default function LoadedFileSelector({
+  uploadEndpoint,
+  id,
+  className = "",
+}: LoadedFileSelectorProps) {
+  const [fileName, setFileName] = useState<string>(
+    "Haz clic para seleccionar archivo"
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -33,6 +45,7 @@ export default function LoadedFileSelector({ uploadEndpoint, id, className="" }:
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+    console.log({ files });
     if (files && files.length > 0) {
       const fileNames = Array.from(files).map((file: File) => {
         const fileId = crypto.randomUUID();
@@ -57,28 +70,39 @@ export default function LoadedFileSelector({ uploadEndpoint, id, className="" }:
       return;
     }
 
-    if (!uploadEndpoint) {
-      alert("No se proporcionó un endpoint");
-      return;
-    }
+    // if (!uploadEndpoint) {
+    //   alert("No se proporcionó un endpoint");
+    //   return;
+    // }
 
     const formData = new FormData();
     Array.from(fileInputRef.current.files).forEach((file) => {
       formData.append("file", file);
     });
 
-    const res = await fetch(`${uploadEndpoint}/${crypto.randomUUID()}`, {
-      method: "POST",
-      body: formData,
-    });
+    const fileUploadDTO = {
+      id: crypto.randomUUID(),
+      name: fileInputRef.current.files[0].name,
+      type: fileInputRef.current.files[0].type,
+      size: fileInputRef.current.files[0].size,
+      lastModified: new Date().getTime(),
+      buffer: new Uint8Array(await fileInputRef.current.files[0].arrayBuffer()) as Buffer,
+      url: "",
+    };
 
-    if (res.ok) {
+    const res = await filesApi.uploadFile(fileUploadDTO);
+    console.log({ res });
+    if (res) {
       window.location.reload();
     }
   };
 
   return (
-    <form id={id} className={sc("flex gap-2 items-center text-gray-200", className)} onSubmit={handleUpload}>
+    <form
+      id={id}
+      className={sc("flex gap-2 items-center text-gray-200", className)}
+      onSubmit={handleUpload}
+    >
       <input
         ref={fileInputRef}
         className="hidden"
