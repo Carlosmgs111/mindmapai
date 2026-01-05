@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fileStore } from "../../../file-management/stores/files";
 import type { GenerateNewKnowledgeDTO } from "@/backend/knowledge-assets/@core-contracts/dtos";
+import type { FlowState } from "@/backend/knowledge-assets/@core-contracts/api";
 
 export interface StepInfo {
   id: string;
@@ -154,7 +155,7 @@ export function useKnowledgeManagement() {
           strategy: "fixed",
         },
         embeddingsPolicy: {
-          provider: "hugging-face",
+          provider: "browser",
           repository: "browser",
         },
       });
@@ -177,7 +178,22 @@ export function useKnowledgeManagement() {
       for await (const chunk of (await knowledgeAssetsApi).generateNewKnowledgeStreamingState(
         command
       )) {
-        console.log(chunk);
+        try {
+          const { status, step, message } = chunk as FlowState;
+          const isSuccess = status === "SUCCESS";
+          const isError = status === "ERROR";
+
+          updateStepState(step, isSuccess, isError);
+          if (isError) {
+            setHasError(true);
+            setProcessing(false);
+            return;
+          }
+        } catch (e) {
+          console.error("Error parsing data:", e);
+        } finally {
+          setProcessing(false);
+        }
       }
     } catch (error) {
       console.error("Error processing:", error);

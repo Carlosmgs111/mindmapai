@@ -7,9 +7,12 @@ export class EmbeddingsInfrastructureResolver {
     provider: EmbeddingProvider;
     repository: VectorRepository;
   }> {
+    const provider = await EmbeddingsInfrastructureResolver.resolveProvider(policy.provider);
+    const dimensions = provider.getDimensions();
+
     return {
-      provider: await EmbeddingsInfrastructureResolver.resolveProvider(policy.provider),
-      repository: await EmbeddingsInfrastructureResolver.resolveRepository(policy.repository),
+      provider,
+      repository: await EmbeddingsInfrastructureResolver.resolveRepository(policy.repository, dimensions),
     };
   }
 
@@ -25,6 +28,10 @@ export class EmbeddingsInfrastructureResolver {
         const { HuggingFaceEmbeddingProvider } = await import("../providers/HuggingFaceEmbeddingProvider");
         return new HuggingFaceEmbeddingProvider();
       }
+      case "browser": {
+        const { BrowserEmbeddingProvider } = await import("../providers/BrowserEmbeddingProvider");
+        return new BrowserEmbeddingProvider();
+      }
       case "openai": {
         // TODO: Create OpenAIProvider
         const { AIEmbeddingProvider } = await import("../providers/AIEmbeddingProvider");
@@ -36,13 +43,14 @@ export class EmbeddingsInfrastructureResolver {
   }
 
   private static async resolveRepository(
-    type: EmbeddingsInfrastructurePolicy["repository"]
+    type: EmbeddingsInfrastructurePolicy["repository"],
+    dimensions: number
   ): Promise<VectorRepository> {
     switch (type) {
       case "local-level": {
         const { LevelVectorStore } = await import("../repositories/LocalLevelVectorDB");
         return new LevelVectorStore({
-          dimensions: 1024,
+          dimensions,
           similarityThreshold: 0.7,
           dbPath: "./embeddings.db",
         });
@@ -51,7 +59,7 @@ export class EmbeddingsInfrastructureResolver {
         // TODO: Create RemoteVectorDB
         const { LevelVectorStore } = await import("../repositories/LocalLevelVectorDB");
         return new LevelVectorStore({
-          dimensions: 1024,
+          dimensions,
           similarityThreshold: 0.7,
           dbPath: "./embeddings.db",
         });
@@ -59,7 +67,7 @@ export class EmbeddingsInfrastructureResolver {
       case "browser": {
         const { BrowserVectorDB } = await import("../repositories/BrowserVectorDB");
         return new BrowserVectorDB({
-          dimensions: 1024,
+          dimensions,
           similarityThreshold: 0.7,
           dbName: "embeddings-db",
         });
