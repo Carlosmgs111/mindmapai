@@ -21,6 +21,10 @@ export class TextExtractionInfrastructureResolver {
         const { PDFTextExtractor } = await import("../extraction/PDFTextExtractor");
         return new PDFTextExtractor();
       }
+      case "browser-pdf": {
+        const { BrowserPDFTextExtractor } = await import("../extraction/BrowserPDFTextExtractor");
+        return new BrowserPDFTextExtractor();
+      }
       case "docx": {
         // TODO: Create DocxTextExtractor
         const { PDFTextExtractor } = await import("../extraction/PDFTextExtractor");

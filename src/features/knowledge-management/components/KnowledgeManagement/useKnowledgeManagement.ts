@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { fileStore } from "../../../file-management/stores/files";
+import type { GenerateNewKnowledgeDTO } from "@/backend/knowledge-assets/@core-contracts/dtos";
 
 export interface StepInfo {
   id: string;
@@ -10,11 +11,41 @@ export interface StepInfo {
 }
 
 const initialSteps: StepInfo[] = [
-  { id: "file-upload", title: "File Upload", success: false, error: false, visible: false },
-  { id: "text-extraction", title: "Text Extraction", success: false, error: false, visible: false },
-  { id: "chunking", title: "Chunking", success: false, error: false, visible: false },
-  { id: "embedding", title: "Embedding", success: false, error: false, visible: false },
-  { id: "knowledge-asset", title: "Knowledge Asset", success: false, error: false, visible: false },
+  {
+    id: "file-upload",
+    title: "File Upload",
+    success: false,
+    error: false,
+    visible: false,
+  },
+  {
+    id: "text-extraction",
+    title: "Text Extraction",
+    success: false,
+    error: false,
+    visible: false,
+  },
+  {
+    id: "chunking",
+    title: "Chunking",
+    success: false,
+    error: false,
+    visible: false,
+  },
+  {
+    id: "embedding",
+    title: "Embedding",
+    success: false,
+    error: false,
+    visible: false,
+  },
+  {
+    id: "knowledge-asset",
+    title: "Knowledge Asset",
+    success: false,
+    error: false,
+    visible: false,
+  },
 ];
 
 export function useKnowledgeManagement() {
@@ -23,9 +54,13 @@ export function useKnowledgeManagement() {
   const [hasFile, setHasFile] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const updateStepState = (stepId: string, success: boolean, error: boolean) => {
-    setSteps(prev => {
-      const stepIndex = prev.findIndex(s => s.id === stepId);
+  const updateStepState = (
+    stepId: string,
+    success: boolean,
+    error: boolean
+  ) => {
+    setSteps((prev) => {
+      const stepIndex = prev.findIndex((s) => s.id === stepId);
 
       return prev.map((step, index) => {
         if (step.id === stepId) {
@@ -98,41 +133,66 @@ export function useKnowledgeManagement() {
       setProcessing(false);
       setHasError(true);
     }
-  }
+  };
 
-  const handleFromApi = async () => {
-    const { knowledgeAssetsApiFactory } = await import("@/modules/knowledge-assets");
+  const handleFromApi = async (id: string, formData: FormData) => {
+    const { knowledgeAssetsApiFactory } = await import(
+      "@/modules/knowledge-assets"
+    );
     try {
       const knowledgeAssetsApi = await knowledgeAssetsApiFactory({
-      repository: "browser",
-      filesPolicy: {
-        storage: "browser",
         repository: "browser",
-      },
-      textExtractionPolicy: {
-        extractor: "pdf",
-        repository: "browser",
-      },
-      chunkingPolicy: {
-        strategy: "fixed",
-      },
-      embeddingsPolicy: {
-        provider: "hugging-face",
-        repository: "browser",
-      },
-    });
+        filesPolicy: {
+          storage: "browser",
+          repository: "browser",
+        },
+        textExtractionPolicy: {
+          extractor: "browser-pdf",
+          repository: "browser",
+        },
+        chunkingPolicy: {
+          strategy: "fixed",
+        },
+        embeddingsPolicy: {
+          provider: "hugging-face",
+          repository: "browser",
+        },
+      });
+      const file = formData.get("file") as File;
+      const buffer = new Uint8Array(await file.arrayBuffer()) as Buffer;
+      const source = {
+        id: id,
+        name: file.name,
+        buffer,
+        type: file.type,
+        size: file.size,
+        lastModified: file.lastModified,
+        url: "",
+      };
+      const command: GenerateNewKnowledgeDTO = {
+        source,
+        chunkingStrategy: "sentence",
+        embeddingStrategy: "sentence",
+      };
+      for await (const chunk of (await knowledgeAssetsApi).generateNewKnowledgeStreamingState(
+        command
+      )) {
+        console.log(chunk);
+      }
     } catch (error) {
       console.error("Error processing:", error);
-      setSteps(prev => prev.map((step, index) => ({
-        ...step,
-        visible: index === 0,
-        success: false,
-        error: false
-      })));
+      setSteps((prev) =>
+        prev.map((step, index) => ({
+          ...step,
+          visible: index === 0,
+          success: false,
+          error: false,
+        }))
+      );
       setProcessing(false);
       setHasError(true);
     }
-  }
+  };
 
   const handleProcess = async () => {
     const files = fileStore.get();
@@ -148,12 +208,14 @@ export function useKnowledgeManagement() {
     setHasError(false);
 
     // Reset all steps and show only first step in loading state
-    setSteps(prev => prev.map((step, index) => ({
-      ...step,
-      visible: index === 0,
-      success: false,
-      error: false
-    })));
+    setSteps((prev) =>
+      prev.map((step, index) => ({
+        ...step,
+        visible: index === 0,
+        success: false,
+        error: false,
+      }))
+    );
 
     const id = crypto.randomUUID();
     const formData = new FormData();
@@ -163,7 +225,7 @@ export function useKnowledgeManagement() {
     formData.append("embeddingStrategy", "sentence");
 
     // await handleFromFetching(id, formData);
-    await handleFromApi();
+    await handleFromApi(id, formData);
   };
 
   useEffect(() => {
