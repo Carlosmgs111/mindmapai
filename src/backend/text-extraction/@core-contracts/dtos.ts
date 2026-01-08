@@ -26,3 +26,5 @@ export interface TextExtractionResultDTO extends Partial<Text> {
   status: "success" | "error";
   message?: string;
 }
+
+export interface TextIndexDTO extends Omit<Text, "text"> {}

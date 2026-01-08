@@ -41,7 +41,7 @@ export class BrowserRepository implements Repository {
 
   async saveTextById(index: string, text: Text): Promise<void> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readwrite");
       const store = transaction.objectStore(this.config.storeName);
@@ -54,7 +54,7 @@ export class BrowserRepository implements Repository {
 
   async getTextById(index: string): Promise<Text> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readonly");
       const store = transaction.objectStore(this.config.storeName);
@@ -74,7 +74,7 @@ export class BrowserRepository implements Repository {
 
   async getAllTexts(): Promise<Text[]> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readonly");
       const store = transaction.objectStore(this.config.storeName);
@@ -83,8 +83,7 @@ export class BrowserRepository implements Repository {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
         const texts = request.result.map((item: any) => {
-          const { id, ...text } = item;
-          return text as Text;
+          return item;
         });
         resolve(texts);
       };
@@ -93,20 +92,21 @@ export class BrowserRepository implements Repository {
 
   async getAllIndexes(): Promise<string[]> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readonly");
       const store = transaction.objectStore(this.config.storeName);
       const request = store.getAllKeys();
-
       request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result as string[]);
+      request.onsuccess = (event: any) => {
+        resolve(event.target.result as string[]);
+      };
     });
   }
 
   async deleteTextById(index: string): Promise<void> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readwrite");
       const store = transaction.objectStore(this.config.storeName);
@@ -119,7 +119,7 @@ export class BrowserRepository implements Repository {
 
   async purge(): Promise<void> {
     const db = await this.openDB();
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readwrite");
       const store = transaction.objectStore(this.config.storeName);

@@ -49,7 +49,8 @@ export class UseCases {
     return texts;
   };
   getAllIndexes = async () => {
-    const indexes = await this.textRepository.getAllIndexes();
-    return indexes;
+    const texts = await this.textRepository.getAllTexts();
+    console.log(texts);
+    return texts.map(({ text, ...rest }) => rest);
   };
 }

@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
+import { TextList } from "@/features/knowledge-management/components/texts/TextsList";
 ---
 
 <Layout title="Textos | MindMapAI">
   <DashBoardLayout contentClass="pt-8">
+    <TextList client:load />
   </DashBoardLayout>
 </Layout>
