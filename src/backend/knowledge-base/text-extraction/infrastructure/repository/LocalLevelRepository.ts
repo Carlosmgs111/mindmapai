@@ -1,6 +1,6 @@
 import type { Repository } from "../../@core-contracts/repositories";
 import type { Text } from "../../@core-contracts/entities";
-import { getTextsDB } from "../../../shared/config/repositories";
+import { getTextsDB } from "@/modules/shared/config/repositories";
 // import { Level } from "level";
 
 export class LocalLevelRepository implements Repository {

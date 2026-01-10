@@ -21,8 +21,6 @@ export class LevelVectorStore implements VectorRepository {
         this.cosineSimilarity = ai.cosineSimilarity;
       })
       .catch((error) => console.error(error));
-
-    console.log(this.cosineSimilarity);
   }
 
   async initialize(): Promise<void> {
@@ -30,7 +28,6 @@ export class LevelVectorStore implements VectorRepository {
       this.db = await getEmbeddingsDB();
       this.dbInitialized = true;
       await this.db.open();
-      console.log(this.db);
     }
   }
 
@@ -60,7 +57,6 @@ export class LevelVectorStore implements VectorRepository {
     const batch = this.db.batch();
 
     for (const doc of documents) {
-      console.log(doc.embedding.length, this.dimensions);
       if (doc.embedding.length !== this.dimensions) {
         throw new Error(`Document ${doc.id}: Embedding dimension mismatch`);
       }
@@ -110,7 +106,6 @@ export class LevelVectorStore implements VectorRepository {
         queryEmbedding,
         document.embedding
       );
-      console.log({ similarity });
       if (similarity >= this.similarityThreshold) {
         results.push({ document, similarity });
       }

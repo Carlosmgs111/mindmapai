@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fileStore } from "../../../file-management/stores/files";
-import type { GenerateNewKnowledgeDTO } from "@/modules/knowledge-base/knowledge-assets/@core-contracts/dtos";
-import type { FlowState } from "@/modules/knowledge-base/knowledge-assets/@core-contracts/api";
+import type { GenerateNewKnowledgeDTO } from "@/modules/knowledge-base/orchestrator/@core-contracts/dtos";
+import type { FlowState } from "@/modules/knowledge-base/orchestrator/@core-contracts/api";
 
 export interface StepInfo {
   id: string;
@@ -140,7 +140,7 @@ export function useKnowledgeManagement() {
 
   const handleFromApi = async (id: string, formData: FormData) => {
     const { knowledgeAssetsApiFactory } = await import(
-      "@/modules/knowledge-base/knowledge-assets"
+      "@/modules/knowledge-base/orchestrator"
     );
     try {
       const knowledgeAssetsApi = await knowledgeAssetsApiFactory({

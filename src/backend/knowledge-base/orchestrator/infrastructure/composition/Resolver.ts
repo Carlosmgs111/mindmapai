@@ -1,9 +1,9 @@
 import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositories";
 import type { KnowledgeAssetsInfrastructurePolicy } from "../../@core-contracts/infrastructurePolicies";
-import type { FilesApi } from "../../../files/@core-contracts/api";
-import type { TextExtractorApi } from "../../../text-extraction/@core-contracts/api";
-import type { ChunkingApi } from "../../../chunking/@core-contracts/api";
-import type { EmbeddingAPI } from "../../../embeddings/@core-contracts/api";
+import type { FilesApi } from "@/modules/files/@core-contracts/api";
+import type { TextExtractorApi } from "@/modules/knowledge-base/text-extraction/@core-contracts/api";
+import type { ChunkingApi } from "@/modules/knowledge-base/chunking/@core-contracts/api";
+import type { EmbeddingAPI } from "@/modules/knowledge-base/embeddings/@core-contracts/api";
 
 export class KnowledgeAssetsInfrastructureResolver {
   static async resolve(policy: KnowledgeAssetsInfrastructurePolicy): Promise<{
@@ -53,22 +53,22 @@ export class KnowledgeAssetsInfrastructureResolver {
   }
 
   private static async resolveFilesApi(policy: any): Promise<FilesApi> {
-    const { filesApiFactory } = await import("../../../files");
+    const { filesApiFactory } = await import("@/modules/files");
     return await filesApiFactory(policy);
   }
 
   private static async resolveTextExtractorApi(policy: any): Promise<TextExtractorApi> {
-    const { textExtractorApiFactory } = await import("../../../text-extraction");
+    const { textExtractorApiFactory } = await import("@/modules/knowledge-base/text-extraction");
     return await textExtractorApiFactory(policy);
   }
 
   private static async resolveChunkingApi(policy: any): Promise<ChunkingApi> {
-    const { chunkingApiFactory } = await import("../../../chunking");
+    const { chunkingApiFactory } = await import("@/modules/knowledge-base/chunking");
     return await chunkingApiFactory(policy);
   }
 
   private static async resolveEmbeddingApi(policy: any): Promise<EmbeddingAPI> {
-    const { embeddingApiFactory } = await import("../../../embeddings");
+    const { embeddingApiFactory } = await import("@/modules/knowledge-base/embeddings");
     return await embeddingApiFactory(policy);
   }
 }
