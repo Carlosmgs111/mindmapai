@@ -49,6 +49,8 @@ const initialSteps: StepInfo[] = [
   },
 ];
 
+const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
+
 export function useKnowledgeManagement() {
   const [steps, setSteps] = useState<StepInfo[]>(initialSteps);
   const [processing, setProcessing] = useState(false);
@@ -175,9 +177,9 @@ export function useKnowledgeManagement() {
         chunkingStrategy: "sentence",
         embeddingStrategy: "sentence",
       };
-      for await (const chunk of (await knowledgeAssetsApi).generateNewKnowledgeStreamingState(
-        command
-      )) {
+      for await (const chunk of (
+        await knowledgeAssetsApi
+      ).generateNewKnowledgeStreamingState(command)) {
         try {
           const { status, step, message } = chunk as FlowState;
           const isSuccess = status === "SUCCESS";
@@ -240,8 +242,11 @@ export function useKnowledgeManagement() {
     formData.append("chunkingStrategy", "sentence");
     formData.append("embeddingStrategy", "sentence");
 
-    // await handleFromFetching(id, formData);
-    await handleFromApi(id, formData);
+    if (execEnv === "browser") {
+      await handleFromApi(id, formData);
+      return;
+    }
+    await handleFromFetching(id, formData);
   };
 
   useEffect(() => {

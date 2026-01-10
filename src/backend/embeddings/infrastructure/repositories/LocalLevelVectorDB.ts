@@ -30,6 +30,7 @@ export class LevelVectorStore implements VectorRepository {
       this.db = await getEmbeddingsDB();
       this.dbInitialized = true;
       await this.db.open();
+      console.log(this.db);
     }
   }
 
@@ -53,6 +54,9 @@ export class LevelVectorStore implements VectorRepository {
   async addDocuments(
     documents: Omit<VectorDocument, "timestamp">[]
   ): Promise<void> {
+    if (!this.dbInitialized) {
+      await this.initialize();
+    }
     const batch = this.db.batch();
 
     for (const doc of documents) {
@@ -116,6 +120,9 @@ export class LevelVectorStore implements VectorRepository {
   }
 
   async getAllDocuments(): Promise<VectorDocument[]> {
+    if (!this.dbInitialized) {
+      await this.initialize();
+    }
     const documents: VectorDocument[] = [];
 
     for await (const value of this.db.values()) {

@@ -24,17 +24,10 @@ export const TextList = () => {
         }
       );
     }
-    // const fetchTexts = async () => {
-    //   const response = await fetch("/api/texts");
-    //   const data = await response.json();
-    //   setTexts(data);
-    // };
-    // fetchTexts();
   }, []);
 
   return (
-    <div>
-      <h1>Texts</h1>
+    <div className="flex flex-wrap gap-4">
       {texts.map((text) => (
         <TextIndex key={text.id} {...text} />
       ))}

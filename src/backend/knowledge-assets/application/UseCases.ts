@@ -47,7 +47,11 @@ export class UseCases {
         strategy: chunkingStrategy,
       });
       const chunkBatch = chunks.chunks as Chunk[];
-      const chunksContent = chunkBatch?.map((chunk) => chunk.content);
+      const chunksContent = chunkBatch?.map((chunk) => ({
+        id: crypto.randomUUID(),
+        content: chunk.content,
+        metadata: { sourceId: sourceFile.id },
+      }));
       const embeddings = await this.embeddingApi.generateEmbeddings(
         chunksContent
       );
@@ -89,29 +93,50 @@ export class UseCases {
       const { status, message } = await this.filesApi.uploadFile(sourceFile);
       console.log(status, message);
       if (status === "SUCCESS") {
-        yield { status: "SUCCESS", step: "file-upload", message :"File uploaded successfully"};
+        yield {
+          status: "SUCCESS",
+          step: "file-upload",
+          message: "File uploaded successfully",
+        };
       }
 
       const text = await this.textExtractorApi.extractTextFromPDF({
-        id: sourceFile.id,
+        id: crypto.randomUUID(),
         source: sourceFile,
       });
       if (text.status === "success") {
-        yield { status: "SUCCESS", step: "text-extraction", message: "Text extracted successfully" };
+        yield {
+          status: "SUCCESS",
+          step: "text-extraction",
+          message: "Text extracted successfully",
+        };
       }
       const chunks = await this.chunkingApi.chunkOne(text.text as string, {
         strategy: chunkingStrategy,
       });
-      if(chunks.status === "success") {
-        yield { status: "SUCCESS", step: "chunking", message: "Chunks generated successfully" };
+      if (chunks.status === "success") {
+        yield {
+          status: "SUCCESS",
+          step: "chunking",
+          message: "Chunks generated successfully",
+        };
       }
       const chunkBatch = chunks.chunks as Chunk[];
-      const chunksContent = chunkBatch.map((chunk) => chunk.content);
+      const chunksContent = chunkBatch.map((chunk) => ({
+        id: crypto.randomUUID(),
+        content: chunk.content,
+        metadata: { sourceId: sourceFile.id },
+        timestamp: Date.now(),
+      }));
       const embeddings = await this.embeddingApi.generateEmbeddings(
         chunksContent
       );
-      if(embeddings.status === "success") {
-        yield { status: "SUCCESS", step: "embedding", message: "Embeddings generated successfully" };
+      if (embeddings.status === "success") {
+        yield {
+          status: "SUCCESS",
+          step: "embedding",
+          message: "Embeddings generated successfully",
+        };
       }
       const embeddingsDocuments = embeddings.documents as VectorDocument[];
       const knowledgeAsset: KnowledgeAssetDTO = {
@@ -122,11 +147,19 @@ export class UseCases {
         embeddingsIds: embeddingsDocuments.map((embedding) => embedding.id),
       };
       // await this.knowledgeAssetsRepository.saveKnowledgeAsset(knowledgeAsset);
-      yield { status: "SUCCESS", step: "knowledge-asset", message: "Knowledge asset generated successfully" };
+      yield {
+        status: "SUCCESS",
+        step: "knowledge-asset",
+        message: "Knowledge asset generated successfully",
+      };
       // return knowledgeAsset;
     } catch (error) {
       console.log(error);
-      yield { status: "ERROR", step: "knowledge-asset", message: "Knowledge asset generation failed" };
+      yield {
+        status: "ERROR",
+        step: "knowledge-asset",
+        message: "Knowledge asset generation failed",
+      };
     }
   }
   async retrieveKnowledge(command: string): Promise<void> {}

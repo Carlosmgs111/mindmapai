@@ -2,7 +2,7 @@ import type { EmbeddingProvider } from "../@core-contracts/providers";
 import type { VectorRepository } from "../@core-contracts/repositories";
 import type { SearchResult } from "../@core-contracts/dtos";
 import type { VectorDocument } from "../@core-contracts/entities";
-import type { EmbeddingResultDTO } from "../@core-contracts/dtos";
+import type { EmbeddingResultDTO, EmbeddingCreationDTO } from "../@core-contracts/dtos";
 
 export class EmbeddingUseCases {
   constructor(
@@ -10,13 +10,15 @@ export class EmbeddingUseCases {
     private vectorRepository: VectorRepository
   ) {}
 
-  async generateEmbeddings(texts: string[]): Promise<EmbeddingResultDTO> {
-    const embeddings = await this.embeddingProvider.generateEmbeddings(texts);
+  async generateEmbeddings(texts: EmbeddingCreationDTO[]): Promise<EmbeddingResultDTO> {
+    const embeddings = await this.embeddingProvider.generateEmbeddings(texts.map((text) => text.content));
     const documents: VectorDocument[] = texts.map((text, index) => ({
-      id: index.toString(),
-      content: text,
+      id: crypto.randomUUID(),
+      content: text.content,
       embedding: embeddings[index],
-      metadata: {},
+      metadata: {
+        sourceId: text.metadata.sourceId,
+      },
       timestamp: Date.now(),
     }));
     await this.vectorRepository.addDocuments(documents);

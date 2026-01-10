@@ -16,3 +16,11 @@ export interface EmbeddingResultDTO {
   status: "success" | "error";
   message?: string;
 }
+
+export interface EmbeddingCreationDTO {
+  id: string;
+  content: string;
+  metadata: {
+    sourceId: string;
+  };
+}
