@@ -1,5 +1,5 @@
 import type { FileUploadDTO } from "@/modules/files/@core-contracts/dtos";
-import type { ChunkingStrategyType } from "@/modules/chunking/@core-contracts/entities";
+import type { ChunkingStrategyType } from "@/backend/knowledge-base/chunking/@core-contracts/entities";
 
 export interface GenerateNewKnowledgeDTO {
   source: FileUploadDTO | string;

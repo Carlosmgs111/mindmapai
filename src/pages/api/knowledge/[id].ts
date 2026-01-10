@@ -1,5 +1,5 @@
-import { knowledgeAssetsApiFactory } from "@/modules/knowledge-assets";
-import { AstroRouter } from "@/modules/knowledge-assets/infrastructure/routes/AstroRouter";
+import { knowledgeAssetsApiFactory } from "@/modules/knowledge-base/knowledge-assets";
+import { AstroRouter } from "@/modules/knowledge-base/knowledge-assets/infrastructure/routes/AstroRouter";
 console.log("knowledgeAssetsApiFactory", knowledgeAssetsApiFactory);
 const knowledgeAssetsRouter = new AstroRouter(knowledgeAssetsApiFactory);
 

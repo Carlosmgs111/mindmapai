@@ -6,7 +6,7 @@ import { ParagraphChunker } from "./strategies/ParagraphChunker";
 import { RecursiveChunker } from "./strategies/RecursiveChunker";
 import { SemanticChunker } from "./strategies/SemanticChunker";
 import type { ChunkingConfig } from "../@core-contracts/dtos";
-import type { EmbeddingAPI } from "@/modules/embeddings/@core-contracts/api";
+import type { EmbeddingAPI } from "@/backend/knowledge-base/embeddings/@core-contracts/api";
 
 export class ChunkerFactory {
   constructor(private embeddingProvider?: EmbeddingAPI) {}

@@ -1,5 +1,5 @@
-import { embeddingApiFactory } from "@/modules/embeddings";
-import { AstroRouter } from "@/modules/embeddings/infrastructure/routes/AstroRouter";
+import { embeddingApiFactory } from "@/modules/knowledge-base/embeddings";
+import { AstroRouter } from "@/modules/knowledge-base/embeddings/infrastructure/routes/AstroRouter";
 
 const embeddingsRouter = new AstroRouter(embeddingApiFactory);
 

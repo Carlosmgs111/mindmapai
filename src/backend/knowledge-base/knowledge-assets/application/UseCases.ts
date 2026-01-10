@@ -1,14 +1,14 @@
 import type { GenerateNewKnowledgeDTO } from "../@core-contracts/dtos";
 import type { FilesApi } from "@/backend/files/@core-contracts/api";
 import type { TextExtractorApi } from "@/backend/text-extraction/@core-contracts/api";
-import type { ChunkingApi } from "@/modules/chunking/@core-contracts/api";
-import type { EmbeddingAPI } from "@/modules/embeddings/@core-contracts/api";
+import type { ChunkingApi } from "@/backend/knowledge-base/chunking/@core-contracts/api";
+import type { EmbeddingAPI } from "@/backend/knowledge-base/embeddings/@core-contracts/api";
 import type { FileUploadDTO } from "@/modules/files/@core-contracts/dtos";
 import type { KnowledgeAssetsRepository } from "../@core-contracts/repositories";
 import type { KnowledgeAssetDTO } from "../@core-contracts/dtos";
 import type { FlowState } from "../@core-contracts/api";
-import type { Chunk } from "@/backend/chunking/@core-contracts/entities";
-import type { VectorDocument } from "@/backend/embeddings/@core-contracts/entities";
+import type { Chunk } from "@/backend/knowledge-base/chunking/@core-contracts/entities";
+import type { VectorDocument } from "@/backend/knowledge-base/embeddings/@core-contracts/entities";
 
 export class UseCases {
   constructor(

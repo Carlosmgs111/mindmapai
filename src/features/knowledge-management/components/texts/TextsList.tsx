@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TextIndex } from "./TextIndex";
-import type { TextIndexDTO } from "@/modules/text-extraction/@core-contracts/dtos";
+import type { TextIndexDTO } from "@/modules/knowledge-base/text-extraction/@core-contracts/dtos";
 
 const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
 
@@ -11,7 +11,7 @@ export const TextList = () => {
 
   useEffect(() => {
     if (execEnv === "browser") {
-      import("@/modules/text-extraction").then(
+      import("@/modules/knowledge-base/text-extraction").then(
         async ({ textExtractorApiFactory }) => {
           const api = await textExtractorApiFactory({
             extractor: "browser-pdf",

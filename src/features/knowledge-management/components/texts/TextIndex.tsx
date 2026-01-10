@@ -23,7 +23,7 @@ export const TextIndex = ({
   const onDelete = (e: React.MouseEvent) => {
     onClickEvent(e);
     if (execEnv === "browser") {
-      import("@/backend/text-extraction").then(
+      import("@/modules/knowledge-base/text-extraction").then(
         ({ textExtractorApiFactory }) => {
           textExtractorApiFactory({
             extractor: "browser-pdf",

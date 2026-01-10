@@ -2,7 +2,7 @@
 
 import { BaseChunker } from "./BaseChunker";
 import type { Chunk, ChunkMetadata } from "../../@core-contracts/entities";
-import type { EmbeddingAPI } from "@/modules/embeddings/@core-contracts/api";
+import type { EmbeddingAPI } from "@/backend/knowledge-base/embeddings/@core-contracts/api";
 
 export class SemanticChunker extends BaseChunker {
   private embeddingProvider: EmbeddingAPI;

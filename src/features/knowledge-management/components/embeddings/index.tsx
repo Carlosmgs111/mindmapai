@@ -6,7 +6,7 @@ export const EmbeddingsList = () => {
   const [embeddings, setEmbeddings] = useState<any[]>([]);
   useEffect(() => {
     if (execEnv === "browser") {
-      import("@/modules/embeddings").then(async ({ embeddingApiFactory }) => {
+      import("@/backend/knowledge-base/embeddings").then(async ({ embeddingApiFactory }) => {
         const api = await embeddingApiFactory({
           provider: "browser",
           repository: "browser",

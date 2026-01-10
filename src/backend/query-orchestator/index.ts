@@ -1,6 +1,6 @@
 import type { QueryOrchestatorApi } from "./@core-contracts/api";
 import { aiApi } from "../agents";
-import { embeddingAPI } from "../embeddings";
+import { embeddingAPI } from "../knowledge-base/embeddings";
 import { UseCases } from "./application/UseCases";
 import { AstroRouter } from "./infrastructure/AstroRouter";
 
