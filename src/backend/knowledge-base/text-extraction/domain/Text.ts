@@ -2,7 +2,8 @@ export class Text {
   constructor(
     public id: string,
     public sourceId: string,
-    public text: string,
+    public content: string,
+    public description: string,
     public metadata?: {
       author?: string;
       title?: string;
@@ -14,7 +15,8 @@ export class Text {
     return {
       id: this.id,
       sourceId: this.sourceId,
-      text: this.text,
+      content: this.content,
+      description: this.description,
       metadata: this.metadata,
     };
   }

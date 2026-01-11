@@ -3,6 +3,7 @@ import type { ChunkingStrategyType } from "@/backend/knowledge-base/chunking/@co
 
 export interface NewKnowledgeDTO {
   id: string;
+  name: string;
   sources: [FileUploadDTO | string];
   chunkingStrategy: ChunkingStrategyType;
   embeddingStrategy: string;

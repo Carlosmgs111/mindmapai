@@ -19,6 +19,7 @@ export class AstroRouter {
       textExtractionPolicy: {
         extractor: "pdf",
         repository: "local-level",
+        aiProvider: "vercel-ai",
       },
       chunkingPolicy: {
         strategy: "fixed",
@@ -56,6 +57,7 @@ export class AstroRouter {
         ) as ChunkingStrategyType;
         const embeddingStrategy = formData.get("embeddingStrategy") as string;
         const command: NewKnowledgeDTO = {
+          name: file.name,
           sources: [source],
           chunkingStrategy,
           embeddingStrategy,
@@ -98,6 +100,7 @@ export class AstroRouter {
         ) as ChunkingStrategyType;
         const embeddingStrategy = formData.get("embeddingStrategy") as string;
         const command: NewKnowledgeDTO = {
+          name: file.name,
           sources: [source],
           chunkingStrategy,
           embeddingStrategy,

@@ -8,9 +8,13 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
 
   async generateKnowledgeAsset(dto: NewKnowledgeDTO): Promise<KnowledgeAsset> {
     // Create a new knowledge asset
+    console.log({ dto });
     const knowledgeAsset: KnowledgeAsset = {
+      name: dto.name,
       id: crypto.randomUUID(),
-      sourcesIds: dto.sources.map((source) => (typeof source === "string" ? source : source.id)),
+      sourcesIds: dto.sources.map((source) =>
+        typeof source === "string" ? source : source.id
+      ),
       cleanedTextIds: dto.cleanedTextIds,
       embeddingsIds: dto.embeddingsIds,
       metadata: dto.metadata,
@@ -31,6 +35,6 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
   }
 
   async deleteKnowledgeAsset(id: string): Promise<boolean> {
-    return  this.repository.deleteKnowledgeAsset(id);
+    return this.repository.deleteKnowledgeAsset(id);
   }
 }

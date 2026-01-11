@@ -13,8 +13,8 @@ import { TextExtractionInfrastructureResolver } from "./infrastructure/compositi
 export async function textExtractorApiFactory(
   policy: TextExtractionInfrastructurePolicy
 ): Promise<TextExtractorApi> {
-  const { extractor, repository } = await TextExtractionInfrastructureResolver.resolve(policy);
-  return new UseCases(extractor, repository);
+  const { extractor, repository, aiProvider } = await TextExtractionInfrastructureResolver.resolve(policy);
+  return new UseCases(extractor, repository, aiProvider);
 }
 
 // export const textsRouter = new AstroRouter(textExtractorApiFactory);

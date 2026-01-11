@@ -11,6 +11,7 @@ export class AstroRouter {
   ) {
     this.knowledgeAssetApi = knowledgeAssetApiFactory({
       repository: "local-level",
+      aiProvider: "vercel-ai",
     });
   }
 

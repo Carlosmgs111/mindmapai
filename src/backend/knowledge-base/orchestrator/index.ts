@@ -9,7 +9,6 @@ import type { KnowledgeAssetsAPI } from "./@core-contracts/api";
 import type { KnowledgeAssetsInfrastructurePolicy } from "./@core-contracts/infrastructurePolicies";
 import { UseCases } from "./application/UseCases";
 import { KnowledgeAssetsInfrastructureResolver } from "./infrastructure/composition/Resolver";
-// import { AstroRouter } from "./infrastructure/routes/AstroRouter";
 
 export async function knowledgeAssetsApiFactory(
   policy: KnowledgeAssetsInfrastructurePolicy
@@ -31,4 +30,3 @@ export async function knowledgeAssetsApiFactory(
   );
 }
 
-// export const knowledgeAssetsRouter = new AstroRouter(knowledgeAssetsApiFactory);

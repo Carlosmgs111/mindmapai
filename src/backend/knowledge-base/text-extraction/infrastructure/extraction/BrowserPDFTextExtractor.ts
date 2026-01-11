@@ -54,7 +54,7 @@ export class BrowserPDFTextExtractor implements TextExtractor {
       }
 
       return {
-        text: fullText.trim(),
+        content: fullText.trim(),
         metadata: {
           author: metadata.info?.Author || "",
           title: metadata.info?.Title || "",

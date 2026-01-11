@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { fileStore } from "../../../file-management/stores/files";
 import type { GenerateNewKnowledgeDTO } from "@/modules/knowledge-base/orchestrator/@core-contracts/dtos";
 import type { FlowState } from "@/modules/knowledge-base/orchestrator/@core-contracts/api";
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
+import type { NewKnowledgeDTO } from "@/backend/knowledge-base/knowledge-asset";
 
 export interface StepInfo {
   id: string;
@@ -152,6 +159,7 @@ export function useKnowledgeManagement() {
         textExtractionPolicy: {
           extractor: "browser-pdf",
           repository: "browser",
+          aiProvider: "web-llm",
         },
         chunkingPolicy: {
           strategy: "fixed",
@@ -161,10 +169,11 @@ export function useKnowledgeManagement() {
           repository: "browser",
         },
         knowledgeAssetPolicy: {
-          repository: "browser",
+          repository: "browser"
         },
       });
       const file = formData.get("file") as File;
+      const name = formData.get("name") as string;
       const buffer = new Uint8Array(await file.arrayBuffer()) as Buffer;
       const source = {
         id: id,
@@ -175,10 +184,16 @@ export function useKnowledgeManagement() {
         lastModified: file.lastModified,
         url: "",
       };
-      const command: GenerateNewKnowledgeDTO = {
+      console.log({ name });
+      const command: NewKnowledgeDTO = {
+        name: name,
         sources: [source],
         chunkingStrategy: "sentence",
         embeddingStrategy: "sentence",
+        id: crypto.randomUUID(),
+        cleanedTextIds: [],
+        embeddingsIds: [],
+        metadata: {},
       };
       for await (const chunk of (
         await knowledgeAssetsApi
@@ -244,6 +259,16 @@ export function useKnowledgeManagement() {
     formData.append("id", id);
     formData.append("chunkingStrategy", "sentence");
     formData.append("embeddingStrategy", "sentence");
+    const result = window.prompt("Name for the knowledge asset");
+    const name =
+      result ||
+      uniqueNamesGenerator({
+        length: 2,
+        style: "lowerCase",
+        dictionaries: [adjectives, colors, animals],
+      });
+    console.log({ name });
+    formData.append("name", name);
 
     if (execEnv === "browser") {
       await handleFromApi(id, formData);

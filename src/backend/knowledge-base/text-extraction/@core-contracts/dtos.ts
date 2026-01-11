@@ -10,7 +10,7 @@ export interface TextExtractParams {
 }
 
 export interface TextExtractDTO {
-  text: string;
+  content: string;
   metadata?: {
     author?: string;
     title?: string;
@@ -27,4 +27,4 @@ export interface TextExtractionResultDTO extends Partial<Text> {
   message?: string;
 }
 
-export interface TextIndexDTO extends Omit<Text, "text"> {}
+export interface TextIndexDTO extends Omit<Text, "content" | "description"> {}

@@ -4,11 +4,13 @@ const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
 
 export const AssetIndex = ({
   id,
+  name,
   sourcesIds,
   cleanedTextIds,
   embeddingsIds,
 }: {
   id: string;
+  name: string;
   sourcesIds: string[];
   cleanedTextIds: string[];
   embeddingsIds: string[];
@@ -20,6 +22,7 @@ export const AssetIndex = ({
       import("@/modules/knowledge-base/knowledge-asset").then(({ knowledgeAssetApiFactory }) => {
         knowledgeAssetApiFactory({
           repository: "browser",
+          aiProvider: "browser",
         }).then(async (api) => {
           const result = await api.deleteKnowledgeAsset(id);
           if (result) removeAsset(id);
@@ -35,10 +38,10 @@ export const AssetIndex = ({
   };
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-bold">ID: {id}</p>
-      <p className="font-bold">Source IDs: {sourcesIds}</p>
-      <p className="font-bold"> Cleaned Text IDs: {cleanedTextIds}</p>
-      <p className="font-bold">Embeddings IDs: {embeddingsIds}</p>
+      <h2 className="font-bold text-xl">{name}</h2>
+      <p className="font-thin">Source IDs: {sourcesIds.join(", ")}</p>
+      <p className="font-thin"> Cleaned Text IDs: {cleanedTextIds.join(", ")}</p>
+      <p className="font-thin">Embeddings IDs: {embeddingsIds.join(", ")}</p>
       <button onClick={onClickEvent} className="font-bold">Eliminar</button>
     </div>
   );

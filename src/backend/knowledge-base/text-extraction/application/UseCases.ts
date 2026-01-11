@@ -6,13 +6,16 @@ import type {
 } from "../@core-contracts/dtos";
 import { Text } from "../domain/Text";
 import { TextCleanerService } from "./TextCleanerService";
+import type { AIProvider } from "../@core-contracts/providers";
 
 export class UseCases {
   private textExtractor: TextExtractor;
   private textRepository: Repository;
-  constructor(textExtractor: TextExtractor, textRepository: Repository) {
+  private aiProvider: AIProvider;
+  constructor(textExtractor: TextExtractor, textRepository: Repository, aiProvider: AIProvider) {
     this.textExtractor = textExtractor;
     this.textRepository = textRepository;
+    this.aiProvider = aiProvider;
   }
   extractTextFromPDF = async ({
     source,
@@ -27,8 +30,10 @@ export class UseCases {
     if (!extractedText) {
       throw new Error("Text not extracted");
     }
-    const cleanedText = TextCleanerService.cleanAll(extractedText.text);
-    const text = new Text(id, source.id, cleanedText, extractedText.metadata);
+    console.log({ extractedText });
+    const cleanedText = TextCleanerService.cleanAll(extractedText.content);
+    const description = await this.aiProvider.generateDescription(cleanedText);
+    const text = new Text(id, source.id, cleanedText, description, extractedText.metadata);
     await this.textRepository.saveTextById(id, text.toDTO());
     return {
       status: "success",
@@ -51,6 +56,6 @@ export class UseCases {
   getAllIndexes = async () => {
     const texts = await this.textRepository.getAllTexts();
     console.log(texts);
-    return texts.map(({ text, ...rest }) => rest);
+    return texts.map(({ content, description, ...rest }) => rest);
   };
 }

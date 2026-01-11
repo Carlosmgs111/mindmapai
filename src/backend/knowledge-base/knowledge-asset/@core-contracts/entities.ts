@@ -1,5 +1,6 @@
 export interface KnowledgeAsset {
     id: string;
+    name: string;
     sourcesIds: string[];
     cleanedTextIds: string[];
     embeddingsIds: string[];

@@ -13,7 +13,7 @@ export class PDFTextExtractor implements TextExtractor {
         info: { Author, Title, numpages },
       } = await pdfExtraction(content);
       return {
-        text,
+        content: text,
         metadata: { author: Author, title: Title, numpages },
       };
     } catch (error) {

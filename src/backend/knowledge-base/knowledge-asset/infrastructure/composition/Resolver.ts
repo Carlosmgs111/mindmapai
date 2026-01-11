@@ -1,6 +1,5 @@
 import type { KnowledgeAssetInfrastructurePolicy } from "../../@core-contracts/infrastructurePolicies";
 import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositories";
-
 export class KnowledgeAssetInfrastructureResolver {
   static async resolve(policy: KnowledgeAssetInfrastructurePolicy): Promise<{
     repository: KnowledgeAssetsRepository;

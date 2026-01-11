@@ -1,6 +1,7 @@
 export interface Text {
-  text: string;
   id: string;
+  content: string;
+  description: string;
   sourceId: string;
   metadata?: {
     author?: string;

@@ -26,7 +26,7 @@ export class UseCases {
   async generateNewKnowledge(
     command: NewKnowledgeDTO
   ): Promise<KnowledgeAssetDTO> {
-    const { sources, chunkingStrategy, embeddingStrategy } = command;
+    const { sources, chunkingStrategy, embeddingStrategy, name } = command;
     const sourceFile = sources[0] as FileUploadDTO;
 
     try {
@@ -43,7 +43,7 @@ export class UseCases {
       if (text.status === "error") {
         throw new Error(text.message);
       }
-      const chunks = await this.chunkingApi.chunkOne(text.text as string, {
+      const chunks = await this.chunkingApi.chunkOne(text.content as string, {
         strategy: chunkingStrategy,
       });
       const chunkBatch = chunks.chunks as Chunk[];
@@ -57,6 +57,7 @@ export class UseCases {
       );
       const embeddingsDocuments = embeddings.documents as VectorDocument[];
       const knowledgeAsset: NewKnowledgeDTO = {
+        name: name,
         id: crypto.randomUUID(),
         sources: sources,
         chunkingStrategy,
@@ -76,7 +77,7 @@ export class UseCases {
   async *generateNewKnowledgeStreamingState(
     command: NewKnowledgeDTO
   ): AsyncGenerator<KnowledgeAssetDTO | FlowState> {
-    const { sources, chunkingStrategy, embeddingStrategy } = command;
+    const { sources, chunkingStrategy, embeddingStrategy, name } = command;
     const sourceFile = sources[0] as FileUploadDTO;
 
     try {
@@ -101,7 +102,7 @@ export class UseCases {
           message: "Text extracted successfully",
         };
       }
-      const chunks = await this.chunkingApi.chunkOne(text.text as string, {
+      const chunks = await this.chunkingApi.chunkOne(text.content as string, {
         strategy: chunkingStrategy,
       });
       if (chunks.status === "success") {
@@ -131,6 +132,7 @@ export class UseCases {
       const embeddingsDocuments = embeddings.documents as VectorDocument[];
 
       const newKnowledgeDTO: NewKnowledgeDTO = {
+        name: name,
         id: crypto.randomUUID(),
         sources,
         chunkingStrategy,
