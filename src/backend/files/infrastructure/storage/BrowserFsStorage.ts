@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-export class BrowserStorage implements Storage {
+export class BrowserFsStorage implements Storage {
   private directoryHandle: FileSystemDirectoryHandle | null = null;
 
   async uploadFile(file: Buffer, fileName: string): Promise<string> {
@@ -39,15 +39,15 @@ export class BrowserStorage implements Storage {
   }
 
   async deleteFile(fileUrl: string): Promise<boolean> {
-    console.log("Deleting file:", this.directoryHandle);
     if (!this.directoryHandle) {
-      return false;
+      await this.initializeDirectory();
     }
 
     try {
-      await this.directoryHandle.removeEntry(fileUrl);
+      await this.directoryHandle!.removeEntry(fileUrl);
       return true;
     } catch (error) {
+      console.log("Error deleting file:", error);
       if ((error as DOMException).name === 'NotFoundError') {
         return true; // File already doesn't exist
       }

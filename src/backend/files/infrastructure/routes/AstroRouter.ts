@@ -9,7 +9,7 @@ export class AstroRouter {
     filesApiFactory: (policy: FilesInfrastructurePolicy) => Promise<FilesApi>
   ) {
     this.fileManagerUseCasesPromise = filesApiFactory({
-      storage: "local-fs",
+      storage: "node-fs",
       repository: "csv",
     });
   }

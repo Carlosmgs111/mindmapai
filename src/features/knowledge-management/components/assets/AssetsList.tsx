@@ -14,7 +14,8 @@ export const AssetsList = () => {
         async ({ knowledgeAssetApiFactory }) => {
           const knowledgeAssetApi: KnowledgeAssetApi =
             await knowledgeAssetApiFactory({
-              repository: "browser",
+              repository: "idb",
+              aiProvider: "web-llm",
             });
           knowledgeAssetApi.getAllKnowledgeAssets().then((assets) => {
             assetsStore.set(assets);
@@ -25,7 +26,6 @@ export const AssetsList = () => {
     }
     fetch("/api/knowledge").then((res) => {
       res.json().then((data) => {
-        console.log(data);
         assetsStore.set(data);  
       });
     });

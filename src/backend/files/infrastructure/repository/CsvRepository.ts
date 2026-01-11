@@ -2,7 +2,7 @@ import type { Repository } from "../../@core-contracts/repositories";
 import type { File } from "../../@core-contracts/entities";
 import fs from "fs";
 
-export class LocalCsvRepository implements Repository {
+export class CsvRepository implements Repository {
   private repositoryPath: string = "./database/";
   constructor() {
     if (!fs.existsSync(this.repositoryPath)) {

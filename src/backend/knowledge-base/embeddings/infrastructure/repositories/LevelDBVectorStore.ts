@@ -7,7 +7,7 @@ import { getEmbeddingsDB } from "../../../../shared/config/repositories";
 import type { VectorDocument } from "../../@core-contracts/entities";
 import type { SearchResult, VectorDBConfig } from "../../@core-contracts/dtos";
 
-export class LevelVectorStore implements VectorRepository {
+export class LevelDBVectorStore implements VectorRepository {
   private db: any;
   private dimensions: number;
   private similarityThreshold: number;

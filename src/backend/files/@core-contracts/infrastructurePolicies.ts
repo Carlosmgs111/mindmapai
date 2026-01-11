@@ -1,4 +1,4 @@
 export type FilesInfrastructurePolicy = {
-  storage: "local-fs" | "browser" | "browser-mock";
-  repository: "csv" | "browser";
+  storage: "node-fs" | "browser-fs" | "browser-mock";
+  repository: "csv" | "idb";
 };

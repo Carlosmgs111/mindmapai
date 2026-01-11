@@ -1,7 +1,7 @@
 import type { EmbeddingProvider } from "../../@core-contracts/providers";
 import { InferenceClient } from "@huggingface/inference";
 
-export class HuggingFaceEmbeddingProvider implements EmbeddingProvider {
+export class NodeHFEmbeddingProvider implements EmbeddingProvider {
   private client: InferenceClient;
   private dimensions: number;
   private model: string;

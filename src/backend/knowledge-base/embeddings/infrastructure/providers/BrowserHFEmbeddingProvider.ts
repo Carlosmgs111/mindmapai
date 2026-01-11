@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
   env.useBrowserCache = true;
 }
 
-export class BrowserEmbeddingProvider implements EmbeddingProvider {
+export class BrowserHFEmbeddingProvider implements EmbeddingProvider {
   private extractor: any = null;
   private dimensions: number;
   private model: string;

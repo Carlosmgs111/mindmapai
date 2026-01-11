@@ -10,7 +10,7 @@ export class AstroRouter {
     ) => Promise<KnowledgeAssetApi>
   ) {
     this.knowledgeAssetApi = knowledgeAssetApiFactory({
-      repository: "local-level",
+      repository: "idb",
       aiProvider: "vercel-ai",
     });
   }

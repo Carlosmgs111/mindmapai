@@ -30,7 +30,7 @@ export default function FileList({ execEnv }: FileListProps) {
           const { filesApiFactory } = await import("@/modules/files/index");
           const api = await filesApiFactory({
             storage: "browser-mock",
-            repository: "browser",
+            repository: "idb",
           });
           setFilesApi(api);
 

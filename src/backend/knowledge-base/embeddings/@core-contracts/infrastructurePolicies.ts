@@ -1,4 +1,4 @@
 export type EmbeddingsInfrastructurePolicy = {
-  provider: "cohere" | "hugging-face" | "openai" | "browser";
-  repository: "local-level" | "remote-db" | "browser";
+  provider: "vercel-ai" | "browser-hf" | "node-hf";
+  repository: "leveldb" | "idb";
 };

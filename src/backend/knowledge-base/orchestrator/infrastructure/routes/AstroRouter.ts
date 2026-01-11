@@ -11,25 +11,24 @@ export class AstroRouter {
     knowledgeAssetsApiFactory: (policy: KnowledgeAssetsInfrastructurePolicy) => Promise<KnowledgeAssetsAPI>
   ) {
     this.knowledgeAssetsApi = knowledgeAssetsApiFactory({
-      repository: "local-level",
       filesPolicy: {
-        storage: "local-fs",
+        storage: "node-fs",
         repository: "csv",
       },
       textExtractionPolicy: {
         extractor: "pdf",
-        repository: "local-level",
-        aiProvider: "vercel-ai",
+        repository: "leveldb",
       },
       chunkingPolicy: {
         strategy: "fixed",
       },
       embeddingsPolicy: {
-        provider: "hugging-face",
-        repository: "local-level",
+        provider: "node-hf",
+        repository: "leveldb",
       },
       knowledgeAssetPolicy: {
-        repository: "local-level",
+        repository: "leveldb",
+        aiProvider: "vercel-ai",
       },
     });
   }

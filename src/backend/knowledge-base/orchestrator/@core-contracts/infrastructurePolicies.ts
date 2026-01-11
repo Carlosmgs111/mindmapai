@@ -5,7 +5,6 @@ import type { EmbeddingsInfrastructurePolicy } from "@/modules/knowledge-base/em
 import type { KnowledgeAssetInfrastructurePolicy } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/infrastructurePolicies";
 
 export type KnowledgeAssetsInfrastructurePolicy = {
-  repository: "local-level" | "remote-db" | "browser";
   filesPolicy: FilesInfrastructurePolicy;
   textExtractionPolicy: TextExtractionInfrastructurePolicy;
   chunkingPolicy: ChunkingInfrastructurePolicy;

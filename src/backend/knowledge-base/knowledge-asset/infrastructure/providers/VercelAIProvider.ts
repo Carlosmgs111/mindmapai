@@ -17,7 +17,7 @@ export class VercelAIProvider implements AIProvider {
   ) {
     this.model = createHuggingFace({
       apiKey: import.meta.env.HF_API_KEY,
-    })
+    });
     this.systemPrompt = systemPrompt;
   }
 
@@ -26,9 +26,12 @@ export class VercelAIProvider implements AIProvider {
    */
   async generateDescription(text: string): Promise<string> {
     try {
-      const prompt = `Generate a concise description (2-3 sentences) summarizing the following text:\n\n${text.substring(0, 2000)}`;
+      const prompt = `Generate a concise description (2-3 sentences) summarizing the following text:\n\n${text.substring(
+        0,
+        2000
+      )}`;
       console.log(this.model);
-      const { text: description } = await generateText( {
+      const { text: description } = await generateText({
         model: this.model("deepseek-ai/DeepSeek-V3-0324"),
         system: this.systemPrompt,
         prompt,
@@ -47,7 +50,10 @@ export class VercelAIProvider implements AIProvider {
    */
   async *generateDescriptionStream(text: string): AsyncGenerator<string> {
     try {
-      const prompt = `Generate a concise description (2-3 sentences) summarizing the following text:\n\n${text.substring(0, 2000)}`;
+      const prompt = `Generate a concise description (2-3 sentences) summarizing the following text:\n\n${text.substring(
+        0,
+        2000
+      )}`;
 
       const result = this.model("deepseek-ai/DeepSeek-V3-0324").stream({
         system: this.systemPrompt,

@@ -7,6 +7,7 @@ export class FilesInfrastructureResolver {
     storage: Storage;
     repository: Repository;
   }> {
+    console.log({ policy });
     return {
       storage: await FilesInfrastructureResolver.resolveStorage(policy.storage),
       repository: await FilesInfrastructureResolver.resolveRepository(
@@ -19,13 +20,13 @@ export class FilesInfrastructureResolver {
     type: FilesInfrastructurePolicy["storage"]
   ): Promise<Storage> {
     const resolverTypes = {
-      "local-fs": async () => {
-        const { LocalFsStorage } = await import("../storage/LocalFsStorage");
-        return new LocalFsStorage();
+      "node-fs": async () => {
+        const { NodeFsStorage } = await import("../storage/NodeFsStorage");
+        return new NodeFsStorage();
       },
-      browser: async () => {
-        const { BrowserStorage } = await import("../storage/BrowserStorage");
-        return new BrowserStorage();
+      "browser-fs": async () => {
+        const { BrowserFsStorage } = await import("../storage/BrowserFsStorage");
+        return new BrowserFsStorage();
       },
       "browser-mock": async () => {
         const { BrowserMockStorage } = await import(
@@ -45,16 +46,16 @@ export class FilesInfrastructureResolver {
   ): Promise<Repository> {
     const resolverTypes = {
       csv: async () => {
-        const { LocalCsvRepository } = await import(
-          "../repository/LocalCsvRepository"
+        const { CsvRepository } = await import(
+          "../repository/CsvRepository"
         );
-        return new LocalCsvRepository();
+        return new CsvRepository();
       },
-      browser: async () => {
-        const { BrowserRepository } = await import(
-          "../repository/BrowserRepository"
+      idb: async () => {
+        const { IDBRepository } = await import(
+          "../repository/IDBRepository"
         );
-        return new BrowserRepository();
+        return new IDBRepository();
       },
     };
 

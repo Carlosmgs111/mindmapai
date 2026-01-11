@@ -3,12 +3,12 @@ import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositori
 import { getKnowledgeAssetsDB } from "@/modules/shared/config/repositories";
 // import { Level } from "level";
 
-export class LocalLevelRepository implements KnowledgeAssetsRepository {
+export class LevelDBRepository implements KnowledgeAssetsRepository {
   private db: any;
   private dbInitialized: boolean = false;
 
   constructor() {
-    console.log("LocalLevelRepository constructor");
+    console.log("LevelDBRepository constructor");
   }
 
   private async ensureDB() {

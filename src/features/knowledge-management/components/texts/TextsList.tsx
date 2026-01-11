@@ -14,7 +14,7 @@ export const TextList = () => {
         async ({ textExtractorApiFactory }) => {
           const api = await textExtractorApiFactory({
             extractor: "browser-pdf",
-            repository: "browser",
+            repository: "idb",
           });
           api.getAllIndexes().then((texts) => {
             textsStore.set(texts);

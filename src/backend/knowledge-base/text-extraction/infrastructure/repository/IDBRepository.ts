@@ -1,16 +1,16 @@
 import type { Repository } from "../../@core-contracts/repositories";
 import type { Text } from "../../@core-contracts/entities";
 
-interface BrowserDBConfig {
+interface IDBConfig {
   dbName: string;
   version: number;
   storeName: string;
 }
 
-export class BrowserRepository implements Repository {
-  private config: BrowserDBConfig;
+export class IDBRepository implements Repository {
+  private config: IDBConfig;
 
-  constructor(config?: Partial<BrowserDBConfig>) {
+  constructor(config?: Partial<IDBConfig>) {
     this.config = {
       dbName: config?.dbName || "text-extraction-db",
       version: config?.version || 1,

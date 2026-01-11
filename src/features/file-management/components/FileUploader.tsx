@@ -25,8 +25,8 @@ export default function FileUploader({ execEnv, onUploadComplete }: FileUploader
         if (!filesApi) {
           const { filesApiFactory } = await import("@/modules/files/index");
           const api = await filesApiFactory({
-            storage: "browser",
-            repository: "browser",
+            storage: "browser-mock",
+            repository: "idb",
           });
           setFilesApi(api);
 

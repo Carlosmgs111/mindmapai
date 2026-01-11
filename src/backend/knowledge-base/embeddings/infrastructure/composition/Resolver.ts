@@ -7,12 +7,17 @@ export class EmbeddingsInfrastructureResolver {
     provider: EmbeddingProvider;
     repository: VectorRepository;
   }> {
-    const provider = await EmbeddingsInfrastructureResolver.resolveProvider(policy.provider);
+    const provider = await EmbeddingsInfrastructureResolver.resolveProvider(
+      policy.provider
+    );
     const dimensions = provider.getDimensions();
 
     return {
       provider,
-      repository: await EmbeddingsInfrastructureResolver.resolveRepository(policy.repository, dimensions),
+      repository: await EmbeddingsInfrastructureResolver.resolveRepository(
+        policy.repository,
+        dimensions
+      ),
     };
   }
 
@@ -20,22 +25,23 @@ export class EmbeddingsInfrastructureResolver {
     type: EmbeddingsInfrastructurePolicy["provider"]
   ): Promise<EmbeddingProvider> {
     const resolverTypes = {
-      cohere: async () => {
-        const { AIEmbeddingProvider } = await import("../providers/AIEmbeddingProvider");
+      "vercel-ai": async () => {
+        const { AIEmbeddingProvider } = await import(
+          "../providers/AIEmbeddingProvider"
+        );
         return new AIEmbeddingProvider();
       },
-      "hugging-face": async () => {
-        const { HuggingFaceEmbeddingProvider } = await import("../providers/HuggingFaceEmbeddingProvider");
-        return new HuggingFaceEmbeddingProvider();
+      "node-hf": async () => {
+        const { NodeHFEmbeddingProvider } = await import(
+          "../providers/NodeHFEmbeddingProvider"
+        );
+        return new NodeHFEmbeddingProvider();
       },
-      browser: async () => {
-        const { BrowserEmbeddingProvider } = await import("../providers/BrowserEmbeddingProvider");
-        return new BrowserEmbeddingProvider();
-      },
-      openai: async () => {
-        // TODO: Create OpenAIProvider
-        const { AIEmbeddingProvider } = await import("../providers/AIEmbeddingProvider");
-        return new AIEmbeddingProvider();
+      "browser-hf": async () => {
+        const { BrowserHFEmbeddingProvider } = await import(
+          "../providers/BrowserHFEmbeddingProvider"
+        );
+        return new BrowserHFEmbeddingProvider();
       },
     };
     if (!resolverTypes[type]) {
@@ -49,26 +55,21 @@ export class EmbeddingsInfrastructureResolver {
     dimensions: number
   ): Promise<VectorRepository> {
     const resolverTypes = {
-      "local-level": async () => {
-        const { LevelVectorStore } = await import("../repositories/LocalLevelVectorDB");
-        return new LevelVectorStore({
+      leveldb: async () => {
+        const { LevelDBVectorStore } = await import(
+          "../repositories/LevelDBVectorStore"
+        );
+        return new LevelDBVectorStore({
           dimensions,
           similarityThreshold: 0.7,
           dbPath: "./embeddings.db",
         });
       },
-      "remote-db": async () => {
-        // TODO: Create RemoteVectorDB
-        const { LevelVectorStore } = await import("../repositories/LocalLevelVectorDB");
-        return new LevelVectorStore({
-          dimensions,
-          similarityThreshold: 0.7,
-          dbPath: "./embeddings.db",
-        });
-      },
-      browser: async () => {
-        const { BrowserVectorDB } = await import("../repositories/BrowserVectorDB");
-        return new BrowserVectorDB({
+      idb: async () => {
+        const { IDBVectorStore } = await import(
+          "../repositories/IDBVectorStore"
+        );
+        return new IDBVectorStore({
           dimensions,
           similarityThreshold: 0.7,
           dbName: "embeddings-db",

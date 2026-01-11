@@ -1,18 +1,15 @@
 import type { TextExtractor } from "../../@core-contracts/services";
 import type { Repository } from "../../@core-contracts/repositories";
 import type { TextExtractionInfrastructurePolicy } from "../../@core-contracts/infrastructurePolicies";
-import type { AIProvider } from "../../@core-contracts/providers";
 
 export class TextExtractionInfrastructureResolver {
   static async resolve(policy: TextExtractionInfrastructurePolicy): Promise<{
     extractor: TextExtractor;
     repository: Repository;
-    aiProvider: AIProvider;
   }> {
     return {
       extractor: await TextExtractionInfrastructureResolver.resolveExtractor(policy.extractor),
       repository: await TextExtractionInfrastructureResolver.resolveRepository(policy.repository),
-      aiProvider: await TextExtractionInfrastructureResolver.resolveAIProvider(policy.aiProvider),
     };
   }
 
@@ -49,18 +46,13 @@ export class TextExtractionInfrastructureResolver {
     type: TextExtractionInfrastructurePolicy["repository"]
   ): Promise<Repository> {
     const resolverTypes = {
-      "local-level": async () => {
-        const { LocalLevelRepository } = await import("../repository/LocalLevelRepository");
-        return new LocalLevelRepository();
+      leveldb: async () => {
+        const { LevelDBRepository } = await import("../repository/LevelDBRepository");
+        return new LevelDBRepository();
       },
-      "remote-db": async () => {
-        // TODO: Create RemoteDbRepository
-        const { LocalLevelRepository } = await import("../repository/LocalLevelRepository");
-        return new LocalLevelRepository();
-      },
-      browser: async () => {
-        const { BrowserRepository } = await import("../repository/BrowserRepository");
-        return new BrowserRepository();
+      idb: async () => {
+        const { IDBRepository } = await import("../repository/IDBRepository");
+        return new IDBRepository();
       },
     };
     if (!resolverTypes[type]) {
@@ -68,23 +60,5 @@ export class TextExtractionInfrastructureResolver {
     }
     return resolverTypes[type]();
   }
-  private static async resolveAIProvider(
-      type: TextExtractionInfrastructurePolicy["aiProvider"]
-    ): Promise<AIProvider> {
-      const resolverTypes = {
-        "web-llm": async () => {
-          const { WebLLMProvider } = await import("../providers/WebLLMProvider");
-          return new WebLLMProvider();
-        },
-        "vercel-ai": async () => {
-          const { VercelAIProvider } = await import("../providers/VercelAIProvider");
-          const { cohere } = await import("@ai-sdk/cohere");
-          return new VercelAIProvider(cohere("command-r-plus"));
-        },
-      };
-      if (!resolverTypes[type]) {
-        throw new Error(`Unsupported AI provider: ${type}`);
-      }
-      return resolverTypes[type]();
-    }
+ 
 }

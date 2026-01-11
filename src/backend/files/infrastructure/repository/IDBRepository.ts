@@ -1,16 +1,16 @@
 import type { Repository } from "../../@core-contracts/repositories";
 import type { File } from "../../@core-contracts/entities";
 
-interface BrowserFilesConfig {
+interface IDBFilesConfig {
   dbName: string;
   version: number;
   storeName: string;
 }
 
-export class BrowserRepository implements Repository {
-  private config: BrowserFilesConfig;
+export class IDBRepository implements Repository {
+  private config: IDBFilesConfig;
 
-  constructor(config?: Partial<BrowserFilesConfig>) {
+  constructor(config?: Partial<IDBFilesConfig>) {
     this.config = {
       dbName: config?.dbName || "files-repository-db",
       version: config?.version || 1,

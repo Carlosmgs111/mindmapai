@@ -3,7 +3,6 @@ export class Text {
     public id: string,
     public sourceId: string,
     public content: string,
-    public description: string,
     public metadata?: {
       author?: string;
       title?: string;
@@ -16,7 +15,6 @@ export class Text {
       id: this.id,
       sourceId: this.sourceId,
       content: this.content,
-      description: this.description,
       metadata: this.metadata,
     };
   }

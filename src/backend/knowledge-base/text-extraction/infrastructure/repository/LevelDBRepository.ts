@@ -3,12 +3,12 @@ import type { Text } from "../../@core-contracts/entities";
 import { getTextsDB } from "@/modules/shared/config/repositories";
 // import { Level } from "level";
 
-export class LocalLevelRepository implements Repository {
+export class LevelDBRepository implements Repository {
   private db: any;
   private dbInitialized: boolean = false;
 
   constructor() {
-    console.log("LocalLevelRepository constructor");
+    console.log("LevelDBRepository constructor");
   }
 
   private async ensureDB() {

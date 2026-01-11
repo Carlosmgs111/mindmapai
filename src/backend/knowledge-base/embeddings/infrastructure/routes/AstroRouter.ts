@@ -8,8 +8,8 @@ export class AstroRouter {
     embeddingApiFactory: (policy: EmbeddingsInfrastructurePolicy) => Promise<EmbeddingAPI>
   ) {
     this.embeddingAPI = embeddingApiFactory({
-      provider: "cohere",
-      repository: "local-level",
+      provider: "node-hf",
+      repository: "leveldb",
     });
   }
 

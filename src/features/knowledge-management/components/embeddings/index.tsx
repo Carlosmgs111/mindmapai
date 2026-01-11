@@ -9,8 +9,8 @@ export const EmbeddingsList = () => {
       import("@/backend/knowledge-base/embeddings").then(
         async ({ embeddingApiFactory }) => {
           const api = await embeddingApiFactory({
-            provider: "browser",
-            repository: "browser",
+            provider: "browser-hf",
+            repository: "idb",
           });
           api.getAllDocuments().then((documents) => {
             setEmbeddings(documents);

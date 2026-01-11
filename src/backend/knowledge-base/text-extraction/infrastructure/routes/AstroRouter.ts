@@ -9,8 +9,7 @@ export class AstroRouter {
   ) {
     this.textExtractorApiPromise = textExtractorApiFactory({
       extractor: "pdf",
-      repository: "local-level",
-      aiProvider: "web-llm",
+      repository: "leveldb",
     });
   }
   deleteText = async ({ params }: APIContext) => {

@@ -2,16 +2,16 @@ import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositori
 import type { KnowledgeAssetDTO } from "../../@core-contracts/dtos";
 import type { KnowledgeAsset } from "../../@core-contracts/entities";
 
-interface BrowserKnowledgeConfig {
+interface IDBKnowledgeConfig {
   dbName: string;
   version: number;
   storeName: string;
 }
 
-export class BrowserRepository implements KnowledgeAssetsRepository {
-  private config: BrowserKnowledgeConfig;
+export class IDBRepository implements KnowledgeAssetsRepository {
+  private config: IDBKnowledgeConfig;
 
-  constructor(config?: Partial<BrowserKnowledgeConfig>) {
+  constructor(config?: Partial<IDBKnowledgeConfig>) {
     this.config = {
       dbName: config?.dbName || "knowledge-assets-db",
       version: config?.version || 1,

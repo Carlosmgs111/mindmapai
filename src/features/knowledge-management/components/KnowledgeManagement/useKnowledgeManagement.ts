@@ -151,25 +151,24 @@ export function useKnowledgeManagement() {
     );
     try {
       const knowledgeAssetsApi = await knowledgeAssetsApiFactory({
-        repository: "browser",
         filesPolicy: {
-          storage: "browser",
-          repository: "browser",
+          storage: "browser-fs",
+          repository: "idb",
         },
         textExtractionPolicy: {
           extractor: "browser-pdf",
-          repository: "browser",
-          aiProvider: "web-llm",
+          repository: "idb",
         },
         chunkingPolicy: {
           strategy: "fixed",
         },
         embeddingsPolicy: {
-          provider: "browser",
-          repository: "browser",
+          provider: "browser-hf",
+          repository: "idb",
         },
         knowledgeAssetPolicy: {
-          repository: "browser"
+          repository: "idb",
+          aiProvider: "web-llm",
         },
       });
       const file = formData.get("file") as File;

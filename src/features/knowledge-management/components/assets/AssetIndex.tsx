@@ -21,8 +21,8 @@ export const AssetIndex = ({
     if(execEnv === "browser") {
       import("@/modules/knowledge-base/knowledge-asset").then(({ knowledgeAssetApiFactory }) => {
         knowledgeAssetApiFactory({
-          repository: "browser",
-          aiProvider: "browser",
+          repository: "idb",
+          aiProvider: "web-llm",
         }).then(async (api) => {
           const result = await api.deleteKnowledgeAsset(id);
           if (result) removeAsset(id);

@@ -1,3 +1,4 @@
 export type KnowledgeAssetInfrastructurePolicy = {
-  repository: "local-level" | "browser";
+  repository: "leveldb" | "idb";
+  aiProvider: "web-llm" | "vercel-ai";
 };

@@ -12,8 +12,8 @@ import { UseCases } from "./application/UseCases";
 // import { ChunkingInfrastructureResolver } from "./infrastructure/composition/Resolver";
 
 export const embeddingAPI = await embeddingApiFactory({
-  provider: "openai",
-  repository: "local-level",
+  provider: "node-hf",
+  repository: "leveldb",
 });
 
 export function chunkingApiFactory(

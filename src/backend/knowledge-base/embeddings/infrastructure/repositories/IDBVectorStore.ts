@@ -2,7 +2,7 @@ import type { VectorRepository } from "../../@core-contracts/repositories";
 import type { VectorDocument } from "../../@core-contracts/entities";
 import type { SearchResult } from "../../@core-contracts/dtos";
 
-interface BrowserVectorConfig {
+interface IDBVectorConfig {
   dbName: string;
   version: number;
   storeName: string;
@@ -10,10 +10,10 @@ interface BrowserVectorConfig {
   similarityThreshold: number;
 }
 
-export class BrowserVectorDB implements VectorRepository {
-  private config: BrowserVectorConfig;
+export class IDBVectorStore implements VectorRepository {
+  private config: IDBVectorConfig;
 
-  constructor(config: Partial<BrowserVectorConfig> = {}) {
+  constructor(config: Partial<IDBVectorConfig> = {}) {
     this.config = {
       dbName: config.dbName || "vector-embeddings-db",
       version: config.version || 1,

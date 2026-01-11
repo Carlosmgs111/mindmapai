@@ -28,7 +28,7 @@ export const TextIndex = ({
         ({ textExtractorApiFactory }) => {
           textExtractorApiFactory({
             extractor: "browser-pdf",
-            repository: "browser",
+            repository: "idb",
           }).then(async (api) => {
             const result = await api.removeText(id);
             if (result) removeText(id);
@@ -47,7 +47,7 @@ export const TextIndex = ({
   return (
     <a
       href={`/knowledge/texts/${id}`}
-      className="p-4 border border-slate-700/50 bg-slate-800/50 rounded text-white w-[330px] flex flex-col gap-1"
+      className="p-4 border border-slate-700/50 bg-slate-800/50 rounded text-white min-w-[400px] flex-grow flex flex-col gap-1"
     >
       <h1 className="text-lg font-semibold border-b border-slate-700/50">
         {metadata?.title || "No title"}

@@ -3,9 +3,10 @@ import { sc } from "@/shared/utils/sc";
 import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
 import DocumentIndex from "../components/DocumentIndex.astro";
-const documentsIndexes: string[] = await fetch(
+const documentsIndexes: object[] = await fetch(
   new URL("/api/texts", Astro.url)
 ).then((res) => res.json());
+console.log(documentsIndexes);
 ---
 
 <Layout title="Mindmaps | Klay">
@@ -28,7 +29,7 @@ const documentsIndexes: string[] = await fetch(
             </li>,
             ...documentsIndexes.map((document) => (
               <li class="hover:bg-slate-700/50 transition-all table-row border rounded-lg">
-                <DocumentIndex id={document} />
+                <DocumentIndex id={document.id} />
               </li>
             )),
           ]

@@ -1,7 +1,7 @@
 import type { Storage } from "../../@core-contracts/storage";
 import fs from "fs";
 
-export class LocalFsStorage implements Storage {
+export class NodeFsStorage implements Storage {
   private storagePath: string = "./uploads";
   constructor() {
     if (!fs.existsSync(this.storagePath)) {

@@ -5,7 +5,7 @@ import { filesApiFactory } from "@/backend/files";
 
 const filesApi = await filesApiFactory({
   storage: "browser-mock",
-  repository: "browser",
+  repository: "idb",
 });
 
 interface LoadedFileSelectorProps {

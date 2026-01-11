@@ -6,16 +6,13 @@ import type {
 } from "../@core-contracts/dtos";
 import { Text } from "../domain/Text";
 import { TextCleanerService } from "./TextCleanerService";
-import type { AIProvider } from "../@core-contracts/providers";
 
 export class UseCases {
   private textExtractor: TextExtractor;
   private textRepository: Repository;
-  private aiProvider: AIProvider;
-  constructor(textExtractor: TextExtractor, textRepository: Repository, aiProvider: AIProvider) {
+  constructor(textExtractor: TextExtractor, textRepository: Repository) {
     this.textExtractor = textExtractor;
     this.textRepository = textRepository;
-    this.aiProvider = aiProvider;
   }
   extractTextFromPDF = async ({
     source,
@@ -32,8 +29,7 @@ export class UseCases {
     }
     console.log({ extractedText });
     const cleanedText = TextCleanerService.cleanAll(extractedText.content);
-    const description = await this.aiProvider.generateDescription(cleanedText);
-    const text = new Text(id, source.id, cleanedText, description, extractedText.metadata);
+    const text = new Text(id, source.id, cleanedText, extractedText.metadata);
     await this.textRepository.saveTextById(id, text.toDTO());
     return {
       status: "success",
@@ -56,6 +52,6 @@ export class UseCases {
   getAllIndexes = async () => {
     const texts = await this.textRepository.getAllTexts();
     console.log(texts);
-    return texts.map(({ content, description, ...rest }) => rest);
+    return texts.map(({ content, ...rest }) => rest);
   };
 }
