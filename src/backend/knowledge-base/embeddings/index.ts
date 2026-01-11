@@ -14,7 +14,9 @@ import { EmbeddingsInfrastructureResolver } from "./infrastructure/composition/R
 export async function embeddingApiFactory(
   policy: EmbeddingsInfrastructurePolicy
 ): Promise<EmbeddingAPI> {
-  const { provider, repository } = await EmbeddingsInfrastructureResolver.resolve(policy);
+  const { provider, repository } = await EmbeddingsInfrastructureResolver.resolve(policy).then((res) => {
+    return res;
+  });
   return new EmbeddingUseCases(provider, repository);
 }
 

@@ -1,5 +1,5 @@
 import type { GenerateNewKnowledgeDTO } from "./dtos";
-import type { KnowledgeAssetDTO } from "./dtos";
+import type { KnowledgeAssetDTO, NewKnowledgeDTO } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/dtos";
 
 export interface FlowState {
   status: "SUCCESS" | "ERROR";
@@ -14,10 +14,11 @@ export interface FlowState {
 
 export interface KnowledgeAssetsAPI {
   generateNewKnowledge(
-    document: GenerateNewKnowledgeDTO
+    document: NewKnowledgeDTO
   ): Promise<KnowledgeAssetDTO>;
   generateNewKnowledgeStreamingState(
-    sourceDocument: GenerateNewKnowledgeDTO
+    sourceDocument: NewKnowledgeDTO
   ): AsyncGenerator<KnowledgeAssetDTO | FlowState>;
+  deleteKnowledgeAsset(id: string): Promise<void>;
   retrieveKnowledge(document: string): Promise<void>;
 }

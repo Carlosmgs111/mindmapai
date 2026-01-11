@@ -3,11 +3,11 @@ import type { EmbeddingAPI } from "../../@core-contracts/api";
 import type { EmbeddingsInfrastructurePolicy } from "../../@core-contracts/infrastructurePolicies";
 
 export class AstroRouter {
-  private embeddingAPIPromise: Promise<EmbeddingAPI>;
+  private embeddingAPI: Promise<EmbeddingAPI>;
   constructor(
     embeddingApiFactory: (policy: EmbeddingsInfrastructurePolicy) => Promise<EmbeddingAPI>
   ) {
-    this.embeddingAPIPromise = embeddingApiFactory({
+    this.embeddingAPI = embeddingApiFactory({
       provider: "cohere",
       repository: "local-level",
     });
@@ -15,19 +15,17 @@ export class AstroRouter {
 
   generateEmbeddings = async ({ request }: APIContext) => {
     const { texts } = await request.json();
-    const embeddingAPI = await this.embeddingAPIPromise;
-    const embeddings = await embeddingAPI.generateEmbeddings(texts);
+    const embeddings = await (await this.embeddingAPI).generateEmbeddings(texts);
     return new Response(JSON.stringify(embeddings));
   };
   getAllDocuments = async ({ request }: APIContext) => {
-    const embeddingAPI = await this.embeddingAPIPromise;
-    const documents = await embeddingAPI.getAllDocuments();
+    console.log("getAllDocuments", { embeddingAPI: this.embeddingAPI });
+    const documents = await (await this.embeddingAPI).getAllDocuments();
     return new Response(JSON.stringify(documents));
   };
   search = async ({ request }: APIContext) => {
     const { text, topK } = await request.json();
-    const embeddingAPI = await this.embeddingAPIPromise;
-    const results = await embeddingAPI.search(text, topK);
+    const results = await (await this.embeddingAPI).search(text, topK);
     return new Response(JSON.stringify(results));
   };
 }

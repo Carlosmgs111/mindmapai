@@ -6,15 +6,17 @@ export const EmbeddingsList = () => {
   const [embeddings, setEmbeddings] = useState<any[]>([]);
   useEffect(() => {
     if (execEnv === "browser") {
-      import("@/backend/knowledge-base/embeddings").then(async ({ embeddingApiFactory }) => {
-        const api = await embeddingApiFactory({
-          provider: "browser",
-          repository: "browser",
-        });
-        api.getAllDocuments().then((documents) => {
-          setEmbeddings(documents);
-        });
-      });
+      import("@/backend/knowledge-base/embeddings").then(
+        async ({ embeddingApiFactory }) => {
+          const api = await embeddingApiFactory({
+            provider: "browser",
+            repository: "browser",
+          });
+          api.getAllDocuments().then((documents) => {
+            setEmbeddings(documents);
+          });
+        }
+      );
       return;
     }
     fetch("/api/embeddings").then((res) => {
@@ -25,8 +27,7 @@ export const EmbeddingsList = () => {
   }, []);
   return (
     <div>
-      <h1>Embeddings</h1>
-      <ul className="list-disc text-white">
+      <ul className="text-white">
         {embeddings.map((embedding) => (
           <li key={embedding.id}>
             {embedding.id} - {embedding.metadata.sourceId}

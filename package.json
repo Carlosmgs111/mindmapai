@@ -1,5 +1,5 @@
 {
-  "name": "mindmapai",
+  "name": "klay",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -17,7 +17,7 @@
     "@codemirror/view": "^6.39.4",
     "@huggingface/inference": "^4.13.5",
     "@mlc-ai/web-llm": "^0.2.80",
-    "@nanostores/react": "^1.0.0",
+    "@nanostores/react": "github:nanostores/react",
     "@tailwindcss/vite": "^4.1.17",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.0.3",

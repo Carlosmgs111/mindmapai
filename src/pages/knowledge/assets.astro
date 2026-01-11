@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import { AssetsList } from "@/features/knowledge-management/components/assets/AssetsList";
 ---
 
 <Layout>
-<DashboardLayout>
-</DashboardLayout>
+  <DashboardLayout>
+    <AssetsList client:load />
+  </DashboardLayout>
 </Layout>

@@ -14,7 +14,6 @@ export class AstroRouter {
   }
   deleteText = async ({ params }: APIContext) => {
     const { id } = params;
-    console.log({ id });
     if (!id) {
       return new Response("No file id provided", { status: 400 });
     }

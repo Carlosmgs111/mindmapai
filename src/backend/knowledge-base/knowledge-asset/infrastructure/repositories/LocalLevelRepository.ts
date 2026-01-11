@@ -1,4 +1,4 @@
-import type { KnowledgeAssetDTO } from "../../@core-contracts/dtos";
+import type { KnowledgeAsset } from "../../@core-contracts/entities";
 import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositories";
 import { getKnowledgeAssetsDB } from "@/modules/shared/config/repositories";
 // import { Level } from "level";
@@ -18,11 +18,11 @@ export class LocalLevelRepository implements KnowledgeAssetsRepository {
     }
   }
 
-  async saveKnowledgeAsset(knowledgeAsset: KnowledgeAssetDTO): Promise<void> {
+  async saveKnowledgeAsset(knowledgeAsset: KnowledgeAsset): Promise<void> {
     await this.ensureDB();
     return this.db.put(knowledgeAsset.id, JSON.stringify(knowledgeAsset));
   }
-  async getAllKnowledgeAssets(): Promise<KnowledgeAssetDTO[]> {
+  async getAllKnowledgeAssets(): Promise<KnowledgeAsset[]> {
     try {
       await this.ensureDB();
       const knowledgeAssets = [];
@@ -35,12 +35,12 @@ export class LocalLevelRepository implements KnowledgeAssetsRepository {
       return [];
     }
   }
-  async getKnowledgeAssetById(id: string): Promise<KnowledgeAssetDTO> {
+  async getKnowledgeAssetById(id: string): Promise<KnowledgeAsset> {
     await this.ensureDB();
     return this.db.get(id).then((data: any) => JSON.parse(data));
   }
-  async deleteKnowledgeAsset(id: string): Promise<void> {
+  async deleteKnowledgeAsset(id: string): Promise<boolean> {
     await this.ensureDB();
-    return this.db.del(id);
+    return this.db.del(id).then(() => true).catch(() => false);
   }
 }

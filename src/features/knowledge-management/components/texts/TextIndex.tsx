@@ -1,4 +1,5 @@
 import { navigate } from "astro:transitions/client";
+import { removeText } from "./textsStores";
 
 const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
 
@@ -28,14 +29,19 @@ export const TextIndex = ({
           textExtractorApiFactory({
             extractor: "browser-pdf",
             repository: "browser",
-          }).then((api) => {
-            const result = api.removeText(id);
-            console.log(result);
-            window.location.reload();
+          }).then(async (api) => {
+            const result = await api.removeText(id);
+            if (result) removeText(id);
           });
         }
       );
+      return;
     }
+    fetch(`/api/texts/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) removeText(id);
+    });
   };
 
   return (

@@ -26,8 +26,8 @@ export class UseCases {
   async generateNewKnowledge(
     command: NewKnowledgeDTO
   ): Promise<KnowledgeAssetDTO> {
-    const { source, chunkingStrategy, embeddingStrategy } = command;
-    const sourceFile = source as FileUploadDTO;
+    const { sources, chunkingStrategy, embeddingStrategy } = command;
+    const sourceFile = sources[0] as FileUploadDTO;
 
     try {
       const { status, message } = await this.filesApi.uploadFile(sourceFile);
@@ -57,11 +57,13 @@ export class UseCases {
       );
       const embeddingsDocuments = embeddings.documents as VectorDocument[];
       const knowledgeAsset: NewKnowledgeDTO = {
-        source: sourceFile,
+        id: crypto.randomUUID(),
+        sources: sources,
         chunkingStrategy,
         embeddingStrategy,
-        cleanedTextId: text.id as string,
+        cleanedTextIds: [text.id as string],
         embeddingsIds: embeddingsDocuments.map((embedding) => embedding.id),
+        metadata: {},
       };
     
       const result = await this.knowledgeAssetApi.generateKnowledgeAsset(knowledgeAsset);
@@ -74,8 +76,8 @@ export class UseCases {
   async *generateNewKnowledgeStreamingState(
     command: NewKnowledgeDTO
   ): AsyncGenerator<KnowledgeAssetDTO | FlowState> {
-    const { source, chunkingStrategy, embeddingStrategy } = command;
-    const sourceFile = source as FileUploadDTO;
+    const { sources, chunkingStrategy, embeddingStrategy } = command;
+    const sourceFile = sources[0] as FileUploadDTO;
 
     try {
       const { status, message } = await this.filesApi.uploadFile(sourceFile);
@@ -129,11 +131,13 @@ export class UseCases {
       const embeddingsDocuments = embeddings.documents as VectorDocument[];
 
       const newKnowledgeDTO: NewKnowledgeDTO = {
-        source: sourceFile,
+        id: crypto.randomUUID(),
+        sources,
         chunkingStrategy,
         embeddingStrategy,
-        cleanedTextId: text.id as string,
+        cleanedTextIds: [text.id as string],
         embeddingsIds: embeddingsDocuments.map((embedding) => embedding.id),
+        metadata: {},
       };
       const knowledgeAsset = await this.knowledgeAssetApi.generateKnowledgeAsset(newKnowledgeDTO);
       yield {
@@ -150,6 +154,10 @@ export class UseCases {
         message: "Knowledge asset generation failed",
       };
     }
+  }
+
+  async deleteKnowledgeAsset(id: string): Promise<void> {
+    await this.knowledgeAssetApi.deleteKnowledgeAsset(id);
   }
   async retrieveKnowledge(command: string): Promise<void> {}
 }

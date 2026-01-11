@@ -1,7 +1,7 @@
 export interface KnowledgeAsset {
     id: string;
-    sourceId: string;
-    cleanedTextId: string;
+    sourcesIds: string[];
+    cleanedTextIds: string[];
     embeddingsIds: string[];
     metadata: Record<string, any>;
     createdAt: Date;

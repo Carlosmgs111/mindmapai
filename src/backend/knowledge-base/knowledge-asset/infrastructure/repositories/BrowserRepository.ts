@@ -1,5 +1,6 @@
 import type { KnowledgeAssetsRepository } from "../../@core-contracts/repositories";
 import type { KnowledgeAssetDTO } from "../../@core-contracts/dtos";
+import type { KnowledgeAsset } from "../../@core-contracts/entities";
 
 interface BrowserKnowledgeConfig {
   dbName: string;
@@ -55,7 +56,7 @@ export class BrowserRepository implements KnowledgeAssetsRepository {
     });
   }
 
-  async getAllKnowledgeAssets(): Promise<KnowledgeAssetDTO[]> {
+  async getAllKnowledgeAssets(): Promise<KnowledgeAsset[]> {
     const db = await this.openDB();
     
     return new Promise((resolve, reject) => {
@@ -68,7 +69,7 @@ export class BrowserRepository implements KnowledgeAssetsRepository {
     });
   }
 
-  async getKnowledgeAssetById(id: string): Promise<KnowledgeAssetDTO> {
+  async getKnowledgeAssetById(id: string): Promise<KnowledgeAsset> {
     const db = await this.openDB();
     
     return new Promise((resolve, reject) => {
@@ -87,16 +88,16 @@ export class BrowserRepository implements KnowledgeAssetsRepository {
     });
   }
 
-  async deleteKnowledgeAsset(id: string): Promise<void> {
+  async deleteKnowledgeAsset(id: string): Promise<boolean> {
     const db = await this.openDB();
     
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([this.config.storeName], "readwrite");
       const store = transaction.objectStore(this.config.storeName);
       const request = store.delete(id);
-
+      console.log(request);
       request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve();
+      request.onsuccess = () => resolve(true);
     });
   }
 

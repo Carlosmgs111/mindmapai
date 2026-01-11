@@ -1,8 +1,9 @@
 import type { NewKnowledgeDTO, KnowledgeAssetDTO } from "./dtos";
+import type { KnowledgeAsset } from "./entities";
 
 export interface KnowledgeAssetApi {
   generateKnowledgeAsset(dto: NewKnowledgeDTO): Promise<KnowledgeAssetDTO>;
-  getAllKnowledgeAssets(): Promise<KnowledgeAssetDTO[]>;
-  getKnowledgeAssetById(id: string): Promise<KnowledgeAssetDTO>;
-  deleteKnowledgeAsset(id: string): Promise<void>;
+  getAllKnowledgeAssets(): Promise<KnowledgeAsset[]>;
+  getKnowledgeAssetById(id: string): Promise<KnowledgeAsset>;
+  deleteKnowledgeAsset(id: string): Promise<boolean>;
 }

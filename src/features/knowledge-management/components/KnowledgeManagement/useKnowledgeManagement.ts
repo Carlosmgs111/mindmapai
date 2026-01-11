@@ -176,7 +176,7 @@ export function useKnowledgeManagement() {
         url: "",
       };
       const command: GenerateNewKnowledgeDTO = {
-        source,
+        sources: [source],
         chunkingStrategy: "sentence",
         embeddingStrategy: "sentence",
       };

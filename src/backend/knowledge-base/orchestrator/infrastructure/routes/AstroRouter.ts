@@ -3,6 +3,7 @@ import type { KnowledgeAssetsAPI } from "../../@core-contracts/api";
 import type { KnowledgeAssetsInfrastructurePolicy } from "../../@core-contracts/infrastructurePolicies";
 import type { GenerateNewKnowledgeDTO } from "../../@core-contracts/dtos";
 import type { ChunkingStrategyType } from "@/modules/knowledge-base/chunking/@core-contracts/entities";
+import type { NewKnowledgeDTO } from "@/backend/knowledge-base/knowledge-asset";
 
 export class AstroRouter {
   private knowledgeAssetsApi: Promise<KnowledgeAssetsAPI>;
@@ -54,10 +55,14 @@ export class AstroRouter {
           "chunkingStrategy"
         ) as ChunkingStrategyType;
         const embeddingStrategy = formData.get("embeddingStrategy") as string;
-        const command: GenerateNewKnowledgeDTO = {
-          source,
+        const command: NewKnowledgeDTO = {
+          sources: [source],
           chunkingStrategy,
           embeddingStrategy,
+          id: crypto.randomUUID(),
+          cleanedTextIds: [],
+          embeddingsIds: [],
+          metadata: {},
         };
         const knowledgeAsset =
           (await this.knowledgeAssetsApi).generateNewKnowledge(command);
@@ -92,10 +97,14 @@ export class AstroRouter {
           "chunkingStrategy"
         ) as ChunkingStrategyType;
         const embeddingStrategy = formData.get("embeddingStrategy") as string;
-        const command: GenerateNewKnowledgeDTO = {
-          source,
+        const command: NewKnowledgeDTO = {
+          sources: [source],
           chunkingStrategy,
           embeddingStrategy,
+          id: crypto.randomUUID(),
+          cleanedTextIds: [],
+          embeddingsIds: [],
+          metadata: {},
         };
         const stream = new ReadableStream({
           async start(controller) {
@@ -129,5 +138,12 @@ export class AstroRouter {
       } catch (error) {}
     }
     return new Response("NOT IMPLEMENTED", { status: 200 });
+  };
+  deleteKnowledgeAsset = async ({ params }: APIContext) => {
+    const id = params.id;
+    console.log({ id });
+    const knowledgeAssetsApi = this.knowledgeAssetsApi;
+    await (await knowledgeAssetsApi).deleteKnowledgeAsset(id as string);
+    return new Response("Knowledge asset deleted successfully", { status: 200 });
   };
 }

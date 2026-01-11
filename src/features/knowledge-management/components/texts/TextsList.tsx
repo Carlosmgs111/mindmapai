@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TextIndex } from "./TextIndex";
-import type { TextIndexDTO } from "@/modules/knowledge-base/text-extraction/@core-contracts/dtos";
+import { textsStore } from "./textsStores";
+import { useStore } from "@nanostores/react";
 
 const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
 
 export const TextList = () => {
-  const [texts, setTexts] = useState<TextIndexDTO[]>([]);
-
-  console.log(execEnv);
+  const texts = useStore(textsStore);
 
   useEffect(() => {
     if (execEnv === "browser") {
@@ -17,13 +16,18 @@ export const TextList = () => {
             extractor: "browser-pdf",
             repository: "browser",
           });
-         api.getAllIndexes().then((texts) => {
-           console.log({texts});
-           setTexts(texts);
-         });
+          api.getAllIndexes().then((texts) => {
+            textsStore.set(texts);
+          });
         }
       );
+      return;
     }
+    fetch("/api/texts").then((res) => {
+      res.json().then((texts) => {
+        textsStore.set(texts);
+      });
+    });
   }, []);
 
   return (

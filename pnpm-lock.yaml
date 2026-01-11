@@ -30,8 +30,8 @@ dependencies:
     specifier: ^0.2.80
     version: 0.2.80
   '@nanostores/react':
-    specifier: ^1.0.0
-    version: 1.0.0(nanostores@1.1.0)(react@19.2.3)
+    specifier: github:nanostores/react
+    version: github.com/nanostores/react/a6ad745cc307881916944ee4d6ba04bdda978dc6(nanostores@1.1.0)(react@19.2.3)
   '@tailwindcss/vite':
     specifier: ^4.1.17
     version: 4.1.17(vite@6.4.1)
@@ -1411,17 +1411,6 @@ packages:
     resolution: {integrity: sha512-Hwy1OCsK5cOU4nKr2wIJ2qA1g595PENtO5f2d9Wd/GgFsj5X04uxfaaJfqED8eFAJOpQpn/DirogdEY/yp5jQg==}
     dependencies:
       loglevel: 1.9.2
-    dev: false
-
-  /@nanostores/react@1.0.0(nanostores@1.1.0)(react@19.2.3):
-    resolution: {integrity: sha512-eDduyNy+lbQJMg6XxZ/YssQqF6b4OXMFEZMYKPJCCmBevp1lg0g+4ZRi94qGHirMtsNfAWKNwsjOhC+q1gvC+A==}
-    engines: {node: ^20.0.0 || >=22.0.0}
-    peerDependencies:
-      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^1.0.0
-      react: '>=18.0.0'
-    dependencies:
-      nanostores: 1.1.0
-      react: 19.2.3
     dev: false
 
   /@napi-rs/canvas-android-arm64@0.1.88:
@@ -7570,4 +7559,18 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
+    dev: false
+
+  github.com/nanostores/react/a6ad745cc307881916944ee4d6ba04bdda978dc6(nanostores@1.1.0)(react@19.2.3):
+    resolution: {tarball: https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6}
+    id: github.com/nanostores/react/a6ad745cc307881916944ee4d6ba04bdda978dc6
+    name: '@nanostores/react'
+    version: 1.0.0
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^1.0.0
+      react: '>=18.0.0'
+    dependencies:
+      nanostores: 1.1.0
+      react: 19.2.3
     dev: false

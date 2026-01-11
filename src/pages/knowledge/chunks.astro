@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import { EmbeddingsList } from "@/features/knowledge-management/components/embeddings";
 ---
 
 <Layout>
-  <DashboardLayout>  
+  <DashboardLayout>
+    <EmbeddingsList client:load />
   </DashboardLayout>
 </Layout>
