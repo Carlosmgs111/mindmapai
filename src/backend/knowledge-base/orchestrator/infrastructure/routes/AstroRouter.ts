@@ -12,21 +12,21 @@ export class AstroRouter {
     this.knowledgeAssetsApi = knowledgeAssetsApiFactory({
       filesPolicy: {
         storage: "node-fs",
-        repository: "leveldb",
+        repository: "nedb",
       },
       textExtractionPolicy: {
         extractor: "pdf",
-        repository: "leveldb",
+        repository: "nedb",
       },
       chunkingPolicy: {
         strategy: "fixed",
       },
       embeddingsPolicy: {
         provider: "node-hf",
-        repository: "leveldb",
+        repository: "nedb",
       },
       knowledgeAssetPolicy: {
-        repository: "leveldb",
+        repository: "nedb",
         aiProvider: "vercel-ai",
       },
     });

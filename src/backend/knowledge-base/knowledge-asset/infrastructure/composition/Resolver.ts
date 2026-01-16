@@ -24,6 +24,10 @@ export class KnowledgeAssetInfrastructureResolver {
         const { IDBRepository } = await import("../repositories/IDBRepository");
         return new IDBRepository();
       },
+      nedb: async () => {
+        const { NeDBRepository } = await import("../repositories/NeDBRepository");
+        return new NeDBRepository();
+      },
     };
     if (!resolverTypes[type]) {
       throw new Error(`Unsupported repository: ${type}`);

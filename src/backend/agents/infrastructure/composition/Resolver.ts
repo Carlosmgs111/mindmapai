@@ -42,6 +42,10 @@ export class AgentInfrastructureResolver {
         const { LocalLevelAgentRepository } = await import("../Repositories/LocalLevelAgentRepository");
         return new LocalLevelAgentRepository();
       },
+      nedb: async () => {
+        const { NeDBAgentRepository } = await import("../Repositories/NeDBAgentRepository");
+        return new NeDBAgentRepository();
+      },
     };
     if (!resolverTypes[type]) {
       throw new Error(`Unsupported repository: ${type}`);

@@ -17,23 +17,21 @@ export class LevelDBRepository implements Repository {
     }
   }
 
-  async saveFile(collectionId: string, file: File): Promise<void> {
+  async saveFile(file: File): Promise<void> {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${file.id}`;
-      await this.db.put(key, JSON.stringify(file));
-      console.log(`File ${file.id} saved successfully in collection ${collectionId}`);
+      await this.db.put(file.id, JSON.stringify(file));
+      console.log(`File ${file.id} saved successfully`);
     } catch (error) {
       console.error("Error saving file:", error);
       throw error;
     }
   }
 
-  async getFileById(collectionId: string, id: string): Promise<File | undefined> {
+  async getFileById(id: string): Promise<File | undefined> {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${id}`;
-      const fileData = await this.db.get(key);
+      const fileData = await this.db.get(id);
 
       // Check if data is valid before parsing
       if (fileData === undefined || fileData === null || fileData === "undefined") {
@@ -51,18 +49,15 @@ export class LevelDBRepository implements Repository {
     }
   }
 
-  async getFiles(collectionId: string): Promise<File[]> {
-    console.log(`Getting files from collection ${collectionId}`);
+  async getAllFiles(): Promise<File[]> {
+    console.log(`Getting all files`);
     try {
       await this.ensureDB();
       const files: File[] = [];
-      const prefix = `${collectionId}:`;
 
       for await (const [key, value] of this.db.iterator()) {
         console.log({ key, value });
-        if (key.startsWith(prefix)) {
-          files.push(JSON.parse(value));
-        }
+        files.push(JSON.parse(value));
       }
 
       return files;
@@ -72,54 +67,28 @@ export class LevelDBRepository implements Repository {
     }
   }
 
-  async deleteFile(collectionId: string, id: string): Promise<boolean> {
+  async deleteFile(id: string): Promise<boolean> {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${id}`;
 
       // Check if file exists before deleting
       try {
-        await this.db.get(key);
+        await this.db.get(id);
       } catch (error: any) {
         if (error?.notFound || error?.code === 'LEVEL_NOT_FOUND') {
           // File doesn't exist, consider it already deleted
-          console.log(`File ${id} deleted successfully from collection ${collectionId}`);
+          console.log(`File ${id} deleted successfully`);
           return true;
         }
         throw error;
       }
 
-      await this.db.del(key);
-      console.log(`File ${id} deleted successfully from collection ${collectionId}`);
+      await this.db.del(id);
+      console.log(`File ${id} deleted successfully`);
       return true;
     } catch (error) {
       console.error("Error deleting file:", error);
       return false;
-    }
-  }
-
-  async clearCollection(collectionId: string): Promise<void> {
-    try {
-      await this.ensureDB();
-      const prefix = `${collectionId}:`;
-      const keysToDelete: string[] = [];
-
-      // Collect all keys for this collection
-      for await (const key of this.db.keys()) {
-        if (key.startsWith(prefix)) {
-          keysToDelete.push(key);
-        }
-      }
-
-      // Delete all collected keys
-      for (const key of keysToDelete) {
-        await this.db.del(key);
-      }
-
-      console.log(`Collection ${collectionId} cleared successfully! (${keysToDelete.length} files removed)`);
-    } catch (error) {
-      console.error("Error clearing collection:", error);
-      throw error;
     }
   }
 

@@ -57,6 +57,12 @@ export class FilesInfrastructureResolver {
         );
         return new LevelDBRepository();
       },
+      nedb: async () => {
+        const { NeDBRepository } = await import(
+          "../repository/NeDBRepository"
+        );
+        return new NeDBRepository();
+      },
     };
 
     if (!resolverTypes[type]) {

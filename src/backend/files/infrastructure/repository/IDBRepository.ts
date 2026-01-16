@@ -37,7 +37,7 @@ export class IDBRepository implements Repository {
     });
   }
 
-  private async openDB(collectionId?: string): Promise<IDBDatabase> {
+  private async openDB(): Promise<IDBDatabase> {
     const version = await this.getCurrentVersion();
 
     return new Promise((resolve, reject) => {
@@ -52,43 +52,39 @@ export class IDBRepository implements Repository {
 
       request.onsuccess = () => {
         const db = request.result;
-        // If collectionId provided and store doesn't exist, trigger upgrade
-        if (collectionId) {
-          if (!db.objectStoreNames.contains(collectionId)) {
-            this.currentVersion = version + 1;
-            db.close();
-            this.openDB(collectionId).then(resolve).catch(reject);
-            return;
-          }
+        const storeName = "files";
+
+        // If store doesn't exist, trigger upgrade
+        if (!db.objectStoreNames.contains(storeName)) {
+          this.currentVersion = version + 1;
+          db.close();
+          this.openDB().then(resolve).catch(reject);
+          return;
         }
         resolve(db);
       };
 
       request.onupgradeneeded = () => {
         const db = request.result;
-        // Create collection store if collectionId provided
-        if (collectionId) {
-          if (!db.objectStoreNames.contains(collectionId)) {
-            const store = db.createObjectStore(collectionId, { keyPath: "id" });
-            store.createIndex("name", "name", { unique: false });
-            store.createIndex("type", "type", { unique: false });
-            store.createIndex("lastModified", "lastModified", { unique: false });
-          }
+        const storeName = "files";
+
+        if (!db.objectStoreNames.contains(storeName)) {
+          const store = db.createObjectStore(storeName, { keyPath: "id" });
+          store.createIndex("name", "name", { unique: false });
+          store.createIndex("type", "type", { unique: false });
+          store.createIndex("lastModified", "lastModified", { unique: false });
         }
       };
     });
   }
 
-  // private getStoreName(collectionId: string): string {
-  //   return `${this.config.storeName}_${collectionId}`;
-  // }
-
-  async saveFile(collectionId: string, file: File): Promise<void> {
-    const db = await this.openDB(collectionId);
+  async saveFile(file: File): Promise<void> {
+    const db = await this.openDB();
+    const storeName = "files";
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([collectionId], "readwrite");
-      const store = transaction.objectStore(collectionId);
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
       const request = store.put(file);
 
       request.onerror = () => reject(request.error);
@@ -96,17 +92,13 @@ export class IDBRepository implements Repository {
     });
   }
 
-  async getFileById(collectionId: string, id: string): Promise<File | undefined> {
-    const db = await this.openDB(collectionId);
+  async getFileById(id: string): Promise<File | undefined> {
+    const db = await this.openDB();
+    const storeName = "files";
 
     return new Promise((resolve, reject) => {
-      if (!db.objectStoreNames.contains(collectionId)) {
-        resolve(undefined);
-        return;
-      }
-
-      const transaction = db.transaction([collectionId], "readonly");
-      const store = transaction.objectStore(collectionId);
+      const transaction = db.transaction([storeName], "readonly");
+      const store = transaction.objectStore(storeName);
       const request = store.get(id);
 
       request.onerror = () => reject(request.error);
@@ -114,17 +106,13 @@ export class IDBRepository implements Repository {
     });
   }
 
-  async getFiles(collectionId: string): Promise<File[]> {
-    const db = await this.openDB(collectionId);
+  async getAllFiles(): Promise<File[]> {
+    const db = await this.openDB();
+    const storeName = "files";
 
     return new Promise((resolve, reject) => {
-      if (!db.objectStoreNames.contains(collectionId)) {
-        resolve([]);
-        return;
-      }
-
-      const transaction = db.transaction([collectionId], "readonly");
-      const store = transaction.objectStore(collectionId);
+      const transaction = db.transaction([storeName], "readonly");
+      const store = transaction.objectStore(storeName);
       const request = store.getAll();
 
       request.onerror = () => reject(request.error);
@@ -132,17 +120,13 @@ export class IDBRepository implements Repository {
     });
   }
 
-  async deleteFile(collectionId: string, id: string): Promise<boolean> {
-    const db = await this.openDB(collectionId);
+  async deleteFile(id: string): Promise<boolean> {
+    const db = await this.openDB();
+    const storeName = "files";
 
     return new Promise((resolve, reject) => {
-      if (!db.objectStoreNames.contains(collectionId)) {
-        resolve(true);
-        return;
-      }
-
-      const transaction = db.transaction([collectionId], "readwrite");
-      const store = transaction.objectStore(collectionId);
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
 
       const getRequest = store.get(id);
 
@@ -160,51 +144,17 @@ export class IDBRepository implements Repository {
     });
   }
 
-  async clearCollection(collectionId: string): Promise<void> {
-    const db = await this.openDB(collectionId);
+  async purge(): Promise<void> {
+    const db = await this.openDB();
+    const storeName = "files";
 
     return new Promise((resolve, reject) => {
-      if (!db.objectStoreNames.contains(collectionId)) {
-        resolve();
-        return;
-      }
-
-      const transaction = db.transaction([collectionId], "readwrite");
-      const store = transaction.objectStore(collectionId);
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
       const request = store.clear();
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve();
-    });
-  }
-
-  async purge(): Promise<void> {
-    const db = await this.openDB();
-
-    return new Promise((resolve, reject) => {
-      const storeNames = Array.from(db.objectStoreNames);
-      const filesToClear = storeNames.filter(name => name.startsWith(`${this.config.dbName}_`));
-
-      if (filesToClear.length === 0) {
-        resolve();
-        return;
-      }
-
-      const transaction = db.transaction(filesToClear, "readwrite");
-      let clearedCount = 0;
-
-      filesToClear.forEach(storeName => {
-        const store = transaction.objectStore(storeName);
-        const request = store.clear();
-
-        request.onsuccess = () => {
-          clearedCount++;
-          if (clearedCount === filesToClear.length) {
-            resolve();
-          }
-        };
-        request.onerror = () => reject(request.error);
-      });
     });
   }
 

@@ -8,9 +8,9 @@ export interface FlowState {
 
 
 export interface TextExtractorApi {
-    extractTextFromPDF(command: TextExtractParams): Promise<TextExtractionResultDTO>;
-    getOneText(collectionId: string, id: string): Promise<Text>;
-    getAllTexts(collectionId: string): Promise<Text[]>;
-    getAllIndexes(collectionId: string): Promise<TextIndexDTO[]>;
-    removeText(collectionId: string, id: string): Promise<boolean>;
+    extractTextFromPDF(command: Omit<TextExtractParams, 'collectionId'>): Promise<TextExtractionResultDTO>;
+    getOneText(id: string): Promise<Text | undefined>;
+    getAllTexts(): Promise<Text[]>;
+    getAllIndexes(): Promise<TextIndexDTO[]>;
+    removeText(id: string): Promise<boolean>;
 }

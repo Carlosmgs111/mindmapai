@@ -54,6 +54,10 @@ export class TextExtractionInfrastructureResolver {
         const { IDBRepository } = await import("../repository/IDBRepository");
         return new IDBRepository();
       },
+      nedb: async () => {
+        const { NeDBRepository } = await import("../repository/NeDBRepository");
+        return new NeDBRepository();
+      },
     };
     if (!resolverTypes[type]) {
       throw new Error(`Unsupported repository: ${type}`);

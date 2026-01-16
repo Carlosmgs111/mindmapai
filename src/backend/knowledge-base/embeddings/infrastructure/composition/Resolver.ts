@@ -75,6 +75,16 @@ export class EmbeddingsInfrastructureResolver {
           dbName: "embeddings-db",
         });
       },
+      nedb: async () => {
+        const { NeDBVectorStore } = await import(
+          "../repositories/NeDBVectorStore"
+        );
+        return new NeDBVectorStore({
+          dimensions,
+          similarityThreshold: 0.5,
+          dbPath: "./embeddings.db",
+        });
+      },
     };
     if (!resolverTypes[type]) {
       throw new Error(`Unsupported repository: ${type}`);

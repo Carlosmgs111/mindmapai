@@ -12,31 +12,25 @@ export class FilesUseCases {
     this.repository = repository;
   }
 
-  getFileById = async (
-    collectionId: string,
-    id: string
-  ): Promise<File & { buffer: Buffer }> => {
-    const file = await this.repository.getFileById(collectionId, id);
-    const fileBuffer = await this.getFileBuffer(collectionId, id);
+  getFileById = async (id: string): Promise<File & { buffer: Buffer }> => {
+    const file = await this.repository.getFileById(id);
+    const fileBuffer = await this.getFileBuffer(id);
     if (!file) {
       throw new Error("File not found");
     }
     return { ...file, buffer: fileBuffer };
   };
 
-  getFiles = async (collectionId: string): Promise<File[]> => {
-    console.log("collectionId", collectionId);
-    const files = await this.repository.getFiles(collectionId);
+  getAllFiles = async (): Promise<File[]> => {
+    const files = await this.repository.getAllFiles();
     return files;
   };
 
   uploadFile = async ({
     file,
-    collectionId,
   }: {
     file: FileUploadDTO;
-    collectionId: string;
-  }): Promise<ApplicationResult<FileUploadDTO & { collectionId: string }>> => {
+  }): Promise<ApplicationResult<FileUploadDTO>> => {
    try{ console.log("uploading file", file);
     const fileUrl = await this.storage.uploadFile(file.buffer, file.name);
     console.log({ fileUrl });
@@ -55,12 +49,11 @@ export class FilesUseCases {
       url: fileUrl,
     };
     console.log({ fileEntity });
-    await this.repository.saveFile(collectionId, fileEntity);
+    await this.repository.saveFile(fileEntity);
     return {
       data: {
         ...fileEntity,
         buffer: file.buffer,
-        collectionId,
       },
       status: "SUCCESS",
     };}
@@ -73,8 +66,8 @@ export class FilesUseCases {
     }
   };
 
-  deleteFile = async (collectionId: string, fileId: string) => {
-    const file = await this.repository.getFileById(collectionId, fileId);
+  deleteFile = async (fileId: string) => {
+    const file = await this.repository.getFileById(fileId);
     if (!file) {
       throw new Error("File not found");
     }
@@ -82,17 +75,14 @@ export class FilesUseCases {
     if (!deleted) {
       throw new Error("File not deleted");
     }
-    const deletedDb = await this.repository.deleteFile(collectionId, fileId);
+    const deletedDb = await this.repository.deleteFile(fileId);
     if (!deletedDb) {
       throw new Error("File not deleted in database");
     }
   };
 
-  private getFileBuffer = async (
-    collectionId: string,
-    fileId: string
-  ): Promise<Buffer> => {
-    const file = await this.repository.getFileById(collectionId, fileId);
+  private getFileBuffer = async (fileId: string): Promise<Buffer> => {
+    const file = await this.repository.getFileById(fileId);
     if (!file) {
       throw new Error("File not found");
     }

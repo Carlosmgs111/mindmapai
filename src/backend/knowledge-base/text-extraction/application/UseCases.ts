@@ -17,8 +17,7 @@ export class UseCases {
   extractTextFromPDF = async ({
     source,
     id,
-    collectionId,
-  }: TextExtractParams): Promise<TextExtractionResultDTO> => {
+  }: Omit<TextExtractParams, 'collectionId'>): Promise<TextExtractionResultDTO> => {
     if (!source.buffer) {
       throw new Error("File not found");
     }
@@ -31,27 +30,27 @@ export class UseCases {
     console.log({ extractedText });
     const cleanedText = TextCleanerService.cleanAll(extractedText.content);
     const text = new Text(id, source.id, cleanedText, extractedText.metadata);
-    await this.textRepository.saveTextById(collectionId, id, text.toDTO());
+    await this.textRepository.saveText(text.toDTO());
     return {
       status: "success",
       message: "Text extracted successfully",
       ...text.toDTO(),
     };
   };
-  removeText = async (collectionId: string, id: string) => {
-    await this.textRepository.deleteTextById(collectionId, id);
+  removeText = async (id: string) => {
+    await this.textRepository.deleteTextById(id);
     return true;
   };
-  getOneText = async (collectionId: string, id: string) => {
-    const text = await this.textRepository.getTextById(collectionId, id);
+  getOneText = async (id: string) => {
+    const text = await this.textRepository.getTextById(id);
     return text;
   };
-  getAllTexts = async (collectionId: string) => {
-    const texts = await this.textRepository.getAllTexts(collectionId);
+  getAllTexts = async () => {
+    const texts = await this.textRepository.getAllTexts();
     return texts;
   };
-  getAllIndexes = async (collectionId: string) => {
-    const texts = await this.textRepository.getAllTexts(collectionId);
+  getAllIndexes = async () => {
+    const texts = await this.textRepository.getAllTexts();
     console.log(texts);
     return texts.map(({ content, ...rest }) => rest);
   };

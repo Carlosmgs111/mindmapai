@@ -40,29 +40,27 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
     // Create a new knowledge asset
 
     try {
+      const knowledgeAssetId = crypto.randomUUID();
       const { sources, chunkingStrategy } = command;
-      const sourceFile = {
-        ...(sources[0] as FileUploadDTO),
-        collectionId: command.name,
-      };
+      const sourceFile = sources[0] as FileUploadDTO;
+
       const { status, message } = await this.filesApi.uploadFile({
         file: sourceFile,
-        collectionId: command.name,
       });
       console.log(status, message);
       if (status === "ERROR") {
         throw new Error(message);
       }
 
+      const textId = crypto.randomUUID();
       const text = await this.textExtractorApi.extractTextFromPDF({
-        id: sourceFile.id,
+        id: textId,
         source: sourceFile,
-        collectionId: command.name,
       });
       if (text.status === "error") {
         throw new Error(text.message);
       }
-      const textIds = [text.id as string];
+
       const chunks = await this.chunkingApi.chunkOne(text.content as string, {
         strategy: chunkingStrategy,
       });
@@ -72,17 +70,19 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         content: chunk.content,
         metadata: { sourceId: sourceFile.id },
       }));
+
+      const embeddingsCollectionId = `embeddings-${knowledgeAssetId}`;
       const embeddings = await this.embeddingApi.generateEmbeddings({
         texts: chunksContent,
-        collectionId: command.name,
+        collectionId: embeddingsCollectionId,
       });
-      const embeddingsDocuments = embeddings.documents as VectorDocument[];
-      const embeddingsIds = embeddingsDocuments.map(
-        (embedding) => embedding.id
-      );
+
       const knowledgeAsset: KnowledgeAsset = {
         name: command.name,
-        id: crypto.randomUUID(),
+        id: knowledgeAssetId,
+        fileId: sourceFile.id,
+        textId: textId,
+        embeddingsCollectionId: embeddingsCollectionId,
         metadata: command.metadata,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -103,9 +103,9 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const { sources, chunkingStrategy, name } = command;
       const sourceFile = sources[0] as FileUploadDTO;
       console.log({ sourceFile });
+
       const { status, message } = await this.filesApi.uploadFile({
         file: sourceFile,
-        collectionId: knowledgeAssetId.split("-").reverse()[0] + ":" + name,
       });
       console.log({ status, message });
       if (status === "ERROR") {
@@ -116,11 +116,11 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         step: "file-upload",
         message: "File uploaded successfully",
       };
+
       const textId = crypto.randomUUID();
       const text = await this.textExtractorApi.extractTextFromPDF({
         id: textId,
         source: sourceFile,
-        collectionId: knowledgeAssetId.split("-").reverse()[0] + ":" + name,
       });
       console.log({ text });
       if (text.status === "error") {
@@ -131,6 +131,7 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         step: "text-extraction",
         message: "Text extracted successfully",
       };
+
       const chunks = await this.chunkingApi.chunkOne(text.content as string, {
         strategy: chunkingStrategy,
       });
@@ -142,6 +143,7 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
           message: "Chunks generated successfully",
         };
       }
+
       const chunkBatch = chunks.chunks as Chunk[];
       const chunksContent = chunkBatch.map((chunk) => ({
         id: crypto.randomUUID(),
@@ -149,9 +151,11 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         metadata: { sourceId: sourceFile.id },
         timestamp: Date.now(),
       }));
+
+      const embeddingsCollectionId = `embeddings-${knowledgeAssetId}`;
       const embeddings = await this.embeddingApi.generateEmbeddings({
         texts: chunksContent,
-        collectionId: knowledgeAssetId.split("-").reverse()[0] + ":" + name,
+        collectionId: embeddingsCollectionId,
       });
       console.log({ embeddings });
       if (embeddings.status === "success") {
@@ -165,6 +169,9 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const newKnowledgeAsset: KnowledgeAsset = {
         name: name,
         id: knowledgeAssetId,
+        fileId: sourceFile.id,
+        textId: textId,
+        embeddingsCollectionId: embeddingsCollectionId,
         metadata: {},
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -195,7 +202,7 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const searchResult = await this.embeddingApi.search({
         text: query,
         topK: 5,
-        collectionId: knowledgeAsset.name,
+        collectionId: knowledgeAsset.embeddingsCollectionId,
       });
       const similarQuery = searchResult.map((query) => query.document.content);
       return similarQuery;

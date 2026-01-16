@@ -18,51 +18,34 @@ export class LevelDBRepository implements Repository {
     }
   }
 
-  saveTextById = async (collectionId: string, index: string, text: Text) => {
+  saveText = async (text: Text): Promise<void> => {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${index}`;
-      await this.db.put(key, JSON.stringify(text));
+      await this.db.put(text.id, JSON.stringify(text));
       console.log("Text saved successfully!");
     } catch (error) {
       console.log({ error });
+      throw error;
     }
   };
-  deleteTextById = async (collectionId: string, index: string) => {
+
+  deleteTextById = async (id: string): Promise<void> => {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${index}`;
-      await this.db.del(key);
+      await this.db.del(id);
       console.log("Text deleted successfully!");
     } catch (error) {
       console.log({ error });
+      throw error;
     }
   };
-  getAllIndexes = async (collectionId: string): Promise<string[]> => {
+
+  getAllTexts = async (): Promise<Text[]> => {
     try {
       await this.ensureDB();
-      const indexes = [];
-      const prefix = `${collectionId}:`;
-      for await (const key of this.db.keys()) {
-        if (key.startsWith(prefix)) {
-          indexes.push(key.substring(prefix.length));
-        }
-      }
-      return indexes;
-    } catch (error) {
-      console.log({ error });
-      return [];
-    }
-  };
-  getAllTexts = async (collectionId: string) => {
-    try {
-      await this.ensureDB();
-      const texts = [];
-      const prefix = `${collectionId}:`;
+      const texts: Text[] = [];
       for await (const [key, value] of this.db.iterator()) {
-        if (key.startsWith(prefix)) {
-          texts.push(JSON.parse(value));
-        }
+        texts.push(JSON.parse(value));
       }
       return texts;
     } catch (error) {
@@ -70,33 +53,18 @@ export class LevelDBRepository implements Repository {
       return [];
     }
   };
-  getTextById = async (collectionId: string, index: string) => {
+
+  getTextById = async (id: string): Promise<Text | undefined> => {
     try {
       await this.ensureDB();
-      const key = `${collectionId}:${index}`;
-      const text = await this.db.get(key);
+      const text = await this.db.get(id);
       return JSON.parse(text);
-    } catch (error) {
-      console.log({ error });
-      return null;
-    }
-  };
-  clearCollection = async (collectionId: string) => {
-    try {
-      await this.ensureDB();
-      const prefix = `${collectionId}:`;
-      const keysToDelete = [];
-      for await (const key of this.db.keys()) {
-        if (key.startsWith(prefix)) {
-          keysToDelete.push(key);
-        }
+    } catch (error: any) {
+      if (error?.notFound || error?.code === 'LEVEL_NOT_FOUND') {
+        return undefined;
       }
-      for (const key of keysToDelete) {
-        await this.db.del(key);
-      }
-      console.log(`Collection ${collectionId} cleared successfully!`);
-    } catch (error) {
       console.log({ error });
+      throw error;
     }
   };
 
