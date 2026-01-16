@@ -146,31 +146,11 @@ export function useKnowledgeManagement() {
   };
 
   const handleFromApi = async (id: string, formData: FormData) => {
-    const { knowledgeAssetsApiFactory } = await import(
-      "@/modules/knowledge-base/orchestrator"
+    const { clientKnowledgeBaseApiFactory } = await import(
+      "@/features/knowledge-management/lib/clientKnowledgeBaseApi"
     );
     try {
-      const knowledgeAssetsApi = await knowledgeAssetsApiFactory({
-        filesPolicy: {
-          storage: "browser-fs",
-          repository: "idb",
-        },
-        textExtractionPolicy: {
-          extractor: "browser-pdf",
-          repository: "idb",
-        },
-        chunkingPolicy: {
-          strategy: "fixed",
-        },
-        embeddingsPolicy: {
-          provider: "browser-hf",
-          repository: "idb",
-        },
-        knowledgeAssetPolicy: {
-          repository: "idb",
-          aiProvider: "web-llm",
-        },
-      });
+      const knowledgeAssetsApi = await clientKnowledgeBaseApiFactory();
       const file = formData.get("file") as File;
       const assetName = formData.get("assetName") as string;
       const buffer = new Uint8Array(await file.arrayBuffer()) as Buffer;

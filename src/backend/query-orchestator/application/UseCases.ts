@@ -10,8 +10,11 @@ export class UseCases {
 
   async *streamCompletionWithContext(command: AICompletionDTO) {
     console.log("streamCompletionWithContext", command);
+    if (!command.context?.knowledgeAssetId) {
+      throw new Error("Knowledge asset id is required");
+    }
     const similarQuery = await this.knowledgeAssetsApi.retrieveKnowledge(
-      "21100502-63db-4a3e-8853-ee8bd6b2be0e",
+      command.context.knowledgeAssetId,
       command.userPrompt
     );
     console.log({ similarQuery });

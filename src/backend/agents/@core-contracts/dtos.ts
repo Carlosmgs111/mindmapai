@@ -1,29 +1,32 @@
 export interface PromptTemplateDTO {
-    id: string;
-    systemPrompt: string;
-    userPrompt: string;
+  id: string;
+  systemPrompt: string;
+  userPrompt: string;
 }
 
 export interface AICompletionDTO {
-    systemPrompt?: string;
-    userPrompt: string;
+  systemPrompt?: string;
+  userPrompt: string;
+  context?: {
+    knowledgeAssetId: string;
+  };
 }
 
 export interface ChunkOptions {
-    chunkSize: number;
-    chunkOverlap: number;
+  chunkSize: number;
+  chunkOverlap: number;
 }
 
 export interface PromptTemplateDTO {
-    id: string;
-    template: string;
+  id: string;
+  template: string;
 }
 
 export interface AgentDTO {
-    id: string;
-    model: string;
-    name: string;
-    description: string;
-    instructions: string;
-    tools: string[];
+  id: string;
+  model: string;
+  name: string;
+  description: string;
+  instructions: string;
+  tools: string[];
 }

@@ -58,11 +58,11 @@ export class BrowserFsStorage implements Storage {
 
   async loadFileBuffer(fileName: string): Promise<Buffer> {
     if (!this.directoryHandle) {
-      throw new Error('Directory not initialized');
+      await this.initializeDirectory();
     }
 
     try {
-      const fileHandle = await this.directoryHandle.getFileHandle(fileName);
+      const fileHandle = await this.directoryHandle!.getFileHandle(fileName);
       const file = await fileHandle.getFile();
       const arrayBuffer = await file.arrayBuffer();
       return Buffer.from(arrayBuffer);

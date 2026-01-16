@@ -1,4 +1,4 @@
-import type { NewKnowledgeDTO } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/dtos";
+import type { FullKnowledgeAssetDTO, NewKnowledgeDTO } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/dtos";
 import type { KnowledgeAssetDTO } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/dtos";
 import type { FlowState } from "../@core-contracts/api";
 import type { KnowledgeAssetApi } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/api";
@@ -56,6 +56,10 @@ export class UseCases {
     return this.knowledgeAssetApi.getAllKnowledgeAssets();
   }
 
+  async getFullKnowledgeAssetById(id: string): Promise<FullKnowledgeAssetDTO> {
+    return this.knowledgeAssetApi.getFullKnowledgeAssetById(id);
+  }
+
   async deleteKnowledgeAsset(id: string): Promise<boolean> {
     await this.knowledgeAssetApi.deleteKnowledgeAsset(id);
     return true;
@@ -64,6 +68,7 @@ export class UseCases {
     knowledgeAssetId: string,
     query: string
   ): Promise<string[]> {
+    console.log("retrieveKnowledge", knowledgeAssetId, query);
     try {
       const result = await this.knowledgeAssetApi.retrieveKnowledge(
         knowledgeAssetId,

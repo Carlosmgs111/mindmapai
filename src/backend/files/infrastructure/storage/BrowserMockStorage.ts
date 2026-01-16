@@ -18,13 +18,14 @@ import type { Storage } from "../../@core-contracts/storage";
  * - Not suitable for production use
  */
 export class BrowserMockStorage implements Storage {
-  private fileStore: Map<string, Buffer> = new Map();
+  private fileStore: Map<string, Uint8Array> = new Map();
 
   async uploadFile(file: Buffer, fileName: string): Promise<string> {
-    // Store the file in memory
-    this.fileStore.set(fileName, file);
+    // Store the file in memory - convert Buffer to Uint8Array for browser compatibility
+    const uint8Array = file instanceof Uint8Array ? file : new Uint8Array(file);
+    this.fileStore.set(fileName, uint8Array);
 
-    console.log(`[BrowserMockStorage] File "${fileName}" stored in memory (${file.length} bytes)`);
+    console.log(`[BrowserMockStorage] File "${fileName}" stored in memory (${uint8Array.length} bytes)`);
 
     // Return the fileName as the file identifier
     return fileName;
@@ -48,13 +49,14 @@ export class BrowserMockStorage implements Storage {
     const file = this.fileStore.get(fileName);
 
     if (!file) {
-      console.error(`[BrowserMockStorage] File "${fileName}" not found in memory`);
-      throw new Error(`File not found: ${fileName}`);
+      console.log(`[BrowserMockStorage] File "${fileName}" not found in memory - returning empty buffer`);
+      // Return empty Uint8Array instead of throwing error (mock behavior)
+      return new Uint8Array(0) as any as Buffer;
     }
 
     console.log(`[BrowserMockStorage] File "${fileName}" loaded from memory (${file.length} bytes)`);
 
-    return file;
+    return file as any as Buffer;
   }
 
   /**

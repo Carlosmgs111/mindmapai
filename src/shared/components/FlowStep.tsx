@@ -7,6 +7,7 @@ interface FlowStepProps {
   className?: string;
   id?: string;
   children?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export default function FlowStep({
@@ -15,6 +16,7 @@ export default function FlowStep({
   className = "",
   id,
   children,
+  action, 
 }: FlowStepProps) {
   return (
     <div
@@ -27,6 +29,7 @@ export default function FlowStep({
       <div className="flex flex-col gap-2 font-thin">
         <div className="flex items-center justify-between border-b border-slate-600/20 pb-2">
           <span>{title}</span>
+          {action}
           <div className={sc("event-none group relative", !help && "hidden")}>
             <i className="bx bx-info-circle"></i>
             <span

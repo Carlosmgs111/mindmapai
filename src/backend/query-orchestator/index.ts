@@ -2,7 +2,7 @@ import type { QueryOrchestatorApi } from "./@core-contracts/api";
 import { aiApi } from "../agents";
 import { knowledgeAssetsApiFactory } from "@/modules/knowledge-base/orchestrator";
 import { UseCases } from "./application/UseCases";
-// import { AstroRouter } from "./infrastructure/AstroRouter";
+import { AstroRouter } from "./infrastructure/AstroRouter";
 
 const knowledgeAssetsApi = await knowledgeAssetsApiFactory({
   filesPolicy: {
@@ -30,4 +30,4 @@ export const orchestatorApi: QueryOrchestatorApi = new UseCases(
   knowledgeAssetsApi,
   aiApi
 );
-// export const router = new AstroRouter(orchestatorApi);
+ export const router = new AstroRouter(orchestatorApi);

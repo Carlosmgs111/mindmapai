@@ -6,13 +6,6 @@ const currentPath = Astro.url.pathname;
 
 const knowledgeItems = [
   {
-    href: "/knowledge/generator",
-    label: "Generar nuevo conocimiento",
-    classIcon: "bx bxs-layers-down-right",
-    isActive: currentPath.includes("/knowledge/generator"),
-    title: "Generar nuevo conocimiento",
-  },
-  {
     href: "/knowledge/assets",
     label: "Assets",
     classIcon: "bx bxs-intellect",
@@ -25,20 +18,6 @@ const knowledgeItems = [
     classIcon: "bx bxs-archive",
     isActive: currentPath.includes("files"),
     title: "Gestion de archivos",
-  },
-  {
-    href: "/knowledge/texts",
-    label: "Textos",
-    classIcon: "bx bxs-quote-right",
-    isActive: currentPath.includes("texts"),
-    title: "Gestion de textos",
-  },
-  {
-    href: "/knowledge/chunks",
-    label: "Porciones",
-    classIcon: "bx bxs-cake-slice",
-    isActive: currentPath.includes("chunks"),
-    title: "Gestion de porciones",
   },
 ];
 

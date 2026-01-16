@@ -1,9 +1,10 @@
 export interface KnowledgeAsset {
     id: string;
     name: string;
-    fileId: string;
-    textId: string;
-    embeddingsCollectionId: string;
+    version: string;
+    filesIds: string[];
+    textsIds: string[];
+    embeddingsCollectionsIds: string[];
     metadata: Record<string, any>;
     createdAt: Date;
     updatedAt: Date;

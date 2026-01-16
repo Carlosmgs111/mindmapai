@@ -1,4 +1,5 @@
 import type {
+  FullKnowledgeAssetDTO,
   KnowledgeAssetDTO,
   NewKnowledgeDTO,
 } from "@/modules/knowledge-base/knowledge-asset/@core-contracts/dtos";
@@ -21,6 +22,7 @@ export interface KnowledgeAssetsAPI {
     sourceDocument: NewKnowledgeDTO
   ): AsyncGenerator<KnowledgeAssetDTO | FlowState>;
   getAllKnowledgeAssets(): Promise<KnowledgeAsset[]>;
+  getFullKnowledgeAssetById(id: string): Promise<FullKnowledgeAssetDTO>;
   deleteKnowledgeAsset(id: string): Promise<boolean>;
   retrieveKnowledge(knowledgeAssetId: string, query: string): Promise<string[]>;
 }

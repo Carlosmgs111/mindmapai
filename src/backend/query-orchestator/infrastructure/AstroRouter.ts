@@ -4,7 +4,11 @@ import type { QueryOrchestatorApi } from "../@core-contracts/api";
 export class AstroRouter {
   constructor(private api: QueryOrchestatorApi) {}
   streamCompletionWithContext = async (context: APIContext) => {
-    const { systemPrompt, userPrompt } = await context.request.json();
+    const {
+      systemPrompt,
+      userPrompt,
+      context: { knowledgeAssetId },
+    } = await context.request.json();
     const api = this.api;
 
     const stream = new ReadableStream({
@@ -12,6 +16,9 @@ export class AstroRouter {
         for await (const chunk of api.streamCompletionWithContext({
           systemPrompt,
           userPrompt,
+          context: {
+            knowledgeAssetId,
+          },
         })) {
           controller.enqueue(chunk);
         }

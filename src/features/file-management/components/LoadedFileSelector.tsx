@@ -92,7 +92,7 @@ export default function LoadedFileSelector({
       url: "",
     };
 
-    const res = await filesApi.uploadFile(fileUploadDTO);
+    const res = await filesApi.uploadFile({ file: fileUploadDTO });
     console.log({ res });
     if (res) {
       window.location.reload();
@@ -102,7 +102,7 @@ export default function LoadedFileSelector({
   return (
     <form
       id={id}
-      className={sc("flex gap-2 items-center text-gray-200  font-thin")}
+      className={sc("flex gap-2 items-center text-gray-200 w-full font-thin")}
       onSubmit={handleUpload}
     >
       <input
@@ -122,7 +122,7 @@ export default function LoadedFileSelector({
         )}
         htmlFor="fileInput"
       >
-        <i className="bx bx-folder-open mr-2 align-middle text-xl"></i>
+        <i className="bx bxs-folder-open mr-2 align-middle text-xl"></i>
         {fileName}
       </label>
       {uploadEndpoint && (

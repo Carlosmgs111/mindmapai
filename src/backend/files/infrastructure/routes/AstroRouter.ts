@@ -10,7 +10,7 @@ export class AstroRouter {
   ) {
     this.fileManagerUseCasesPromise = filesApiFactory({
       storage: "node-fs",
-      repository: "leveldb",
+      repository: "nedb",
     });
   }
 

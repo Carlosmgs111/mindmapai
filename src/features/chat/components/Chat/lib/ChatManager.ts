@@ -50,6 +50,9 @@ export class ChatManager {
       const response = await orchestatorApi.streamCompletionWithContext({
         userPrompt: userMessage.content,
         systemPrompt: "",
+        context: {
+          knowledgeAssetId: "d1ee44e5-0c8d-408a-ba3a-3d5fe087dfb0",
+        },
       });
       console.log(response);
       for await (const chunk of response) {
@@ -64,7 +67,13 @@ export class ChatManager {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userPrompt: userMessage.content }),
+      body: JSON.stringify({
+        userPrompt: userMessage.content,
+        systemPrompt: "",
+        context: {
+          knowledgeAssetId: "d1ee44e5-0c8d-408a-ba3a-3d5fe087dfb0",
+        },
+      }),
     });
     if (!response.body) {
       return;

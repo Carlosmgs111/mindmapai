@@ -1,5 +1,6 @@
 import type { KnowledgeAssetApi } from "../@core-contracts/api";
 import type {
+  FullKnowledgeAssetDTO,
   KnowledgeAssetDTO,
   NewKnowledgeDTO,
 } from "../@core-contracts/dtos";
@@ -80,9 +81,9 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const knowledgeAsset: KnowledgeAsset = {
         name: command.name,
         id: knowledgeAssetId,
-        fileId: sourceFile.id,
-        textId: textId,
-        embeddingsCollectionId: embeddingsCollectionId,
+        filesIds: [sourceFile.id],
+        textsIds: [textId],
+        embeddingsCollectionsIds: [embeddingsCollectionId],
         metadata: command.metadata,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -169,9 +170,9 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const newKnowledgeAsset: KnowledgeAsset = {
         name: name,
         id: knowledgeAssetId,
-        fileId: sourceFile.id,
-        textId: textId,
-        embeddingsCollectionId: embeddingsCollectionId,
+        filesIds: [sourceFile.id],
+        textsIds: [textId],
+        embeddingsCollectionsIds: [embeddingsCollectionId],
         metadata: {},
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -202,13 +203,26 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
       const searchResult = await this.embeddingApi.search({
         text: query,
         topK: 5,
-        collectionId: knowledgeAsset.embeddingsCollectionId,
+        collectionId: knowledgeAsset.embeddingsCollectionsIds[0],
       });
       const similarQuery = searchResult.map((query) => query.document.content);
       return similarQuery;
     } catch (error) {
       throw error;
     }
+  }
+
+  async getFullKnowledgeAssetById(id: string): Promise<FullKnowledgeAssetDTO> {
+    const knowledgeAsset = await this.repository.getKnowledgeAssetById(id);
+    const file = await this.filesApi.getFileById(knowledgeAsset.filesIds[0]);
+    const text = await this.textExtractorApi.getOneText(knowledgeAsset.textsIds[0]);
+    const embeddings = await this.embeddingApi.getAllDocuments({collectionId: knowledgeAsset.embeddingsCollectionsIds[0]});
+    return {
+      ...knowledgeAsset,
+      files: [file],
+      texts: [text],
+      embeddings,
+    };
   }
 
   async getAllKnowledgeAssets(): Promise<KnowledgeAsset[]> {

@@ -36,8 +36,9 @@ export class IDBRepository implements KnowledgeAssetsRepository {
         if (!db.objectStoreNames.contains(this.config.storeName)) {
           const store = db.createObjectStore(this.config.storeName, { keyPath: "id" });
           // Create indexes for efficient querying
-          store.createIndex("sourceId", "sourceId", { unique: false });
-          store.createIndex("cleanedTextId", "cleanedTextId", { unique: false });
+          store.createIndex("filesIds", "filesIds", { unique: false });
+          store.createIndex("textsIds", "textsIds", { unique: false });
+          store.createIndex("embeddingsCollectionsIds", "embeddingsCollectionsIds", { unique: false });
         }
       };
     });

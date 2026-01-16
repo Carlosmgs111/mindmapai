@@ -34,7 +34,7 @@ export default function FileList({ execEnv }: FileListProps) {
           });
           setFilesApi(api);
 
-          const loadedFiles = await api.getFiles("3903f3451367:stupid_crimson");
+          const loadedFiles = await api.getAllFiles();
           console.log({ loadedFiles });
           setFilesState(loadedFiles as FileData[]);
 

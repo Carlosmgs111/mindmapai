@@ -1,11 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
-import KnowledgeManagement from "../components/KnowledgeManagement";
+import Asset from "@/features/knowledge-management/components/assets/Asset"
+const { id } = Astro.params;
 ---
 
 <Layout>
   <DashboardLayout>
-    <KnowledgeManagement client:load />
+    <Asset client:load id={id as string} />
   </DashboardLayout>
 </Layout>
