@@ -3,7 +3,8 @@ import { sc } from "@/shared/utils/sc";
 import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
 import DocumentIndex from "../components/DocumentIndex.astro";
-const documentsIndexes: object[] = await fetch(
+import type {Text} from "@/modules/knowledge-base/text-extraction/@core-contracts/entities"
+const documentsIndexes: Text[] = await fetch(
   new URL("/api/texts", Astro.url)
 ).then((res) => res.json());
 console.log(documentsIndexes);

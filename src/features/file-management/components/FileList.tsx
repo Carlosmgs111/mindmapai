@@ -109,10 +109,13 @@ export default function FileList({ execEnv }: FileListProps) {
 
   if (loading) {
     return (
-      <div className="text-gray-200 p-6 bg-gray-800 border border-gray-700 rounded-lg">
-        <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-200"></div>
-          <span className="ml-3">Cargando archivos...</span>
+      <div className="bg-gradient-to-br from-slate-800/80 to-slate-800/50 backdrop-blur-sm p-8 rounded-xl border border-slate-700/50 shadow-xl">
+        <div className="flex flex-col items-center justify-center p-12 gap-4">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-blue-400 absolute top-0 left-0"></div>
+          </div>
+          <span className="text-slate-300 font-medium">Cargando archivos...</span>
         </div>
       </div>
     );
@@ -120,54 +123,99 @@ export default function FileList({ execEnv }: FileListProps) {
 
   if (error) {
     return (
-      <div className="text-gray-200 p-6 bg-gray-800 border border-gray-700 rounded-lg">
-        <div className="text-red-500 p-4">Error: {error}</div>
+      <div className="bg-gradient-to-br from-red-900/20 to-slate-800/50 backdrop-blur-sm p-8 rounded-xl border border-red-500/30 shadow-xl">
+        <div className="flex items-center gap-4 text-red-400">
+          <i className="bx bxs-error text-4xl"></i>
+          <div>
+            <h3 className="font-semibold text-lg">Error al cargar archivos</h3>
+            <p className="text-sm text-red-300 mt-1">{error}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (files.length === 0) {
     return (
-      <div className="text-gray-200 p-12 bg-gray-800/50 border border-gray-700/50 rounded-lg">
-        <span className="block text-gray-200 font-semibold text-xl px-4 w-full text-center">
-          Aun no tienes ningun archivo.
-        </span>
+      <div className="bg-gradient-to-br from-slate-800/80 to-slate-800/50 backdrop-blur-sm p-12 rounded-xl border border-slate-700/50 shadow-xl">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <div className="p-6 bg-slate-700/30 rounded-full">
+            <i className="bx bxs-folder-open text-6xl text-slate-500"></i>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-slate-200 mb-2">
+              No hay archivos todavía
+            </h3>
+            <p className="text-slate-400 text-sm">
+              Sube tu primer documento PDF para comenzar
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="text-slate-200 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-      <span className="block text-slate-200 mb-2 font-semibold text-lg px-4 pb-2 w-full">
-        Archivos
-      </span>
-      <span className="block text-slate-200 mb-2 font-thin text-sm px-4 pb-2 w-full border-b border-slate-700/50">
-        Archivos guardados en la biblioteca
-      </span>
+    <div className="bg-gradient-to-br from-slate-800/80 to-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 shadow-xl overflow-hidden">
+      <div className="p-6 border-b border-slate-700/50">
+        <div className="flex items-center gap-3 mb-2">
+          <i className="bx bxs-folder text-2xl text-blue-400"></i>
+          <h2 className="text-xl font-semibold text-slate-100">
+            Mis Archivos
+          </h2>
+          <span className="ml-auto px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full font-medium">
+            {files.length} {files.length === 1 ? 'archivo' : 'archivos'}
+          </span>
+        </div>
+        <p className="text-slate-400 text-sm">
+          Documentos disponibles en tu biblioteca
+        </p>
+      </div>
+
       <LibraryFileSelector />
 
-      <div className="overflow-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:w-2 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-        <ul className="w-full flex flex-wrap table mb-2">
-          <li className="font-semibold text-lg table-row">
-            <span className="p-4 w-full table-cell">Nombre</span>
-            <span className="p-4 whitespace-nowrap table-cell">
-              Ultima modificacion
-            </span>
-            <span className="p-4 whitespace-nowrap table-cell">Tamaño</span>
-            <span className="p-4 whitespace-nowrap table-cell sticky right-0 bg-slate-900 border-l border-slate-700">
-              Acciones
-            </span>
-          </li>
-          {files.map((file) => (
-            <FileItem
-              key={file.id}
-              file={file}
-              onDelete={handleDelete}
-              onDetail={handleDetail}
-              timeAgo={timeAgo}
-            />
-          ))}
-        </ul>
+      <div className="overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-600 hover:[&::-webkit-scrollbar-thumb]:bg-slate-500">
+        <table className="w-full">
+          <thead className="bg-slate-900/50 sticky top-0">
+            <tr className="border-b border-slate-700/50">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                <div className="flex items-center gap-2">
+                  <i className="bx bx-file text-lg"></i>
+                  Nombre
+                </div>
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300 whitespace-nowrap">
+                <div className="flex items-center gap-2">
+                  <i className="bx bx-time text-lg"></i>
+                  Última modificación
+                </div>
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300 whitespace-nowrap">
+                <div className="flex items-center gap-2">
+                  <i className="bx bx-data text-lg"></i>
+                  Tamaño
+                </div>
+              </th>
+              <th className="px-6 py-4 text-center text-sm font-semibold text-slate-300 sticky right-0 bg-slate-900/50 border-l border-slate-700/50 whitespace-nowrap">
+                <div className="flex items-center justify-center gap-2">
+                  <i className="bx bx-cog text-lg"></i>
+                  Acciones
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-700/30">
+            {files.map((file) => (
+              <FileItem
+                key={file.id}
+                file={file}
+                onDelete={handleDelete}
+                onDetail={handleDetail}
+                timeAgo={timeAgo}
+              />
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

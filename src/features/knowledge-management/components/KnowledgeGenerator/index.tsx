@@ -10,10 +10,12 @@ export function KnowledgeGenerator() {
     useKnowledgeManagement();
   const [openSettings, setOpenSettings] = useState(false);
 
+  console.log("KnowledgeGenerator");
+
   return (
     <div className="flex flex-col gap-4 text-white">
-      <div className="bg-slate-700/50 border border-slate-800/50 h-20 w-full rounded-md">
-        <LoadedFileSelector className="h-20 w-full px-8" />
+      <div className="bg-slate-700/50 border border-slate-800/50 w-full rounded-md">
+        <LoadedFileSelector className="h-fit w-full px-8" />
       </div>
       <div id="flow" className="flex flex-col gap-2 mt-2">
         {steps.map((step) => (
@@ -58,8 +60,8 @@ export function KnowledgeGenerator() {
           : "Process"}
       </button>
       <Overlay open={openSettings} setOpen={setOpenSettings}>
-        <div className="flex flex-col gap-2 p-8 border border-gray-600/50 rounded-tl-lg rounded-bl-lg bg-slate-900 h-full">
-          <span className="text-xl font-semibold text-white">Setting del paso</span>
+        <div className="flex flex-col gap-2 p-8 border border-gray-600/50 rounded-tl-lg rounded-bl-lg bg-slate-900 h-full w-full">
+          <span className="text-xl font-semibold">Setting del paso</span>
         </div>
       </Overlay>
     </div>

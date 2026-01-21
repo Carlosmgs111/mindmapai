@@ -99,10 +99,12 @@ export default function LoadedFileSelector({
     }
   };
 
+  const hasFile = fileName !== "Haz clic para seleccionar archivo";
+
   return (
     <form
       id={id}
-      className={sc("flex gap-2 items-center text-gray-200 w-full font-thin")}
+      className={sc("flex flex-col sm:flex-row gap-3 items-stretch text-slate-200 w-full")}
       onSubmit={handleUpload}
     >
       <input
@@ -117,21 +119,51 @@ export default function LoadedFileSelector({
       <label
         id="fileLabel"
         className={sc(
-          "w-full p-4 hover:bg-gray-700/50 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer flex items-center",
+          "group relative flex-1 p-5 rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer overflow-hidden",
+          hasFile
+            ? "bg-blue-500/10 border-blue-500/50 hover:bg-blue-500/20 hover:border-blue-500"
+            : "bg-slate-700/30 border-slate-600 hover:bg-slate-700/50 hover:border-slate-500",
           className
         )}
         htmlFor="fileInput"
       >
-        <i className="bx bxs-folder-open mr-2 align-middle text-xl"></i>
-        {fileName}
+        <div className="flex items-center gap-3">
+          <div className={`p-3 rounded-lg transition-colors ${
+            hasFile ? "bg-blue-500/20" : "bg-slate-600/30 group-hover:bg-slate-600/50"
+          }`}>
+            <i className={`text-2xl ${
+              hasFile
+                ? "bx bxs-file-plus text-blue-400"
+                : "bx bxs-archive-arrow-up text-slate-400 group-hover:text-slate-300"
+            }`}></i>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className={`font-medium truncate ${
+              hasFile ? "text-slate-200" : "text-slate-400 group-hover:text-slate-300"
+            }`}>
+              {fileName}
+            </p>
+            {!hasFile && (
+              <p className="text-xs text-slate-500 mt-1">
+                Selecciona un archivo PDF
+              </p>
+            )}
+          </div>
+          <i className="bx bx-right-arrow-alt text-xl text-slate-500 group-hover:text-slate-400 transition-colors"></i>
+        </div>
       </label>
       {uploadEndpoint && (
         <button
-          className="bg-gray-700/50 hover:bg-gray-700 p-4 rounded-lg whitespace-nowrap"
+          className={`px-6 py-4 rounded-xl font-semibold whitespace-nowrap transition-all duration-300 flex items-center justify-center gap-2 ${
+            hasFile
+              ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg hover:shadow-blue-500/30"
+              : "bg-slate-700/50 text-slate-500 cursor-not-allowed"
+          }`}
           id="uploadButton"
           type="submit"
+          disabled={!hasFile}
         >
-          <i className="bx bx-folder-up-arrow mr-2 align-middle text-xl"></i>
+          <i className="bx bx-upload text-xl"></i>
           Subir archivo
         </button>
       )}

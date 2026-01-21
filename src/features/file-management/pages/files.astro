@@ -11,17 +11,40 @@ console.log("EXEC_ENV:", execEnv);
 
 <Layout title="Archivos | Klay">
   <DashBoardLayout contentClass="pt-8">
-    <FileList client:load execEnv={execEnv} />
-    <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700/50">
-      <span
-        class="block text-gray-200 mb-2 font-semibold text-lg px-4 pb-2 w-full"
-        >Agregar archivo</span
-      >
-      <span
-        class="block text-gray-200 mb-2 font-thin text-sm px-4 pb-2 w-full border-b border-gray-700"
-        >Agrega un nuevo archivo PDF a la biblioteca</span
-      >
-      <LoadedFileSelector client:load uploadEndpoint={"/api/file"} />
+    <div class="space-y-6 flex flex-col gap-6">
+      <!-- Header Section -->
+      <div class="flex flex-col gap-2">
+        <h1 class="text-3xl font-bold text-slate-100 flex items-center gap-3">
+          <i class="bx bxs-file-doc text-blue-400"></i>
+          Biblioteca de Archivos
+        </h1>
+        <p class="text-slate-400 text-sm">
+          Gestiona tus documentos PDF y crea mapas mentales a partir de ellos
+        </p>
+      </div>
+
+      <!-- File List Section -->
+      <FileList client:load execEnv={execEnv} />
+
+      <!-- Upload Section -->
+      <div class="bg-gradient-to-br from-slate-800/80 to-slate-800/50 p-8 rounded-xl border border-slate-700/50 shadow-xl backdrop-blur-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="p-3 bg-blue-500/10 rounded-lg">
+            <i class="bx bxs-file-plus text-3xl text-blue-400"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold text-slate-100">
+              Agregar Nuevo Archivo
+            </h2>
+            <p class="text-slate-400 text-sm mt-1">
+              Sube un documento PDF para agregarlo a tu biblioteca
+            </p>
+          </div>
+        </div>
+        <div class="mt-6">
+          <LoadedFileSelector client:load uploadEndpoint={"/api/file"} />
+        </div>
+      </div>
     </div>
   </DashBoardLayout>
 </Layout>
