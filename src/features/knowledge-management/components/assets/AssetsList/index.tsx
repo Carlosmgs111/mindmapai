@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { AssetIndex } from "./AssetCard";
-import { assetsStore } from "../../stores/assetsStores";
+import { AssetIndex } from "../AssetCard";
+import { assetsStore } from "../../../stores/assetsStores";
 import { useStore } from "@nanostores/react";
 import { Overlay } from "@/shared/components/Overlay";
-import { KnowledgeGenerator } from "../KnowledgeGenerator";
+import { KnowledgeGenerator } from "../../KnowledgeGenerator";
 import Spinner from "@/shared/components/Spinner";
 const execEnv = import.meta.env.PUBLIC_EXEC_ENV;
 
@@ -94,15 +94,21 @@ export const AssetsIndexesList = () => {
                      animate-[fadeIn_0.3s_ease-out]"
           onClick={() => setOpenGenerator(true)}
         >
-          <div className="flex items-center justify-center w-16 h-16 rounded-full
+          <div
+            className="flex items-center justify-center w-16 h-16 rounded-full
                           bg-blue-500/10 group-hover:bg-blue-500/20
                           border border-blue-500/30 group-hover:border-blue-500/50
-                          transition-all duration-300">
-            <i className="bx bxs-plus text-4xl text-blue-400 group-hover:text-blue-300
-                          group-hover:rotate-90 transition-all duration-300" />
+                          transition-all duration-300"
+          >
+            <i
+              className="bx bxs-plus text-4xl text-blue-400 group-hover:text-blue-300
+                          group-hover:rotate-90 transition-all duration-300"
+            />
           </div>
-          <span className="text-base font-semibold text-slate-300 group-hover:text-blue-300
-                          transition-colors duration-300">
+          <span
+            className="text-base font-semibold text-slate-300 group-hover:text-blue-300
+                          transition-colors duration-300"
+          >
             Agregar nuevo asset
           </span>
         </button>
@@ -112,7 +118,10 @@ export const AssetsIndexesList = () => {
           <div
             key={asset.id}
             className="animate-[fadeInUp_0.4s_ease-out]"
-            style={{ animationDelay: `${index * 0.05}s`, animationFillMode: "backwards" }}
+            style={{
+              animationDelay: `${index * 0.05}s`,
+              animationFillMode: "backwards",
+            }}
           >
             <AssetIndex {...asset} />
           </div>
@@ -120,7 +129,7 @@ export const AssetsIndexesList = () => {
       </div>
 
       <Overlay open={openGenerator} setOpen={setOpenGenerator}>
-        <div className="flex flex-col gap-2 p-8 border border-gray-600/50 rounded-tl-lg rounded-bl-lg bg-slate-900 h-full">
+        <div className="flex flex-col gap-2 p-8 border border-gray-600/50 rounded-tl-lg rounded-bl-lg bg-slate-900 h-full w-[600px]">
           <KnowledgeGenerator />
         </div>
       </Overlay>

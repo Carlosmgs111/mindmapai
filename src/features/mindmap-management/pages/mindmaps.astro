@@ -3,7 +3,10 @@ import { sc } from "@/shared/utils/sc";
 import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
 import DocumentIndex from "../components/DocumentIndex.astro";
-import type {Text} from "@/modules/knowledge-base/text-extraction/@core-contracts/entities"
+import Overlay from "@/shared/components/Overlay/Overlay.astro";
+import MindmapGenerator from "../components/MindmapGenerator.astro";
+import type { Text } from "@/modules/knowledge-base/text-extraction/@core-contracts/entities";
+
 const documentsIndexes: Text[] = await fetch(
   new URL("/api/texts", Astro.url)
 ).then((res) => res.json());
@@ -18,7 +21,12 @@ console.log(documentsIndexes);
         documentsIndexes.length > 0 && "hidden"
       )}>Aun no tienes ningun MindMap.</span
     >
-    <div class={sc("bg-slate-800/50 p-6 rounded-lg border border-slate-700/50", documentsIndexes.length === 0 && "hidden")}>
+    <div
+      class={sc(
+        "bg-slate-800/50 p-6 rounded-lg border border-slate-700/50",
+        documentsIndexes.length === 0 && "hidden"
+      )}
+    >
       <ul class="w-full flex flex-wrap table text-slate-200">
         {
           [
@@ -38,15 +46,36 @@ console.log(documentsIndexes);
       </ul>
     </div>
     <div class="flex gap-2 mt-6">
-      <a
-        href="/use-cases/generator"
+      <button
+        id="open-overlay"
         class="block text-slate-200 font-thin text-lg px-4 w-full mt-6 text-center bg-slate-700/50 hover:bg-slate-700 p-4 rounded-lg border border-slate-600"
-        ><i class="bx bx-plus mr-2 align-middle text-xl"></i>Agregar MindMap</a
+        ><i class="bx bx-plus mr-2 align-middle text-xl"></i>Agregar MindMap</button
       >
       <a
         href="/playground/editor"
         class="block text-slate-200 font-thin text-lg px-4 w-full mt-6 text-center bg-slate-700/50 hover:bg-slate-700 p-4 rounded-lg border border-slate-600"
-        ><i class="bx bx-rename mr-2 align-middle text-xl"></i>Abre el Editor</a>
+        ><i class="bx bx-rename mr-2 align-middle text-xl"></i>Abre el Editor</a
+      >
     </div>
+    <Overlay open={false} id="generator-overlay">
+      <div class="p-6 md:p-10 bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-gray-700/50 rounded-tl-lg rounded-bl-lg h-full text-gray-200 shadow-2xl h-screen overflow-y-scroll"><MindmapGenerator /></div>
+    </Overlay>
   </DashBoardLayout>
 </Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const overlay = document.getElementById("generator-overlay");
+    const openOverlayButton = document.getElementById("open-overlay");
+    if (openOverlayButton) {
+      openOverlayButton.addEventListener("click", () => {
+        if (overlay) {
+          overlay.setAttribute("data-open", "true");
+        }
+      });
+      overlay?.addEventListener("overlay-close", () => {
+        overlay.setAttribute("data-open", "false");
+      });
+    }
+  });
+</script>

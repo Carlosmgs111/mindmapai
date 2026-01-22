@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import DashBoardLayout from "@/layouts/DashboardLayout.astro";
 import LoadedFileSelector from "../components/LoadedFileSelector";
 import FileList from "../components/FileList";
-import FileUploader from "../components/FileUploader";
+import Overlay from "@/shared/components/Overlay/Overlay.astro";
 
 const execEnv = import.meta.env.EXEC_ENV || "server";
 console.log("EXEC_ENV:", execEnv);
@@ -25,9 +25,17 @@ console.log("EXEC_ENV:", execEnv);
 
       <!-- File List Section -->
       <FileList client:load execEnv={execEnv} />
-
+      <button
+        class="bg-blue-500 text-white p-2 rounded-lg inline-flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors duration-300"
+        id="open-overlay"
+        ><i class="bx bxs-file-plus text-3xl text-slate-100"></i> Agregar Archivo</button
+      >
       <!-- Upload Section -->
-      <div class="bg-gradient-to-br from-slate-800/80 to-slate-800/50 p-8 rounded-xl border border-slate-700/50 shadow-xl backdrop-blur-sm">
+    </div>
+    <Overlay open={false} id="my-overlay">
+      <div
+        class="bg-gradient-to-br h-full from-slate-800/80 to-slate-800/80 p-8 rounded-xl border border-slate-700/50 shadow-xl backdrop-blur-sm"
+      >
         <div class="flex items-center gap-3 mb-4">
           <div class="p-3 bg-blue-500/10 rounded-lg">
             <i class="bx bxs-file-plus text-3xl text-blue-400"></i>
@@ -41,11 +49,11 @@ console.log("EXEC_ENV:", execEnv);
             </p>
           </div>
         </div>
-        <div class="mt-6">
+        <div class="mt-6 w-[600px]">
           <LoadedFileSelector client:load uploadEndpoint={"/api/file"} />
         </div>
       </div>
-    </div>
+    </Overlay>
   </DashBoardLayout>
 </Layout>
 
@@ -59,6 +67,30 @@ console.log("EXEC_ENV:", execEnv);
     if (modeContainer) {
       const mode = modeContainer.dataset.mode;
       selectionMode.set(mode === "select");
+    }
+    const openOverlayButton = document.getElementById("open-overlay");
+    if (openOverlayButton) {
+      openOverlayButton.addEventListener("click", () => {
+        const overlay = document.getElementById("my-overlay");
+        if (overlay) {
+          overlay.setAttribute("data-open", "true");
+        }
+      });
+    }
+
+    const overlay = document.getElementById("my-overlay");
+    if (overlay) {
+      // Abrir
+
+      // overlay?.setAttribute('data-open', 'true');
+
+      // Cerrar
+      // overlay?.setAttribute('data-open', 'false');
+
+      // Escuchar cierre
+      overlay?.addEventListener("overlay-close", () => {
+        overlay.setAttribute("data-open", "false");
+      });
     }
   });
 </script>

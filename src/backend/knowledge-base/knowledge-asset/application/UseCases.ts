@@ -87,6 +87,7 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         metadata: command.metadata,
         createdAt: new Date(),
         updatedAt: new Date(),
+        version: "1",
       };
 
       await this.repository.saveKnowledgeAsset(knowledgeAsset);
@@ -176,6 +177,7 @@ export class KnowledgeAssetUseCases implements KnowledgeAssetApi {
         metadata: {},
         createdAt: new Date(),
         updatedAt: new Date(),
+        version: "1",
       };
       this.repository.saveKnowledgeAsset(newKnowledgeAsset);
       yield {

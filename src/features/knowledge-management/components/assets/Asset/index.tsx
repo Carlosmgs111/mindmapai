@@ -25,7 +25,7 @@ export default function Asset({ id }: { id: string }) {
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
-                <i className="bx bx-collection text-2xl text-blue-400"></i>
+                <i className="bx bxs-book-library text-2xl text-blue-400"></i>
               </div>
               <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {asset?.name}
@@ -59,9 +59,11 @@ export default function Asset({ id }: { id: string }) {
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-700/50">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/30">
-                  <i className="bx bx-file text-xl text-blue-400"></i>
+                  <i className="bx bxs-file-detail text-xl text-blue-400"></i>
                 </div>
-                <h2 className="text-lg font-semibold text-slate-200">Fuentes</h2>
+                <h2 className="text-lg font-semibold text-slate-200">
+                  Fuentes
+                </h2>
               </div>
               <span className="px-2.5 py-1 text-xs font-bold bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/30">
                 {asset.files.length}
@@ -85,8 +87,12 @@ export default function Asset({ id }: { id: string }) {
                 <div className="p-4 bg-slate-700/30 rounded-full mb-3">
                   <i className="bx bx-folder-open text-4xl text-slate-500"></i>
                 </div>
-                <p className="text-slate-400 text-sm">No hay fuentes agregadas</p>
-                <p className="text-slate-500 text-xs mt-1">Haz clic en el botón + para agregar archivos</p>
+                <p className="text-slate-400 text-sm">
+                  No hay fuentes agregadas
+                </p>
+                <p className="text-slate-500 text-xs mt-1">
+                  Haz clic en el botón + para agregar archivos
+                </p>
               </div>
             )}
           </div>
@@ -99,9 +105,11 @@ export default function Asset({ id }: { id: string }) {
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-700/50">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-500/10 rounded-lg border border-purple-500/30">
-                  <i className="bx bx-text text-xl text-purple-400"></i>
+                  <i className="bx bxs-article text-xl text-purple-400"></i>
                 </div>
-                <h2 className="text-lg font-semibold text-slate-200">Textos extraídos</h2>
+                <h2 className="text-lg font-semibold text-slate-200">
+                  Textos extraídos
+                </h2>
               </div>
               <span className="px-2.5 py-1 text-xs font-bold bg-purple-500/10 text-purple-400 rounded-full border border-purple-500/30">
                 {asset.texts.length}
@@ -117,8 +125,12 @@ export default function Asset({ id }: { id: string }) {
                 <div className="p-4 bg-slate-700/30 rounded-full mb-3">
                   <i className="bx bx-file-blank text-4xl text-slate-500"></i>
                 </div>
-                <p className="text-slate-400 text-sm">No hay textos extraídos</p>
-                <p className="text-slate-500 text-xs mt-1">Los textos aparecerán después de procesar las fuentes</p>
+                <p className="text-slate-400 text-sm">
+                  No hay textos extraídos
+                </p>
+                <p className="text-slate-500 text-xs mt-1">
+                  Los textos aparecerán después de procesar las fuentes
+                </p>
               </div>
             )}
           </div>
@@ -132,14 +144,18 @@ export default function Asset({ id }: { id: string }) {
             <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/30">
               <i className="bx bxs-cog text-2xl text-blue-400"></i>
             </div>
-            <h2 className="text-2xl font-bold text-slate-100">Configuraciones</h2>
+            <h2 className="text-2xl font-bold text-slate-100">
+              Configuraciones
+            </h2>
           </div>
 
           {/* Rename Section */}
           <div className="flex flex-col gap-4 bg-slate-800/40 backdrop-blur-sm p-6 rounded-xl border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <i className="bx bx-edit text-lg text-blue-400"></i>
-              <h3 className="font-semibold text-lg text-slate-200">Cambiar nombre</h3>
+              <h3 className="font-semibold text-lg text-slate-200">
+                Cambiar nombre
+              </h3>
             </div>
             <div className="flex flex-wrap gap-3 items-center">
               <input
@@ -161,13 +177,20 @@ export default function Asset({ id }: { id: string }) {
           <div className="flex flex-col gap-4 bg-gradient-to-br from-red-950/40 to-red-900/20 backdrop-blur-sm p-6 rounded-xl border border-red-800/50">
             <div className="flex items-center gap-2 mb-2">
               <i className="bx bx-error text-lg text-red-400"></i>
-              <h3 className="font-semibold text-lg text-red-400">Zona de peligro</h3>
+              <h3 className="font-semibold text-lg text-red-400">
+                Zona de peligro
+              </h3>
             </div>
             <div className="flex flex-wrap gap-4 justify-between items-center">
               <div className="flex flex-col gap-1">
-                <p className="text-sm font-medium text-red-300">Eliminar este Asset</p>
+                <p className="text-sm font-medium text-red-300">
+                  Eliminar este Asset
+                </p>
                 <p className="text-xs text-slate-400">
-                  Esta acción eliminará permanentemente <span className="font-semibold text-slate-300">{asset.name}</span>
+                  Esta acción eliminará permanentemente{" "}
+                  <span className="font-semibold text-slate-300">
+                    {asset.name}
+                  </span>
                 </p>
               </div>
               <button
@@ -189,11 +212,11 @@ export default function Asset({ id }: { id: string }) {
         <div className="flex flex-col gap-6 p-8 border border-slate-700/50 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 h-full text-slate-100 shadow-2xl">
           <div className="flex items-center gap-3 pb-4 border-b border-slate-700/50">
             <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/30">
-              <i className="bx bx-cloud-upload text-2xl text-blue-400"></i>
+              <i className="bx bxs-folder-up-arrow text-2xl text-blue-400"></i>
             </div>
             <h2 className="text-2xl font-bold text-slate-100">Subir archivo</h2>
           </div>
-          <div className="bg-slate-800/40 backdrop-blur-sm p-6 rounded-xl border border-slate-700/50">
+          <div className="bg-slate-800/40 backdrop-blur-sm p-6 rounded-xl border border-slate-700/50 w-[600px]">
             <LoadedFileSelector />
           </div>
         </div>

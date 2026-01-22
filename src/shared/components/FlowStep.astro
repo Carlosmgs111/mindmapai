@@ -6,27 +6,37 @@ const { title, help, class: className, id } = Astro.props;
 <div
   id={id}
   class={sc(
-    "relative pt-4 pb-4 border border-gray-600/50 p-6 rounded-md",
+    "relative group bg-gray-800/30 backdrop-blur-sm border-2 border-gray-700/50 hover:border-gray-600/50 p-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-gray-900/20",
     className
   )}
 >
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-4">
     <div
-      class="flex items-center justify-between border-b border-gray-600/20 pb-2"
+      class="flex items-center justify-between pb-3 border-b border-gray-700/30"
     >
-      <span>{title}</span>
-      <div class={sc("event-none group relative", !help && "hidden")}>
-        <i class="bx bx-info-circle"></i>
-        <span
+      <h3 class="font-semibold text-base text-gray-200 flex items-center gap-2">
+        {title}
+      </h3>
+      <div class={sc("relative group/tooltip", !help && "hidden")}>
+        <button
+          type="button"
+          class="flex items-center justify-center w-6 h-6 rounded-full bg-gray-700/50 hover:bg-gray-600/50 transition-colors cursor-help"
+        >
+          <i class="bx bx-help-circle text-gray-400"></i>
+        </button>
+        <div
           class={sc(
-            "pointer-events-none tooltip absolute group-hover:opacity-100 transition-opacity duration-150",
-            "opacity-0 w-48 bg-gray-800 text-gray-200 p-2 rounded-lg border border-gray-700 text-xs right-6"
+            "pointer-events-none absolute z-50 group-hover/tooltip:opacity-100 transition-opacity duration-200",
+            "opacity-0 w-64 bg-gray-900 text-gray-200 p-3 rounded-lg border border-gray-700 text-xs right-0 top-8 shadow-xl"
           )}
         >
+          <div class="absolute -top-1 right-3 w-2 h-2 bg-gray-900 border-l border-t border-gray-700 transform rotate-45"></div>
           {help}
-        </span>
+        </div>
       </div>
     </div>
-    <slot />
+    <div class="flow-step-content">
+      <slot />
+    </div>
   </div>
 </div>

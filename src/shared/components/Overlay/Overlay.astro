@@ -1,0 +1,211 @@
+---
+/**
+ * Overlay Component - Astro Version
+ *
+ * Componente de overlay con animaciones de entrada/salida, gestión de z-index
+ * y soporte para cierre con Escape o click fuera.
+ */
+
+interface Props {
+  id: string;
+  open: boolean;
+  class?: string;
+}
+
+const { id, open, class: className } = Astro.props;
+---
+
+<overlay-component id={id} data-open={open.toString()} class={className} style="display: contents;">
+  <div data-overlay-content style="display: none;">
+    <slot />
+  </div>
+</overlay-component>
+
+<script>
+  import {
+    acquireOverlay,
+    releaseOverlay,
+    isTopOverlay
+  } from "./overlayStack";
+
+  const ANIMATION_MS = 300;
+
+  class OverlayComponent extends HTMLElement {
+    private mounted = false;
+    private visible = false;
+    private zIndex: number | null = null;
+    private backdropEl: HTMLElement | null = null;
+    private contentEl: HTMLElement | null = null;
+    private unmountTimeout: number | null = null;
+
+    connectedCallback() {
+      const isOpen = this.dataset.open === 'true';
+      if (isOpen) {
+        this.handleOpen();
+      }
+    }
+
+    disconnectedCallback() {
+      this.cleanup();
+      if (this.unmountTimeout !== null) {
+        clearTimeout(this.unmountTimeout);
+      }
+    }
+
+    private handleOpen() {
+      // Set mounted first
+      this.mounted = true;
+
+      // Clear any pending unmount
+      if (this.unmountTimeout !== null) {
+        clearTimeout(this.unmountTimeout);
+        this.unmountTimeout = null;
+      }
+
+      // Acquire z-index
+      if (this.zIndex === null) {
+        this.zIndex = acquireOverlay();
+      }
+
+      // Create and mount the overlay
+      this.mountOverlay();
+
+      // Trigger animation after mount
+      this.visible = false;
+      requestAnimationFrame(() => {
+        this.visible = true;
+        this.updateVisibility();
+      });
+
+      // Setup keyboard listener
+      window.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    private handleClose() {
+      // Set visible to false to trigger animation
+      this.visible = false;
+      this.updateVisibility();
+
+      // Remove keyboard listener
+      window.removeEventListener('keydown', this.handleKeyDown);
+
+      // Unmount after animation
+      if (this.unmountTimeout !== null) {
+        clearTimeout(this.unmountTimeout);
+      }
+
+      this.unmountTimeout = window.setTimeout(() => {
+        this.mounted = false;
+        this.unmountOverlay();
+        this.cleanup();
+      }, ANIMATION_MS);
+    }
+
+    private mountOverlay() {
+      if (this.backdropEl) return; // Already mounted
+
+      // Create backdrop
+      this.backdropEl = document.createElement('div');
+      this.backdropEl.className = 'fixed inset-0 bg-slate-800/30 backdrop-blur-xs flex justify-end transition-opacity duration-300 opacity-0 pointer-events-none';
+      this.backdropEl.style.zIndex = String(this.zIndex);
+      this.backdropEl.addEventListener('click', this.handleBackdropClick);
+
+      // Create content container
+      this.contentEl = document.createElement('div');
+      this.contentEl.className = 'h-full w-fit transition-transform duration-300 ease-in-out translate-x-full';
+
+      // Get the hidden content wrapper
+      const contentWrapper = this.querySelector('[data-overlay-content]') as HTMLElement;
+      if (contentWrapper) {
+        // Move ALL child nodes from the wrapper to content container
+        while (contentWrapper.firstChild) {
+          this.contentEl.appendChild(contentWrapper.firstChild);
+        }
+      }
+
+      // Assemble
+      this.backdropEl.appendChild(this.contentEl);
+      document.body.appendChild(this.backdropEl);
+    }
+
+    private unmountOverlay() {
+      if (this.backdropEl) {
+        // Move ALL content back to the hidden wrapper
+        if (this.contentEl) {
+          const contentWrapper = this.querySelector('[data-overlay-content]') as HTMLElement;
+          if (contentWrapper) {
+            while (this.contentEl.firstChild) {
+              contentWrapper.appendChild(this.contentEl.firstChild);
+            }
+          }
+        }
+
+        // Remove from DOM
+        this.backdropEl.removeEventListener('click', this.handleBackdropClick);
+        this.backdropEl.remove();
+        this.backdropEl = null;
+        this.contentEl = null;
+      }
+    }
+
+    private updateVisibility() {
+      if (!this.backdropEl || !this.contentEl) return;
+
+      if (this.visible) {
+        this.backdropEl.classList.remove('opacity-0', 'pointer-events-none');
+        this.backdropEl.classList.add('opacity-100', 'pointer-events-auto');
+        this.contentEl.classList.remove('translate-x-full');
+        this.contentEl.classList.add('translate-x-0');
+      } else {
+        this.backdropEl.classList.remove('opacity-100', 'pointer-events-auto');
+        this.backdropEl.classList.add('opacity-0', 'pointer-events-none');
+        this.contentEl.classList.remove('translate-x-0');
+        this.contentEl.classList.add('translate-x-full');
+      }
+    }
+
+    private handleBackdropClick = (e: MouseEvent) => {
+      // Only close if clicking the backdrop itself, not children
+      if (e.target !== e.currentTarget) return;
+      this.requestClose();
+    };
+
+    private handleKeyDown = (e: KeyboardEvent) => {
+      // Only close if visible and is top overlay
+      if (e.key === "Escape" && this.visible && this.zIndex !== null && isTopOverlay(this.zIndex)) {
+        this.requestClose();
+      }
+    };
+
+    private requestClose() {
+      // Dispatch close event
+      this.dispatchEvent(new CustomEvent('overlay-close', {
+        bubbles: true,
+        composed: true
+      }));
+    }
+
+    private cleanup() {
+      if (this.zIndex !== null) {
+        releaseOverlay(this.zIndex);
+        this.zIndex = null;
+      }
+    }
+
+    static observedAttributes = ['data-open'];
+
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+      if (name === 'data-open' && oldValue !== null && oldValue !== newValue) {
+        const isOpen = newValue === 'true';
+
+        if (isOpen && !this.mounted) {
+          this.handleOpen();
+        } else if (!isOpen && this.mounted) {
+          this.handleClose();
+        }
+      }
+    }
+  }
+
+  customElements.define('overlay-component', OverlayComponent);
+</script>

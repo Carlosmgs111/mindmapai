@@ -22,6 +22,7 @@ export default function LoadedFileSelector({
   const [fileName, setFileName] = useState<string>(
     "Haz clic para seleccionar archivo"
   );
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -99,12 +100,35 @@ export default function LoadedFileSelector({
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0 && fileInputRef.current) {
+      fileInputRef.current.files = files;
+      handleFileChange({ target: fileInputRef.current } as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
+
   const hasFile = fileName !== "Haz clic para seleccionar archivo";
 
   return (
     <form
       id={id}
-      className={sc("flex flex-col sm:flex-row gap-3 items-stretch text-slate-200 w-full")}
+      className={sc(
+        "flex flex-col sm:flex-row gap-3 items-stretch text-slate-200 w-full"
+      )}
       onSubmit={handleUpload}
     >
       <input
@@ -123,33 +147,57 @@ export default function LoadedFileSelector({
           hasFile
             ? "bg-blue-500/10 border-blue-500/50 hover:bg-blue-500/20 hover:border-blue-500"
             : "bg-slate-700/30 border-slate-600 hover:bg-slate-700/50 hover:border-slate-500",
+          isDragging && "bg-slate-700/50 border-slate-500",
           className
         )}
         htmlFor="fileInput"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         <div className="flex items-center gap-3">
-          <div className={`p-3 rounded-lg transition-colors ${
-            hasFile ? "bg-blue-500/20" : "bg-slate-600/30 group-hover:bg-slate-600/50"
-          }`}>
-            <i className={`text-2xl ${
-              hasFile
-                ? "bx bxs-file-plus text-blue-400"
-                : "bx bxs-archive-arrow-up text-slate-400 group-hover:text-slate-300"
-            }`}></i>
+          <div
+            className={`p-3 aspect-square w-fit h-auto rounded-lg transition-all ${
+              isDragging
+                ? "bg-blue-500/30 scale-110"
+                : hasFile
+                ? "bg-blue-500/20"
+                : "bg-slate-600/30 group-hover:bg-slate-600/50"
+            }`}
+          >
+            <i
+              className={`text-2xl transition-all ${
+                isDragging
+                  ? "bx bxs-archive-arrow-down text-blue-300 animate-bounce"
+                  : hasFile
+                  ? "bx bxs-file-plus text-blue-400"
+                  : "bx bxs-archive-arrow-up text-slate-400 group-hover:text-slate-300"
+              }`}
+            ></i>
           </div>
           <div className="flex-1 min-w-0">
-            <p className={`font-medium truncate ${
-              hasFile ? "text-slate-200" : "text-slate-400 group-hover:text-slate-300"
-            }`}>
-              {fileName}
+            <p
+              className={`font-medium truncate ${
+                isDragging
+                  ? "text-blue-300"
+                  : hasFile
+                  ? "text-slate-200"
+                  : "text-slate-400 group-hover:text-slate-300"
+              }`}
+            >
+              {isDragging ? "Suelta el archivo aquí" : fileName}
             </p>
-            {!hasFile && (
+            {!hasFile && !isDragging && (
               <p className="text-xs text-slate-500 mt-1">
-                Selecciona un archivo PDF
+                Selecciona o arrastra un archivo PDF
               </p>
             )}
           </div>
-          <i className="bx bx-right-arrow-alt text-xl text-slate-500 group-hover:text-slate-400 transition-colors"></i>
+          <i className={`bx text-xl transition-all ${
+            isDragging
+              ? "bx-down-arrow-alt text-blue-400 animate-pulse"
+              : "bx-right-arrow-alt text-slate-500 group-hover:text-slate-400"
+          }`}></i>
         </div>
       </label>
       {uploadEndpoint && (
@@ -163,7 +211,7 @@ export default function LoadedFileSelector({
           type="submit"
           disabled={!hasFile}
         >
-          <i className="bx bx-upload text-xl"></i>
+          <i className="bx bx-folder-up-arrow text-xl"></i>
           Subir archivo
         </button>
       )}

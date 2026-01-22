@@ -21,7 +21,7 @@ export const AssetIndex = ({
                  transition-all duration-300 ease-out
                  hover:border-blue-500/60 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1
                  overflow-hidden min-h-[280px]"
-      href={`/knowledge/${id}`}
+      href={`/knowledge/assets/${id}`}
     >
       {/* Gradient overlay on hover */}
       <div
